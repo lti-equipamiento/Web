@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
+  Button,
   Grid,
-  TextField,
   TableContainer,
   Table,
   TableHead,
@@ -11,10 +11,16 @@ import {
   Paper,
 } from "@mui/material";
 import { HDVContextProvider } from "./../context/HDVContext";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import DialogShowMantenimiento from "../dialogs/DialogShowMantenimiento";
 
 export default function PageMantenimiento() {
-  const { HDVData, setHDVData, disabledMode, mantenimientosData } =
-    useContext(HDVContextProvider);
+  const { mantenimientosData } = useContext(HDVContextProvider);
+  const [openShowMantenimientoDialog, setOpenShowMantenimientoDialog] =
+    useState(false);
+  const handleShowMantenimiento = () => {
+    setOpenShowMantenimientoDialog(true);
+  };
 
   return (
     <Grid container rowSpacing={0} columnSpacing={1}>
@@ -30,6 +36,7 @@ export default function PageMantenimiento() {
                 <TableCell>Fecha de Ingreso</TableCell>
                 <TableCell align="right">Estado</TableCell>
                 <TableCell align="right">Usuario</TableCell>
+                <TableCell align="right">Acción</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -44,6 +51,19 @@ export default function PageMantenimiento() {
                   <TableCell align="right">{row.estado}</TableCell>
                   <TableCell align="right">
                     {row.usuarioByUsuario.nombre}
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      title="Mostrar mantenimiento"
+                      onClick={() => handleShowMantenimiento()}
+                    >
+                      <ZoomInIcon color="primary" />
+                    </Button>
+                    <DialogShowMantenimiento
+                      dialogOpen={openShowMantenimientoDialog}
+                      setDialogOpen={setOpenShowMantenimientoDialog}
+                      datos={row}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

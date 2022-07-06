@@ -139,7 +139,7 @@ export default function AMEquipo({
   ];
 
   return (
-    <Grid container>
+    <Grid container rowSpacing={0}>
       <Grid item xs={12}>
         <TextField
           label="Nombre"
@@ -218,7 +218,7 @@ export default function AMEquipo({
           fullWidth
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="servicio-autocomplete"
@@ -232,7 +232,7 @@ export default function AMEquipo({
           renderInput={(params) => <TextField {...params} label="Servicios" />}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           disablePortal
           fullWidth
@@ -246,7 +246,7 @@ export default function AMEquipo({
           }
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           disablePortal
           fullWidth
@@ -261,7 +261,7 @@ export default function AMEquipo({
           }
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           disablePortal
           fullWidth
@@ -276,7 +276,7 @@ export default function AMEquipo({
           }
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           disablePortal
           fullWidth
@@ -301,36 +301,31 @@ export default function AMEquipo({
           margin="normal"
           variant="outlined"
           color="secondary"
+          rows={3}
+          multiline
           fullWidth
         />
       </Grid>
-      <Grid item xs={12}>
-        <Typography>Prioridad</Typography>
-        <Slider
-          aria-label="Prioridad"
-          step={null}
-          valueLabelDisplay="off"
-          defaultValue={equipoData["prioridad"]}
-          marks={marks}
-          min={1}
-          max={3}
-          onChange={(e) =>
-            setEquipoData({ ...equipoData, prioridad: e.target.value })
-          }
-        />
-        {/* <TextField
-          label="Prioridad"
-          value={equipoData["prioridad"]}
-          onChange={(e) =>
-            setEquipoData({ ...equipoData, prioridad: e.target.value })
-          }
-          margin="normal"
-          variant="outlined"
-          color="secondary"
-          fullWidth
-        /> */}
+      <Grid container>
+        <Grid item xs={12} marginLeft={2}>
+          <Typography variant="h6">Prioridad</Typography>
+        </Grid>
+        <Grid item xs={12} marginLeft={1} marginRight={1}>
+          <Slider
+            aria-label="Prioridad"
+            step={null}
+            valueLabelDisplay="off"
+            defaultValue={equipoData["prioridad"]}
+            marks={marks}
+            min={1}
+            max={3}
+            onChange={(e) =>
+              setEquipoData({ ...equipoData, prioridad: e.target.value })
+            }
+          />
+        </Grid>
       </Grid>
-      <Grid container justifyContent="flex-end">
+      <Grid container marginTop={1} justifyContent="flex-end">
         <Button
           variant="contained"
           onClick={() => {

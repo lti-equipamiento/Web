@@ -566,6 +566,7 @@ export function getHojaDeVida(id) {
         clasif_riesgo_electrico
         clasif_riesgo_sanitario
         distribuidor
+        doc_tecnica
         docTecnicaByDocTecnica {
           diagrama_partes
           manual_operacion
@@ -577,6 +578,7 @@ export function getHojaDeVida(id) {
         fecha_adquisicion
         fecha_instalacion
         forma_adquisicion
+        fuente_alimentacion
         fuenteAlimentacionByFuenteAlimentacion {
           corriente
           frecuencia
@@ -585,6 +587,7 @@ export function getHojaDeVida(id) {
           temperatura
           voltaje
         }
+        guia_limpieza
         id
         mantenimientos {
           id
@@ -621,6 +624,7 @@ export function getHojaDeVida(id) {
         rut
         tecnologia_predominante
         telefono
+        tipo_alimentacion
         tipoAlimentacionByTipoAlimentacion {
           agua
           aire

@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
+  Button,
   Grid,
   TextField,
   Typography,
@@ -12,6 +13,7 @@ import {
   Paper,
 } from "@mui/material";
 import { HDVContextProvider } from "./../context/HDVContext";
+import DialogAddAccesorio from "../dialogs/DialogAddAccesorio";
 
 export default function PageApoyoTecnico() {
   const {
@@ -21,8 +23,12 @@ export default function PageApoyoTecnico() {
     docTecnicaData,
     setDocTecnicaData,
     accesoriosData,
-    setAccesoriosData,
   } = useContext(HDVContextProvider);
+  const [openAddAccesorio, setOpenAddAccesorio] = useState(false);
+
+  const handleOpenAddAccesorio = () => {
+    setOpenAddAccesorio(true);
+  };
 
   return (
     <Grid container rowSpacing={0} columnSpacing={1}>
@@ -120,8 +126,17 @@ export default function PageApoyoTecnico() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item marginTop={0} marginLeft={1} marginBottom={1} xs={12}>
-        <Typography>Accesorios</Typography>
+      <Grid container>
+        <Grid item marginTop={0.75} marginLeft={2} marginBottom={0} xs={1.5}>
+          <Typography>Accesorios</Typography>
+        </Grid>
+        <Grid item marginTop={0} marginLeft={2} marginBottom={1} xs={6}>
+          <Button onClick={() => handleOpenAddAccesorio()}>Agregar</Button>
+          <DialogAddAccesorio
+            dialogOpen={openAddAccesorio}
+            setDialogOpen={setOpenAddAccesorio}
+          />
+        </Grid>
       </Grid>
       <Grid item xs={12}>
         <TableContainer component={Paper}>
@@ -160,11 +175,11 @@ export default function PageApoyoTecnico() {
           label="Guia de limpieza"
           multiline
           rows={3}
-          value={docTecnicaData.otros}
+          value={docTecnicaData.guia_limpieza}
           onChange={(e) =>
             setDocTecnicaData({
               ...docTecnicaData,
-              otros: e.target.value,
+              guia_limpieza: e.target.value,
             })
           }
           margin="normal"
