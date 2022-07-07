@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Typography } from "@mui/material";
 import {
   editMantenimiento,
   getEstadosMantenimiento,
@@ -19,6 +19,7 @@ export default function MMantenimiento({
   const [mantMutation] = useMutation(editMantenimiento());
   const [estados, setEstados] = useState([]);
   const [equipos, setEquipos] = useState([]);
+  const [tiempo, setTiempo] = useState([{ horas: 0, minutos: 0 }]);
 
   const cargando = useMemo(() => {
     if (loading) {
@@ -52,14 +53,19 @@ export default function MMantenimiento({
         id: mantData.id,
         costo: mantData.costo,
         equipo: data.data_equipo.find(
-          (equipo) => equipo.nombre === mantData.equipo
+          (equipo) =>
+            equipo.nombre + " (" + equipo.n_serie + ")" ===
+            mantData.equipoByEquipo.nombre +
+              " (" +
+              mantData.equipoByEquipo.n_serie +
+              ")"
         ).id,
         estado: mantData.estado,
         fecha_egreso: mantData.fecha_egreso,
         piezas: mantData.piezas,
         procedimiento: mantData.procedimiento,
         resultado: mantData.resultado,
-        tiempo_empleado: mantData.tiempo_empleado,
+        tiempo_empleado: tiempo.horas + ":" + tiempo.minutos,
       },
     });
     setDialogOpen(false);
@@ -71,7 +77,7 @@ export default function MMantenimiento({
   }
 
   return (
-    <Grid container>
+    <Grid container columnSpacing={1}>
       <Grid item xs={12}>
         {console.log(
           mantData.equipoByEquipo.nombre +
@@ -106,7 +112,7 @@ export default function MMantenimiento({
           fullWidth
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="estado"
@@ -126,6 +132,8 @@ export default function MMantenimiento({
             setMantData({ ...mantData, procedimiento: e.target.value })
           }
           margin="normal"
+          multiline
+          rows={2}
           variant="outlined"
           color="secondary"
           fullWidth
@@ -137,6 +145,8 @@ export default function MMantenimiento({
           value={mantData.piezas}
           onChange={(e) => setMantData({ ...mantData, piezas: e.target.value })}
           margin="normal"
+          multiline
+          rows={2}
           variant="outlined"
           color="secondary"
           fullWidth
@@ -150,18 +160,33 @@ export default function MMantenimiento({
             setMantData({ ...mantData, resultado: e.target.value })
           }
           margin="normal"
+          multiline
+          rows={2}
           variant="outlined"
           color="secondary"
           fullWidth
         />
       </Grid>
       <Grid item xs={12}>
+        <Typography>Tiempo empleado</Typography>
+      </Grid>
+
+      <Grid item xs={6}>
         <TextField
-          label="Tiempo empleado"
-          value={mantData.tiempo_empleado}
-          onChange={(e) =>
-            setMantData({ ...mantData, tiempo_empleado: e.target.value })
-          }
+          label="horas"
+          value={mantData.tiempo_empleado.split(":")[0]}
+          onChange={(e) => setTiempo({ ...tiempo, horas: e.target.value })}
+          margin="normal"
+          variant="outlined"
+          color="secondary"
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          label="minutos"
+          value={mantData.tiempo_empleado.split(":")[1]}
+          onChange={(e) => setTiempo({ ...tiempo, minutos: e.target.value })}
           margin="normal"
           variant="outlined"
           color="secondary"

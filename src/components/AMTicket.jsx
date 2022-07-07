@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getDDTickets } from "../grapqhql/Queries";
 import Autocomplete from "@mui/material/Autocomplete";
+import moment from "moment";
 
 export default function AMTicket({
   setDialogOpen,
@@ -39,7 +40,7 @@ export default function AMTicket({
         equipo: data.data_equipo.find(
           (equipo) => equipo.nombre === ticketData.equipo
         ).id,
-        fecha: ticketData.fecha,
+        fecha: moment().format("YYYY-MM-D"),
         tipo: ticketData.tipo,
         usuario: user.sub,
       },
@@ -141,7 +142,7 @@ export default function AMTicket({
 
   return (
     <Grid container>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="Servicio"
@@ -155,7 +156,7 @@ export default function AMTicket({
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           disabled={ubicacionesDisabled}
@@ -172,7 +173,7 @@ export default function AMTicket({
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="Equipo"
@@ -185,7 +186,7 @@ export default function AMTicket({
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="Tipo"
@@ -197,7 +198,7 @@ export default function AMTicket({
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <TextField
           label="Fecha"
           value={ticketData["fecha"]}
@@ -209,7 +210,7 @@ export default function AMTicket({
           color="secondary"
           fullWidth
         />
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <TextField
           label="Descripcion"

@@ -21,7 +21,7 @@ import { visuallyHidden } from "@mui/utils";
 import { useQuery } from "@apollo/client";
 import { getTickets } from "../../grapqhql/Queries";
 import CustomizedDialogs from "../dialogs/dialog";
-import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import AMTicket from "../AMTicket";
 import AMantenimiento from "../AMantenimiento";
 import { Edit } from "@mui/icons-material";
@@ -218,7 +218,7 @@ const EnhancedTableToolbar = (props) => {
         <Tooltip title="Registrar Ticket">
           <div>
             <Button onClick={handleClickOpenDialog}>
-              <PersonAddAltRoundedIcon />
+              <PostAddIcon />
             </Button>
             <CustomizedDialogs
               modalTitle="Registro de Ticket"
