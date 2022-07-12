@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Auth0Provider
     domain="https://lti-equipamiento.us.auth0.com"
-    clientId="TU1HzLoMRbH5X4gA7FIFYji7hL88VXTi"
+    clientId="zO2LXg47qvXtDAUibiXnrugRm0wtDpNm"
     redirectUri={window.location.origin}
     audience="https://test-api-agem.hasura.app/v1/graphql"
     useRefreshTokens={true}

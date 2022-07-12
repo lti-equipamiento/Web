@@ -464,7 +464,6 @@ export default function TablaEquipos() {
                         }
                       })()}
                       <TableCell align="left">
-                        {row.hoja_de_vida}
                         <Button onClick={() => handleOpenHDV(row.hoja_de_vida)}>
                           <AutoStoriesIcon />
                         </Button>

@@ -174,7 +174,7 @@ export default function MMantenimiento({
       <Grid item xs={6}>
         <TextField
           label="horas"
-          value={mantData.tiempo_empleado.split(":")[0]}
+          value={mantData.tiempo_empleado?.split(":")[0]}
           onChange={(e) => setTiempo({ ...tiempo, horas: e.target.value })}
           margin="normal"
           variant="outlined"
@@ -185,7 +185,7 @@ export default function MMantenimiento({
       <Grid item xs={6}>
         <TextField
           label="minutos"
-          value={mantData.tiempo_empleado.split(":")[1]}
+          value={mantData.tiempo_empleado?.split(":")[1]}
           onChange={(e) => setTiempo({ ...tiempo, minutos: e.target.value })}
           margin="normal"
           variant="outlined"
