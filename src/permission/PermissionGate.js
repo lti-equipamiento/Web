@@ -18,7 +18,7 @@ export default function PermissionsGate({
   scopes = [],
 }) {
   // const { role } = useGetRole();
-  const permissions = PERMISSIONS["normal"];
+  const permissions = PERMISSIONS["admin"];
 
   const permissionGranted = hasPermission({ permissions, scopes });
 

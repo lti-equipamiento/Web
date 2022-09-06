@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import App from "./App";
-import TablaUsuarios from "./components/tables/TablaUsuarios";
+import TablaUsuarios from "./components/tables/TablaUsuarios2";
 import TablaTickets from "./components/tables/TablaTickets";
 import TablaEquipos from "./components/tables/TablaEquipos";
 import TablaMantenimientos from "./components/tables/TablaMantenimientos";
