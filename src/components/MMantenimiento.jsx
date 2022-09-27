@@ -21,7 +21,6 @@ export default function MMantenimiento({
   const [equipos, setEquipos] = useState([]);
   const [tiempo, setTiempo] = useState([{ horas: 0, minutos: 0 }]);
 
-  const [valorCampo, setValorCampo] = useState("");
   const [mensajeError, setMensajeError] = useState("");
   const [errorCosto, setErrorCosto] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(false);
@@ -113,11 +112,8 @@ export default function MMantenimiento({
          inputProps={{ maxLength: 50 }}
           label="Costo"
           value={mantData.costo}
-          onChange={(e) => {
-            setMantData({ ...mantData, costo: e.target.value });
-            console.log (mantData.costo)
-            
-          if (!mantData.costo.match(regexDecimalResult)) {
+          onChange={(e) => {       
+          if (!e.target.value.match(regexDecimalResult)) {
               setErrorCosto(true)
               setMensajeError("El costo debe de ser un número. Ej: 1342 o 1342.42")
               setBtnDisabled(true)
