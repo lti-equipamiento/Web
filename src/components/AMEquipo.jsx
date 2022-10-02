@@ -143,6 +143,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="Nombre"
+          inputProps={{ maxLength: 50 }}
           value={equipoData["nombre"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, nombre: e.target.value })
@@ -156,6 +157,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="Marca"
+          inputProps={{ maxLength: 50 }}
           value={equipoData["marca"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, marca: e.target.value })
@@ -169,6 +171,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="Modelo"
+          inputProps={{ maxLength: 50 }}
           value={equipoData["modelo"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, modelo: e.target.value })
@@ -182,6 +185,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="N° Serie"
+          inputProps={{ maxLength: 50 }}
           value={equipoData["n_serie"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, n_serie: e.target.value })
@@ -195,6 +199,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="N° Activo fijo"
+          inputProps={{ maxLength: 100 }}
           value={equipoData["n_activo_fijo"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, n_activo_fijo: e.target.value })
@@ -229,7 +234,7 @@ export default function AMEquipo({
             setUbicacionesDisabled(false);
             getUbicaciones(newValue);
           }}
-          renderInput={(params) => <TextField {...params} label="Servicios" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Servicios" />}
         />
       </Grid>
       <Grid item xs={12} marginTop={2} marginBottom={1}>
@@ -240,7 +245,7 @@ export default function AMEquipo({
           id="ubicacion-autocomplete"
           options={ubicaciones}
           value={equipoData["ubicacion"]}
-          renderInput={(params) => <TextField {...params} label="Ubicación" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Ubicación" />}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, ubicacion: newValue })
           }
@@ -254,7 +259,7 @@ export default function AMEquipo({
           options={estado_funcional}
           value={equipoData["estado_funcional"]}
           renderInput={(params) => (
-            <TextField {...params} label="Estado funcional" />
+            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Estado funcional" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, estado_funcional: newValue })
@@ -269,7 +274,7 @@ export default function AMEquipo({
           options={estado_fisico}
           value={equipoData["estado_fisico"]}
           renderInput={(params) => (
-            <TextField {...params} label="Estado fisico" />
+            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Estado fisico" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, estado_fisico: newValue })
@@ -284,7 +289,7 @@ export default function AMEquipo({
           options={clasif_riesgo}
           value={equipoData["clasificacion_riesgo"]}
           renderInput={(params) => (
-            <TextField {...params} label="Clasificación de riesgo" />
+            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Clasificación de riesgo" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, clasificacion_riesgo: newValue })
@@ -294,6 +299,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="Observaciones"
+          inputProps={{ maxLength: 5000 }} 
           value={equipoData["Observaciones"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, Observaciones: e.target.value })
