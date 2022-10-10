@@ -148,7 +148,7 @@ export default function AMTicket({
           id="Servicio"
           options={servicios}
           value={ticketData.servicio}
-          renderInput={(params) => <TextField {...params} label="Servicios" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Servicios" />}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, servicio: newValue });
             setUbicacionesDisabled(false);
@@ -164,7 +164,7 @@ export default function AMTicket({
           options={ubicaciones}
           value={ticketData.ubicacion}
           renderInput={(params) => (
-            <TextField {...params} label="Ubicaciones" />
+            <TextField {...params} inputProps={{ maxLength: 50 }} label="Ubicaciones" />
           )}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, ubicacion: newValue });
@@ -180,7 +180,7 @@ export default function AMTicket({
           disabled={equiposDisabled}
           options={equipos}
           value={ticketData.equipo}
-          renderInput={(params) => <TextField {...params} label="Equipo" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Equipo" />}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, equipo: newValue });
           }}
@@ -192,7 +192,7 @@ export default function AMTicket({
           id="Tipo"
           options={tiposTicket}
           value={ticketData.tipo}
-          renderInput={(params) => <TextField {...params} label="Tipo" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Tipo" />}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, tipo: newValue });
           }}
@@ -214,6 +214,7 @@ export default function AMTicket({
       <Grid item xs={12}>
         <TextField
           label="Descripcion"
+          inputProps={{ maxLength: 5000 }}
           value={ticketData["descripcion"]}
           onChange={(e) =>
             setTicketData({ ...ticketData, descripcion: e.target.value })

@@ -57,6 +57,7 @@ export default function AMantenimiento({
       <Grid item xs={12}>
         <TextField
           label="Ticket"
+          inputProps={{ maxLength: 50 }}
           value={ticket.equipoByEquipo.nombre}
           disabled="true"
           margin="normal"
@@ -72,7 +73,7 @@ export default function AMantenimiento({
           id="usuario"
           options={usuarios}
           // value={ticket.usuarioByUsuario.nombre}
-          renderInput={(params) => <TextField {...params} label="Usuario" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Usuario" />}
           onChange={(e, newValue) => setMantData({ usuario: newValue })}
         />
       </Grid>
