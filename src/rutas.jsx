@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import App from "./App";
 import TablaUsuarios from "./components/tables/TablaUsuarios2";
-import TablaTickets from "./components/tables/TablaTickets";
+import TablaTickets from "./components/tables/TablaTickets2";
 import TablaEquipos from "./components/tables/TablaEquipos2";
 import TablaMantenimientos from "./components/tables/TablaMantenimientos";
 import PermissionsGate from "./permission/PermissionGate";
