@@ -35,6 +35,7 @@ exports.handler = async function (event, context) {
       `,
     })
     .then((result) => (response = result));
+  console.log(response);
   return {
     statusCode: 200,
     body: response,
