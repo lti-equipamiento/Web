@@ -7,6 +7,7 @@ export const ROLES = {
 };
 
 export const SCOPES = {
+  canViewDashboard: "can-view-usuario",
   canCreateUsuario: "can-create-usuario",
   canEditUsuario: "can-edit-usuario",
   canDeleteUsuario: "can-delete-usuario",
@@ -34,6 +35,7 @@ export const PERMISSIONS = {
     SCOPES.canViewTicket,
   ],
   [ROLES.admin]: [
+    SCOPES.canViewDashboard,
     SCOPES.canCreateUsuario,
     SCOPES.canEditUsuario,
     SCOPES.canDeleteUsuario,

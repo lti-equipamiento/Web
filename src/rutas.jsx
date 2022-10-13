@@ -7,6 +7,7 @@ import TablaMantenimientos from "./components/tables/TablaMantenimientos";
 import PermissionsGate from "./permission/PermissionGate";
 import { SCOPES } from "./permission/PermissionMaps";
 import { useAuth0 } from "@auth0/auth0-react";
+import Dashboard from "./components/dashboard/DashboardPage";
 
 export default function Rutas() {
   const { isAuthenticated } = useAuth0();
@@ -16,6 +17,14 @@ export default function Rutas() {
       <Route path="/" element={<App />} />
       {isAuthenticated && (
         <>
+          <Route
+            path="/dashboard"
+            element={
+              <PermissionsGate scopes={[SCOPES.canViewDashboard]}>
+                <Dashboard />
+              </PermissionsGate>
+            }
+          />
           <Route
             path="/equipo"
             element={

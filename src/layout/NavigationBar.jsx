@@ -19,7 +19,6 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./NavigationItems";
 import { LayoutContextProvider } from "./LayoutContext";
 import { useAuth0 } from "@auth0/auth0-react";
-import LogOutButton from "../components/LogOutButton";
 import LoginButton from "../components/LoginButton";
 import PermissionsGate from "../permission/PermissionGate";
 import { SCOPES } from "../permission/PermissionMaps";
@@ -158,7 +157,6 @@ export default function NavigationBar({ children }) {
           <List component="nav">
             {mainListItems}
             <Divider sx={{ my: 1 }} />
-            <LogOutButton />
             {/* {secondaryListItems} */}
           </List>
         </Drawer>
