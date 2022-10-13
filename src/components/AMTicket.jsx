@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getDDTickets } from "../grapqhql/Queries";
 import Autocomplete from "@mui/material/Autocomplete";
+import moment from "moment";
 
 export default function AMTicket({
   setDialogOpen,
@@ -39,7 +40,7 @@ export default function AMTicket({
         equipo: data.data_equipo.find(
           (equipo) => equipo.nombre === ticketData.equipo
         ).id,
-        fecha: ticketData.fecha,
+        fecha: moment().format("YYYY-MM-D"),
         tipo: ticketData.tipo,
         usuario: user.sub,
       },
@@ -141,13 +142,13 @@ export default function AMTicket({
 
   return (
     <Grid container>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="Servicio"
           options={servicios}
           value={ticketData.servicio}
-          renderInput={(params) => <TextField {...params} label="Servicios" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Servicios" />}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, servicio: newValue });
             setUbicacionesDisabled(false);
@@ -155,7 +156,7 @@ export default function AMTicket({
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           disabled={ubicacionesDisabled}
@@ -163,7 +164,7 @@ export default function AMTicket({
           options={ubicaciones}
           value={ticketData.ubicacion}
           renderInput={(params) => (
-            <TextField {...params} label="Ubicaciones" />
+            <TextField {...params} inputProps={{ maxLength: 50 }} label="Ubicaciones" />
           )}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, ubicacion: newValue });
@@ -172,32 +173,32 @@ export default function AMTicket({
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="Equipo"
           disabled={equiposDisabled}
           options={equipos}
           value={ticketData.equipo}
-          renderInput={(params) => <TextField {...params} label="Equipo" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Equipo" />}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, equipo: newValue });
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="Tipo"
           options={tiposTicket}
           value={ticketData.tipo}
-          renderInput={(params) => <TextField {...params} label="Tipo" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Tipo" />}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, tipo: newValue });
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <TextField
           label="Fecha"
           value={ticketData["fecha"]}
@@ -209,10 +210,11 @@ export default function AMTicket({
           color="secondary"
           fullWidth
         />
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <TextField
           label="Descripcion"
+          inputProps={{ maxLength: 5000 }}
           value={ticketData["descripcion"]}
           onChange={(e) =>
             setTicketData({ ...ticketData, descripcion: e.target.value })

@@ -49,6 +49,7 @@ export default function AMUsuario({
       <Grid item xs={12}>
         <TextField
           label="Nombre"
+          inputProps={{ maxLength: 50 }}
           value={userData["nombre"]}
           onChange={(e) => setUserData({ ...userData, nombre: e.target.value })}
           margin="normal"
@@ -60,11 +61,11 @@ export default function AMUsuario({
       <Grid item xs={12}>
         <TextField
           label="Cedula"
+          inputProps={{ maxLength: 8 }}
           value={userData["cedula"]}
           onChange={(e) => {
             setUserData({ ...userData, cedula: e.target.value });
           }}
-          //inputProps={{ inputMode: "text", pattern: "[0-9]*" }}
           margin="normal"
           variant="outlined"
           color="secondary"
@@ -74,6 +75,7 @@ export default function AMUsuario({
       <Grid item xs={12}>
         <TextField
           label="Dirección"
+          inputProps={{ maxLength: 100 }}
           value={userData["direccion"]}
           onChange={(e) =>
             setUserData({ ...userData, direccion: e.target.value })
@@ -87,6 +89,7 @@ export default function AMUsuario({
       <Grid item xs={12}>
         <TextField
           label="Telefono"
+          inputProps={{ maxLength: 9 }}
           value={userData["telefono"]}
           onChange={(e) =>
             setUserData({ ...userData, telefono: e.target.value })
@@ -100,6 +103,7 @@ export default function AMUsuario({
       <Grid item xs={12}>
         <TextField
           label="Mail"
+          inputProps={{ maxLength: 100 }}
           value={userData["mail"]}
           onChange={(e) => setUserData({ ...userData, mail: e.target.value })}
           margin="normal"

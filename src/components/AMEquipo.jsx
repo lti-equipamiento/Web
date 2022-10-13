@@ -139,10 +139,11 @@ export default function AMEquipo({
   ];
 
   return (
-    <Grid container>
+    <Grid container rowSpacing={0}>
       <Grid item xs={12}>
         <TextField
           label="Nombre"
+          inputProps={{ maxLength: 50 }}
           value={equipoData["nombre"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, nombre: e.target.value })
@@ -156,6 +157,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="Marca"
+          inputProps={{ maxLength: 50 }}
           value={equipoData["marca"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, marca: e.target.value })
@@ -169,6 +171,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="Modelo"
+          inputProps={{ maxLength: 50 }}
           value={equipoData["modelo"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, modelo: e.target.value })
@@ -182,6 +185,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="N° Serie"
+          inputProps={{ maxLength: 50 }}
           value={equipoData["n_serie"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, n_serie: e.target.value })
@@ -195,6 +199,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="N° Activo fijo"
+          inputProps={{ maxLength: 100 }}
           value={equipoData["n_activo_fijo"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, n_activo_fijo: e.target.value })
@@ -218,7 +223,7 @@ export default function AMEquipo({
           fullWidth
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           fullWidth
           id="servicio-autocomplete"
@@ -229,10 +234,10 @@ export default function AMEquipo({
             setUbicacionesDisabled(false);
             getUbicaciones(newValue);
           }}
-          renderInput={(params) => <TextField {...params} label="Servicios" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Servicios" />}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           disablePortal
           fullWidth
@@ -240,13 +245,13 @@ export default function AMEquipo({
           id="ubicacion-autocomplete"
           options={ubicaciones}
           value={equipoData["ubicacion"]}
-          renderInput={(params) => <TextField {...params} label="Ubicación" />}
+          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Ubicación" />}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, ubicacion: newValue })
           }
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           disablePortal
           fullWidth
@@ -254,14 +259,14 @@ export default function AMEquipo({
           options={estado_funcional}
           value={equipoData["estado_funcional"]}
           renderInput={(params) => (
-            <TextField {...params} label="Estado funcional" />
+            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Estado funcional" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, estado_funcional: newValue })
           }
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           disablePortal
           fullWidth
@@ -269,14 +274,14 @@ export default function AMEquipo({
           options={estado_fisico}
           value={equipoData["estado_fisico"]}
           renderInput={(params) => (
-            <TextField {...params} label="Estado fisico" />
+            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Estado fisico" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, estado_fisico: newValue })
           }
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
           disablePortal
           fullWidth
@@ -284,7 +289,7 @@ export default function AMEquipo({
           options={clasif_riesgo}
           value={equipoData["clasificacion_riesgo"]}
           renderInput={(params) => (
-            <TextField {...params} label="Clasificación de riesgo" />
+            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Clasificación de riesgo" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, clasificacion_riesgo: newValue })
@@ -294,6 +299,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="Observaciones"
+          inputProps={{ maxLength: 5000 }} 
           value={equipoData["Observaciones"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, Observaciones: e.target.value })
@@ -301,36 +307,31 @@ export default function AMEquipo({
           margin="normal"
           variant="outlined"
           color="secondary"
+          rows={3}
+          multiline
           fullWidth
         />
       </Grid>
-      <Grid item xs={12}>
-        <Typography>Prioridad</Typography>
-        <Slider
-          aria-label="Prioridad"
-          step={null}
-          valueLabelDisplay="off"
-          defaultValue={equipoData["prioridad"]}
-          marks={marks}
-          min={1}
-          max={3}
-          onChange={(e) =>
-            setEquipoData({ ...equipoData, prioridad: e.target.value })
-          }
-        />
-        {/* <TextField
-          label="Prioridad"
-          value={equipoData["prioridad"]}
-          onChange={(e) =>
-            setEquipoData({ ...equipoData, prioridad: e.target.value })
-          }
-          margin="normal"
-          variant="outlined"
-          color="secondary"
-          fullWidth
-        /> */}
+      <Grid container>
+        <Grid item xs={12} marginLeft={2}>
+          <Typography variant="h6">Prioridad</Typography>
+        </Grid>
+        <Grid item xs={12} marginLeft={1} marginRight={1}>
+          <Slider
+            aria-label="Prioridad"
+            step={null}
+            valueLabelDisplay="off"
+            defaultValue={equipoData["prioridad"]}
+            marks={marks}
+            min={1}
+            max={3}
+            onChange={(e) =>
+              setEquipoData({ ...equipoData, prioridad: e.target.value })
+            }
+          />
+        </Grid>
       </Grid>
-      <Grid container justifyContent="flex-end">
+      <Grid container marginTop={1} justifyContent="flex-end">
         <Button
           variant="contained"
           onClick={() => {

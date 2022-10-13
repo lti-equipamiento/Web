@@ -4,10 +4,12 @@ export const HDVContextProvider = createContext();
 const HDVContext = (props) => {
   const [HDVData, setHDVData] = useState([]);
   const [fuenteAlimentacionData, setFuenteAlimentacionData] = useState([]);
+  const [tipoAlimentacionData, setTipoAlimentacionData] = useState([]);
   const [docTecnicaData, setDocTecnicaData] = useState([]);
   const [accesoriosData, setAccesoriosData] = useState([]);
   const [mantenimientosData, setMantenimientosData] = useState([]);
   const [disabledMode, setDisabledMode] = useState(false);
+  const [reload, setReload] = useState(false);
 
   return (
     <div>
@@ -17,6 +19,8 @@ const HDVContext = (props) => {
           setHDVData,
           fuenteAlimentacionData,
           setFuenteAlimentacionData,
+          tipoAlimentacionData,
+          setTipoAlimentacionData,
           docTecnicaData,
           setDocTecnicaData,
           accesoriosData,
@@ -25,6 +29,8 @@ const HDVContext = (props) => {
           setMantenimientosData,
           disabledMode,
           setDisabledMode,
+          reload,
+          setReload,
         }}
       >
         {props.children}

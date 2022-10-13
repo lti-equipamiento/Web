@@ -177,7 +177,13 @@ export function addEquipo() {
           prioridad: $prioridad
           servicio: $servicio
           ubicacion: $ubicacion
-          hojaDeVidaByHojaDeVida: { data: {} }
+          hojaDeVidaByHojaDeVida: {
+            data: {
+              docTecnicaByDocTecnica: { data: {} }
+              fuenteAlimentacionByFuenteAlimentacion: { data: {} }
+              tipoAlimentacionByTipoAlimentacion: { data: {} }
+            }
+          }
         }
       ) {
         id
@@ -560,6 +566,7 @@ export function getHojaDeVida(id) {
         clasif_riesgo_electrico
         clasif_riesgo_sanitario
         distribuidor
+        doc_tecnica
         docTecnicaByDocTecnica {
           diagrama_partes
           manual_operacion
@@ -571,6 +578,7 @@ export function getHojaDeVida(id) {
         fecha_adquisicion
         fecha_instalacion
         forma_adquisicion
+        fuente_alimentacion
         fuenteAlimentacionByFuenteAlimentacion {
           corriente
           frecuencia
@@ -579,6 +587,7 @@ export function getHojaDeVida(id) {
           temperatura
           voltaje
         }
+        guia_limpieza
         id
         mantenimientos {
           id
@@ -615,6 +624,7 @@ export function getHojaDeVida(id) {
         rut
         tecnologia_predominante
         telefono
+        tipo_alimentacion
         tipoAlimentacionByTipoAlimentacion {
           agua
           aire
@@ -636,8 +646,31 @@ export function getHojaDeVida(id) {
 
 export function editHojaDeVida() {
   return gql`
-    mutation MyMutation(
+    mutation editHojaDeVida(
       $id: Int!
+      $corriente: String!
+      $frecuencia: String!
+      $potencia: String!
+      $presion: String!
+      $temperatura: String!
+      $voltaje: String!
+      $agua: Boolean!
+      $aire: Boolean!
+      $bateria: Boolean!
+      $electricidad: Boolean!
+      $emergencia: Boolean!
+      $estandar: Boolean!
+      $otrosAlimentacion: String!
+      $oxigeno: Boolean!
+      $regulada: Boolean!
+      $servicio: Boolean!
+      $vacio: Boolean!
+      $vapor: Boolean!
+      $diagrama_partes: String!
+      $manual_operacion: String!
+      $manual_servicio: String!
+      $otrosDocumentacion: String!
+      $planos: String!
       $autorizacion_msp: String!
       $ciudad_distribuidor: String!
       $ciudad_fabricante: String!
@@ -653,13 +686,59 @@ export function editHojaDeVida() {
       $fecha_instalacion: date!
       $forma_adquisicion: String!
       $fuente_alimentacion: Int!
+      $guia_limpieza: String!
       $period_calibracion: String!
       $period_mantenimiento: String!
       $recom_fabricante: String!
       $rut: String!
+      $tecnologia_predominante: String!
       $telefono: String!
       $tipo_alimentacion: Int!
     ) {
+      update_data_fuente_alimentacion_by_pk(
+        pk_columns: { id: $fuente_alimentacion }
+        _set: {
+          corriente: $corriente
+          frecuencia: $frecuencia
+          potencia: $potencia
+          presion: $presion
+          temperatura: $temperatura
+          voltaje: $voltaje
+        }
+      ) {
+        id
+      }
+      update_data_tipo_alimentacion_by_pk(
+        pk_columns: { id: $tipo_alimentacion }
+        _set: {
+          agua: $agua
+          aire: $aire
+          bateria: $bateria
+          electricidad: $electricidad
+          emergencia: $emergencia
+          estandar: $estandar
+          otros: $otrosAlimentacion
+          oxigeno: $oxigeno
+          regulada: $regulada
+          servicio: $servicio
+          vacio: $vacio
+          vapor: $vapor
+        }
+      ) {
+        id
+      }
+      update_data_doc_tecnica_by_pk(
+        pk_columns: { id: $doc_tecnica }
+        _set: {
+          diagrama_partes: $diagrama_partes
+          manual_operacion: $manual_operacion
+          manual_servicio: $manual_servicio
+          otros: $otrosDocumentacion
+          planos: $planos
+        }
+      ) {
+        id
+      }
       update_data_hoja_de_vida_by_pk(
         pk_columns: { id: $id }
         _set: {
@@ -678,10 +757,12 @@ export function editHojaDeVida() {
           fecha_instalacion: $fecha_instalacion
           forma_adquisicion: $forma_adquisicion
           fuente_alimentacion: $fuente_alimentacion
+          guia_limpieza: $guia_limpieza
           period_calibracion: $period_calibracion
           period_mantenimiento: $period_mantenimiento
           recom_fabricante: $recom_fabricante
           rut: $rut
+          tecnologia_predominante: $tecnologia_predominante
           telefono: $telefono
           tipo_alimentacion: $tipo_alimentacion
         }
