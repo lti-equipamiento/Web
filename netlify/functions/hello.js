@@ -1,14 +1,13 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  gql,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, gql, HttpLink } from "@apollo/client";
+import fetch from "cross-fetch";
 
 exports.handler = async function (event, context) {
   let response;
   const client = new ApolloClient({
-    uri: "https://test-api-agem.hasura.app/v1/graphql",
+    link: new HttpLink({
+      uri: "https://test-api-agem.hasura.app/v1/graphql",
+      fetch,
+    }),
     headers: {
       "x-hasura-admin-secret":
         "6PFLo0JQgYAbu7IK3Dhsz6RtwqLYhBqBdl16KrEiePr121CvC4mxPnncTI774wS0",
