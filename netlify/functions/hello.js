@@ -17,7 +17,7 @@ exports.handler = async function (event, context) {
     },
   });
 
-  const response = await client.query({
+  const response = client.query({
     query: gql`
       query getUsuarios {
         data_usuario {
@@ -26,9 +26,9 @@ exports.handler = async function (event, context) {
       }
     `,
   });
-  await console.log(response);
+  console.log(response);
   return await {
     statusCode: 200,
-    body: JSON.stringify(response),
+    body: JSON.stringify({ response: "Holaaa" }),
   };
 };
