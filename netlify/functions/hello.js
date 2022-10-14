@@ -18,7 +18,7 @@ exports.handler = async function (event, context) {
     },
   });
 
-  client
+  await client
     .query({
       query: gql`
         query getUsuarios {
