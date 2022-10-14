@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, gql, HttpLink } from "@apollo/client";
 import fetch from "cross-fetch";
 
 exports.handler = async function (event, context) {
-  const client = new ApolloClient({
+  const client = await new ApolloClient({
     link: new HttpLink({
       uri: "https://test-api-agem.hasura.app/v1/graphql",
       fetch,
@@ -17,7 +17,7 @@ exports.handler = async function (event, context) {
     },
   });
 
-  const response = client.query({
+  const response = await client.query({
     query: gql`
       query getUsuarios {
         data_usuario {
@@ -27,8 +27,8 @@ exports.handler = async function (event, context) {
     `,
   });
   console.log(response);
-  return await {
+  return {
     statusCode: 200,
-    body: JSON.stringify({ response: "Holaaa" }),
+    body: response,
   };
 };
