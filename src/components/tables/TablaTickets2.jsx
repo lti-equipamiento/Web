@@ -148,8 +148,8 @@ export default function TablaTickets2() {
               )
               return result
   
-           }
-          }, 
+           }     
+      }, 
         {
           field: "fecha",
           headerName: "Fecha",
@@ -167,18 +167,10 @@ export default function TablaTickets2() {
           editable: true,
           headerAlign: "left",
           align: "left",
-        }, {
-          field: "asignar",
-          headerName: "Asignar",
-          minWidth: 70,
-          flex: 1,
-          editable: true,
-          headerAlign: "left",
-          align: "left",
-        }/* ,{
-        field: "actions",
+        },{
+        field: "Asignar",
         type: "actions",
-        headerName: "Modificar",
+        headerName: "Asignar",
         minWidth: 70,
         flex: 1,
         headerAlign: "left",
@@ -205,7 +197,7 @@ export default function TablaTickets2() {
           </CustomizedDialogs>
         </>,
         ],
-      } */
+      } 
   ];
 
 
