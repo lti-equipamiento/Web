@@ -3,7 +3,7 @@ import App from "./App";
 import TablaUsuarios from "./components/tables/TablaUsuarios2";
 import TablaTickets from "./components/tables/TablaTickets2";
 import TablaEquipos from "./components/tables/TablaEquipos2";
-import TablaMantenimientos from "./components/tables/TablaMantenimientos";
+import TablaMantenimientos from "./components/tables/TablaMantenimientos2";
 import PermissionsGate from "./permission/PermissionGate";
 import { SCOPES } from "./permission/PermissionMaps";
 import { useAuth0 } from "@auth0/auth0-react";
