@@ -97,7 +97,7 @@ export default function TablaUsuarios2() {
         id="tableTitle"
         component="div"
       >
-        Test
+        Usuarios
       </Typography>
       <DataGrid
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}

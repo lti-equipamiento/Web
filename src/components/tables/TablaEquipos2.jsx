@@ -73,15 +73,7 @@ export default function TablaEquipos2() {
   };
 
   const columns = [
-    {
-      field: "nombre",
-      headerName: "Nombre",
-      minWidth: 100,
-      flex: 1,
-      editable: true,
-      headerAlign: "left",
-      align: "left",
-    },
+ 
     {
       field: "actions",
       type: "actions",
@@ -112,6 +104,14 @@ export default function TablaEquipos2() {
           </CustomizedDialogs>
         </>,
       ],
+    },   {
+      field: "nombre",
+      headerName: "Nombre",
+      minWidth: 100,
+      flex: 1,
+      editable: true,
+      headerAlign: "left",
+      align: "left",
     },
     {
       field: "marca",

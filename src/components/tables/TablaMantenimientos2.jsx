@@ -30,21 +30,6 @@ export default function TablaMantenimientos2() {
       };
     const columns = [
         {
-            field: "equipo",
-            headerName: "Equipo",
-            minWidth: 100,
-            flex: 1,
-            editable: true,
-            headerAlign: "left",
-            align: "left",
-            valueGetter: (params) =>{
-              return params.row.equipoByEquipo.nombre +
-              " (" +
-              params.row.equipoByEquipo.n_serie +
-              ")"
-           }
-          },
-        {
             field: "editar",
             type: "actions",
             headerName: "Modificar",
@@ -74,6 +59,20 @@ export default function TablaMantenimientos2() {
               </CustomizedDialogs>
             </>,
             ],
+          },{
+            field: "equipo",
+            headerName: "Equipo",
+            minWidth: 100,
+            flex: 1,
+            editable: true,
+            headerAlign: "left",
+            align: "left",
+            valueGetter: (params) =>{
+              return params.row.equipoByEquipo.nombre +
+              " (" +
+              params.row.equipoByEquipo.n_serie +
+              ")"
+           }
           },  {
             field: "prioridad",
             headerName: "Prioridad",
@@ -200,7 +199,7 @@ export default function TablaMantenimientos2() {
               id="tableTitle"
               component="div"
             >
-              Test
+              Mantenimientos
             </Typography>
             <DataGrid 
               localeText={esES.components.MuiDataGrid.defaultProps.localeText}

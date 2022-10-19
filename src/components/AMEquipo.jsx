@@ -234,7 +234,7 @@ export default function AMEquipo({
             setUbicacionesDisabled(false);
             getUbicaciones(newValue);
           }}
-          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Servicios" />}
+          renderInput={(params) => <TextField {...params} label="Servicios" />}
         />
       </Grid>
       <Grid item xs={12} marginTop={2} marginBottom={1}>
@@ -245,7 +245,7 @@ export default function AMEquipo({
           id="ubicacion-autocomplete"
           options={ubicaciones}
           value={equipoData["ubicacion"]}
-          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Ubicación" />}
+          renderInput={(params) => <TextField {...params} label="Ubicación" />}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, ubicacion: newValue })
           }
@@ -259,7 +259,7 @@ export default function AMEquipo({
           options={estado_funcional}
           value={equipoData["estado_funcional"]}
           renderInput={(params) => (
-            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Estado funcional" />
+            <TextField {...params}  label="Estado funcional" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, estado_funcional: newValue })
@@ -274,7 +274,7 @@ export default function AMEquipo({
           options={estado_fisico}
           value={equipoData["estado_fisico"]}
           renderInput={(params) => (
-            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Estado fisico" />
+            <TextField {...params}  label="Estado fisico" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, estado_fisico: newValue })
@@ -289,7 +289,7 @@ export default function AMEquipo({
           options={clasif_riesgo}
           value={equipoData["clasificacion_riesgo"]}
           renderInput={(params) => (
-            <TextField {...params} inputProps={{ maxLength: 50 }}  label="Clasificación de riesgo" />
+            <TextField {...params}  label="Clasificación de riesgo" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, clasificacion_riesgo: newValue })

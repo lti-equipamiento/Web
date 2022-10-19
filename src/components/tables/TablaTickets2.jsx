@@ -33,15 +33,7 @@ export default function TablaTickets2() {
       setEditTicket(ticket);
     };
     const columns = [
-      {
-        field: "id",
-        headerName: "Nº Ticket",
-        minWidth: 100,
-        flex: 1,
-        editable: true,
-        headerAlign: "left",
-        align: "left",
-      },
+     
       {
         field: "actions",
         type: "actions",
@@ -72,6 +64,14 @@ export default function TablaTickets2() {
           </CustomizedDialogs>
         </>,
         ],
+      }, {
+        field: "id",
+        headerName: "Nº Ticket",
+        minWidth: 100,
+        flex: 1,
+        editable: true,
+        headerAlign: "left",
+        align: "left",
       },
       {
         field: "equipo",
@@ -219,7 +219,7 @@ export default function TablaTickets2() {
           id="tableTitle"
           component="div"
         >
-          Test
+          Tickets
         </Typography>
         <DataGrid 
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}

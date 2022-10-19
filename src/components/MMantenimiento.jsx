@@ -104,7 +104,7 @@ export default function MMantenimiento({
           onChange={(e, newValue) => {
             setMantData({ ...mantData, equipo: newValue });
           }}
-          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Equipos" />}
+          renderInput={(params) => <TextField {...params}  label="Equipos" />}
         />
       </Grid>
       <Grid item xs={12}>
@@ -142,7 +142,7 @@ export default function MMantenimiento({
           onChange={(e, newValue) => {
             setMantData({ ...mantData, estado: newValue });
           }}
-          renderInput={(params) => <TextField {...params} inputProps={{ maxLength: 50 }} label="Estados" />}
+          renderInput={(params) => <TextField {...params}  label="Estados" />}
         />
       </Grid>
       <Grid item xs={12}>
@@ -164,7 +164,6 @@ export default function MMantenimiento({
       <Grid item xs={12}>
         <TextField
           label="Piezas"
-          inputProps={{ maxLength: 5000 }}
           value={mantData.piezas}
           onChange={(e) => setMantData({ ...mantData, piezas: e.target.value })}
           margin="normal"
