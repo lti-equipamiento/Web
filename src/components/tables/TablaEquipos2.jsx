@@ -275,6 +275,23 @@ export default function TablaEquipos2() {
         component="div"
       >
         Equipos
+        <div style={{display: 'flex',  justifyContent:'right'}}>
+            <Button onClick={handleClickOpenDialog}>
+              <AddBoxIcon />
+            </Button>
+            <CustomizedDialogs
+              modalTitle="Registro de Equipo"
+              dialogOpen={dialogOpen}
+              setDialogOpen={setDialogOpen}
+            >
+              <AMEquipo
+                setDialogOpen={setDialogOpen}
+                submitButtonText="Registrar"
+                setReload={setReload}
+              />
+            </CustomizedDialogs>
+          </div>
+
       </Typography>
       <DataGrid
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
