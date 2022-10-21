@@ -28,7 +28,9 @@ export default function AMantenimiento({
   useEffect(() => {
     if (data) {
       let usu = [];
-      data.data_usuario.forEach((usuario) => usu.push(usuario.nombre));
+      data.data_usuario.forEach(
+        (usuario) => usuario.nombre != null && usu.push(usuario.nombre)
+      );
       setUsuarios(usu);
     }
   }, [data]);
@@ -73,7 +75,7 @@ export default function AMantenimiento({
           id="usuario"
           options={usuarios}
           // value={ticket.usuarioByUsuario.nombre}
-          renderInput={(params) => <TextField {...params}  label="Usuario" />}
+          renderInput={(params) => <TextField {...params} label="Usuario" />}
           onChange={(e, newValue) => setMantData({ usuario: newValue })}
         />
       </Grid>
