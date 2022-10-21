@@ -161,7 +161,11 @@ export default function PageCTecnica() {
             <TextField
               disabled={disabledMode}
               label="Voltaje"
-              value={fuenteAlimentacionData.voltaje}
+              value={
+                fuenteAlimentacionData.voltaje == null
+                  ? 0
+                  : fuenteAlimentacionData.voltaje
+              }
               onChange={(e) =>
                 setFuenteAlimentacionData({
                   ...fuenteAlimentacionData,
