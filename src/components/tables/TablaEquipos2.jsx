@@ -232,7 +232,7 @@ export default function TablaEquipos2() {
       align: "left",
       getActions: (params) => [
         <>
-          <Button onClick={() => handleOpenHDV(params.hoja_de_vida)}>
+          <Button onClick={() => handleOpenHDV(params.row.hoja_de_vida)}>
             <AutoStoriesIcon />
           </Button>
           <HDVContext>
