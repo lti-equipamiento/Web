@@ -11,7 +11,6 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { NavLink } from "react-router-dom";
-import { LogOutButton } from "../components/LogOutButton.jsx";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 const navLinkStyle = { textDecoration: "none", color: "black" };
