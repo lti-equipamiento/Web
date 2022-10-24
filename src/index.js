@@ -6,7 +6,6 @@ import { BrowserRouter } from "react-router-dom";
 import Rutas from "./rutas";
 import { Auth0Provider } from "@auth0/auth0-react";
 import ApolloWrapper from "./grapqhql/ApolloWrapper";
-import Nav from "./components/Nav";
 import NavigationBar from "./layout/NavigationBar";
 import LayoutContext from "./layout/LayoutContext";
 

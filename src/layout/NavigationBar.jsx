@@ -20,6 +20,10 @@ import { mainListItems, secondaryListItems } from "./NavigationItems";
 import { LayoutContextProvider } from "./LayoutContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from "../components/LoginButton";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import LogoutIcon from "@mui/icons-material/Logout";
 import PermissionsGate from "../permission/PermissionGate";
 import { SCOPES } from "../permission/PermissionMaps";
 
@@ -92,7 +96,7 @@ const mdTheme = createTheme();
 export default function NavigationBar({ children }) {
   const [open, setOpen] = React.useState(true);
   const { headerTitle } = useContext(LayoutContextProvider);
-  const { user, isAuthenticated } = useAuth0();
+  const { user, logout, isAuthenticated } = useAuth0();
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -157,7 +161,16 @@ export default function NavigationBar({ children }) {
           <List component="nav">
             {mainListItems}
             <Divider sx={{ my: 1 }} />
-            {/* {secondaryListItems} */}
+            <ListItemButton
+              onClick={() => {
+                logout({ returnTo: window.location.origin });
+              }}
+            >
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="Cerrar sesión" />
+            </ListItemButton>
           </List>
         </Drawer>
         <Box

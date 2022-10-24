@@ -11,7 +11,8 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { NavLink } from "react-router-dom";
-import LogOutButton from "../components/LogOutButton";
+import { LogOutButton } from "../components/LogOutButton.jsx";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const navLinkStyle = { textDecoration: "none", color: "black" };
 
@@ -22,7 +23,7 @@ export const mainListItems = (
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
-        <ListItemText primary="Usuarios" />
+        <ListItemText primary="Dashboard" />
       </ListItemButton>
     </NavLink>
     <NavLink to="/usuario" style={navLinkStyle}>
@@ -60,19 +61,4 @@ export const mainListItems = (
   </React.Fragment>
 );
 
-export const secondaryListItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <LogOutButton justifyContent="flex-end" />
-    </ListItemButton>
-    {/* <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton> */}
-  </React.Fragment>
-);
+export const secondaryListItems = <React.Fragment></React.Fragment>;

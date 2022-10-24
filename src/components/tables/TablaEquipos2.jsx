@@ -31,13 +31,15 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import DialogHDV from "../dialogs/DialogHDV";
 import {} from "../../grapqhql/Queries";
 import HDVContext from "../context/HDVContext";
+import { isNullableType } from "graphql";
 
 const equipo = getEquipos();
 
 export default function TablaEquipos2() {
   const [pageSize, setPageSize] = React.useState(5);
   const { loading, data, refetch } = useQuery(equipo);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editEquipo, setEditEquipo] = useState([]);
   const [reload, setReload] = useState(false);
   const [hoja, setHoja] = useState([]);
@@ -59,11 +61,11 @@ export default function TablaEquipos2() {
   }, [dataHDV]);
 
   const handleEdit = (equipo) => {
-    handleClickOpenDialog();
+    setEditDialogOpen(true);
     setEditEquipo(equipo);
   };
   const handleClickOpenDialog = () => {
-    setDialogOpen(true);
+    setAddDialogOpen(true);
   };
 
   const handleOpenHDV = (id) => {
@@ -73,7 +75,6 @@ export default function TablaEquipos2() {
   };
 
   const columns = [
- 
     {
       field: "actions",
       type: "actions",
@@ -92,11 +93,11 @@ export default function TablaEquipos2() {
           </Button>
           <CustomizedDialogs
             modalTitle="Edición de Equipo"
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
+            dialogOpen={editDialogOpen}
+            setDialogOpen={setEditDialogOpen}
           >
             <AMEquipo
-              setDialogOpen={setDialogOpen}
+              setDialogOpen={setEditDialogOpen}
               setReload={setReload}
               equipo={editEquipo}
               submitButtonText="Editar"
@@ -104,7 +105,8 @@ export default function TablaEquipos2() {
           </CustomizedDialogs>
         </>,
       ],
-    },   {
+    },
+    {
       field: "nombre",
       headerName: "Nombre",
       minWidth: 100,
@@ -275,23 +277,22 @@ export default function TablaEquipos2() {
         component="div"
       >
         Equipos
-        <div style={{display: 'flex',  justifyContent:'right'}}>
-            <Button onClick={handleClickOpenDialog}>
-              <AddBoxIcon />
-            </Button>
-            <CustomizedDialogs
-              modalTitle="Registro de Equipo"
-              dialogOpen={dialogOpen}
-              setDialogOpen={setDialogOpen}
-            >
-              <AMEquipo
-                setDialogOpen={setDialogOpen}
-                submitButtonText="Registrar"
-                setReload={setReload}
-              />
-            </CustomizedDialogs>
-          </div>
-
+        <div style={{ display: "flex", justifyContent: "right" }}>
+          <Button onClick={handleClickOpenDialog}>
+            <AddBoxIcon />
+          </Button>
+          <CustomizedDialogs
+            modalTitle="Registro de Equipo"
+            dialogOpen={addDialogOpen}
+            setDialogOpen={setAddDialogOpen}
+          >
+            <AMEquipo
+              setDialogOpen={setAddDialogOpen}
+              submitButtonText="Registrar"
+              setReload={setReload}
+            />
+          </CustomizedDialogs>
+        </div>
       </Typography>
       <DataGrid
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
