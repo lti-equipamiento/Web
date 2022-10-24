@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import { useMutation } from "@apollo/client";
+import CloseIcon from "@mui/icons-material/Close";
+import { Button } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import TabsHDV from "../hojaDeVida/TabsHDV";
-import { Button } from "@mui/material";
-import { HDVContextProvider } from "./../context/HDVContext";
-import { useMutation, useQuery } from "@apollo/client";
+import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
+import React, { useContext, useEffect, useState } from "react";
 import { editHojaDeVida } from "../../grapqhql/Queries";
+import TabsHDV from "../hojaDeVida/TabsHDV";
+import { HDVContextProvider } from "./../context/HDVContext";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
