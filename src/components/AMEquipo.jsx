@@ -10,6 +10,8 @@ import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
+import DateFnsUtils from '@date-io/date-fns';
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 export default function AMEquipo({
   setReload,
@@ -32,6 +34,7 @@ export default function AMEquipo({
   const [estado_fisico, setEstado_fisico] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
   const [ubicacionesDisabled, setUbicacionesDisabled] = useState(true);
+  const [selectedDate, handleDateChange] = useState(new Date());
 
   const prio = [1, 2, 3];
   const prioridades = [
@@ -211,6 +214,18 @@ export default function AMEquipo({
         />
       </Grid>
       <Grid item xs={12}>
+
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DatePicker
+               label="Garantia"
+               value={selectedDate}
+               onChange={handleDateChange}
+
+               showTodayButton
+     />
+      </MuiPickersUtilsProvider>
+
+        {/* 
         <TextField
           label="Garantia"
           value={equipoData["garantia"]}
@@ -222,6 +237,7 @@ export default function AMEquipo({
           color="secondary"
           fullWidth
         />
+        */}  
       </Grid>
       <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
