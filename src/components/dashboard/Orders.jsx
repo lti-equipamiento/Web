@@ -15,44 +15,29 @@ function createData(id, date, name, shipTo, paymentMethod, amount) {
 const rows = [
   createData(
     0,
-    "16 Mar, 2019",
-    "Elvis Presley",
-    "Tupelo, MS",
-    "VISA ⠀•••• 3719",
-    312.44
+    "20/10/2022",
+    "Desfibrilador (55f21cmfw4) ",
+    "Juana",
+    "4",
+    0
   ),
   createData(
     1,
-    "16 Mar, 2019",
-    "Paul McCartney",
-    "London, UK",
-    "VISA ⠀•••• 2574",
-    866.99
+    "21/10/2022",
+    "Bomba 2 (v16126uxzsf)",
+    "Nicolas",
+    "12",
+    1.813
   ),
   createData(
     2,
-    "16 Mar, 2019",
-    "Tom Scholz",
-    "Boston, MA",
-    "MC ⠀•••• 1253",
-    100.81
+    "22/10/2022",
+    "Respirador (cxb21eq12a1)",
+    "Juana",
+    "7",
+    2.022
   ),
-  createData(
-    3,
-    "16 Mar, 2019",
-    "Michael Jackson",
-    "Gary, IN",
-    "AMEX ⠀•••• 2000",
-    654.39
-  ),
-  createData(
-    4,
-    "15 Mar, 2019",
-    "Bruce Springsteen",
-    "Long Branch, NJ",
-    "VISA ⠀•••• 5919",
-    212.79
-  ),
+ 
 ];
 
 function preventDefault(event) {
@@ -62,15 +47,15 @@ function preventDefault(event) {
 export default function Orders() {
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>Mantenimientos recientes</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>Fecha de cierre mantenimiento</TableCell>
+            <TableCell>Equipo</TableCell>
+            <TableCell>Tecnico</TableCell>
+            <TableCell>Ticket</TableCell>
+            <TableCell align="right">Costo</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -86,7 +71,7 @@ export default function Orders() {
         </TableBody>
       </Table>
       <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
-        See more orders
+        Ver mas mantenimientos
       </Link>
     </React.Fragment>
   );
