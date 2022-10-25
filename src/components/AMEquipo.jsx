@@ -35,7 +35,6 @@ export default function AMEquipo({
   const [estado_fisico, setEstado_fisico] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
   const [ubicacionesDisabled, setUbicacionesDisabled] = useState(true);
-  const [selectedDate, handleDateChange] = useState(new Date());
 
   const cargando = useMemo(() => {
     if (load) {
@@ -207,7 +206,7 @@ export default function AMEquipo({
           fullWidth
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginTop={2} marginBottom={1}>
         <LocalizationProvider dateAdapter={AdapterMoment}>
           <DesktopDatePicker
             label="Garantía"

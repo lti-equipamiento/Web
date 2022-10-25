@@ -24,24 +24,26 @@ import React, { useContext } from "react";
 import LoginButton from "../components/LoginButton";
 import { LayoutContextProvider } from "./LayoutContext";
 import { mainListItems } from "./NavigationItems";
+import { Avatar } from "@mui/material";
+import { Button } from "@mui/material";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        CowBit
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+// function Copyright(props) {
+//   return (
+//     <Typography
+//       variant="body2"
+//       color="text.secondary"
+//       align="center"
+//       {...props}
+//     >
+//       {"Copyright © "}
+//       <Link color="inherit" href="https://mui.com/">
+//         CowBit
+//       </Link>{" "}
+//       {new Date().getFullYear()}
+//       {"."}
+//     </Typography>
+//   );
+// }
 
 const drawerWidth = 240;
 
@@ -130,15 +132,22 @@ export default function NavigationBar({ children }) {
             >
               {headerTitle}
             </Typography>
-            <IconButton color="inherit">
+            {/* <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
-            {!isAuthenticated && (
+            </IconButton> */}
+            {!isAuthenticated ? (
               <Grid container justifyContent="flex-end">
                 <LoginButton justifyContent="flex-end" />
               </Grid>
+            ) : (
+              <Button
+                title={user.email}
+                onClick={(event) => (window.location.href = "/profile")}
+              >
+                <Avatar alt={user.email} src={user.picture} />
+              </Button>
             )}
           </Toolbar>
         </AppBar>
@@ -185,10 +194,8 @@ export default function NavigationBar({ children }) {
         >
           <Toolbar />
           <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-            {/* Aca comienza el codigo de la pagina en si  */}
             {children}
-            {/* Aca Termina el codigo de la pagina en si  */}
-            <Copyright sx={{ pt: 4 }} />
+            {/* <Copyright sx={{ pt: 4 }} /> */}
           </Container>
         </Box>
       </Box>

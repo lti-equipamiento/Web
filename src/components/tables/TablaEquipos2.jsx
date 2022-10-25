@@ -23,6 +23,7 @@ import DialogHDV from "../dialogs/DialogHDV";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
 import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
 
 const equipo = getEquipos();
 
@@ -72,8 +73,24 @@ export default function TablaEquipos2() {
 
   function CustomToolBar() {
     return (
-      <GridToolbarContainer>
+      <GridToolbarContainer sx={{ justifyContent: "right" }}>
         <GridToolbarExport />
+        <div style={{ display: "flex", justifyContent: "right" }}>
+          <Button onClick={handleClickOpenDialog}>
+            <AddBoxIcon />
+          </Button>
+          <CustomizedDialogs
+            modalTitle="Registro de Equipo"
+            dialogOpen={addDialogOpen}
+            setDialogOpen={setAddDialogOpen}
+          >
+            <AMEquipo
+              setDialogOpen={setAddDialogOpen}
+              submitButtonText="Registrar"
+              setReload={setReload}
+            />
+          </CustomizedDialogs>
+        </div>
       </GridToolbarContainer>
     );
   }
@@ -262,7 +279,7 @@ export default function TablaEquipos2() {
           >
             <Box
               sx={{
-                width: 300,
+                width: 800,
                 height: 300,
               }}
             >
@@ -273,29 +290,32 @@ export default function TablaEquipos2() {
                     secondary={params.row.n_activo_fijo}
                   />
                 </ListItem>
+                <Divider sx={{ my: 0 }} />
                 <ListItem>
                   <ListItemText primary="Marca" secondary={params.row.marca} />
                 </ListItem>
+                <Divider sx={{ my: 0 }} />
                 <ListItem>
                   <ListItemText
                     primary="Modelo"
                     secondary={params.row.modelo}
                   />
                 </ListItem>
+                <Divider sx={{ my: 0 }} />
                 <ListItem>
                   <ListItemText
                     primary="Garantia"
                     secondary={params.row.garantia}
                   />
                 </ListItem>
-
+                <Divider sx={{ my: 0 }} />
                 <ListItem>
                   <ListItemText
                     primary="Clasificacion"
                     secondary={params.row.clasificacion_riesgo}
                   />
                 </ListItem>
-
+                <Divider sx={{ my: 0 }} />
                 <ListItem>
                   <ListItemText
                     primary="Observaciones"
@@ -352,22 +372,6 @@ export default function TablaEquipos2() {
         component="div"
       >
         Equipos
-        <div style={{ display: "flex", justifyContent: "right" }}>
-          <Button onClick={handleClickOpenDialog}>
-            <AddBoxIcon />
-          </Button>
-          <CustomizedDialogs
-            modalTitle="Registro de Equipo"
-            dialogOpen={addDialogOpen}
-            setDialogOpen={setAddDialogOpen}
-          >
-            <AMEquipo
-              setDialogOpen={setAddDialogOpen}
-              submitButtonText="Registrar"
-              setReload={setReload}
-            />
-          </CustomizedDialogs>
-        </div>
       </Typography>
       <DataGrid
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
