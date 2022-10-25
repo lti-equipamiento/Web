@@ -119,6 +119,7 @@ export default function MMantenimiento({
               setBtnDisabled(true)
           }
           else{
+            setMantData({ ...mantData, costo: e.target.value })
             setErrorCosto(false)
             setMensajeError("")
             setBtnDisabled(false)
