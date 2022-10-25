@@ -13,7 +13,7 @@ const columns = [
     headerName: "Nombre",
     minWidth: 100,
     flex: 1,
-    editable: true,
+    editable: false,
     headerAlign: "left",
     align: "left",
   },
@@ -22,7 +22,7 @@ const columns = [
     headerName: "Mail",
     minWidth: 100,
     flex: 1,
-    editable: true,
+    editable: false,
     headerAlign: "left",
     align: "left",
   },
@@ -32,7 +32,7 @@ const columns = [
     type: "number",
     minWidth: 100,
     flex: 1,
-    editable: true,
+    editable: false,
     headerAlign: "left",
     align: "left",
   },
@@ -41,7 +41,7 @@ const columns = [
     headerName: "Direccion",
     minWidth: 100,
     flex: 1,
-    editable: true,
+    editable: false,
     headerAlign: "left",
     align: "left",
   },
@@ -51,7 +51,7 @@ const columns = [
     type: "number",
     minWidth: 100,
     flex: 1,
-    editable: true,
+    editable: false,
     headerAlign: "left",
     align: "left",
   },
@@ -60,7 +60,7 @@ const columns = [
     headerName: "Rol",
     minWidth: 70,
     flex: 1,
-    editable: true,
+    editable: false,
     headerAlign: "left",
     align: "left",
   },
@@ -102,6 +102,8 @@ export default function TablaUsuarios2() {
       <DataGrid
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
         rows={data.data_usuario}
+        autoHeight
+        {...data.data_usuario}
         columns={columns}
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}

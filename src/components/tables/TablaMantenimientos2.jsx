@@ -65,7 +65,7 @@ export default function TablaMantenimientos2() {
       headerName: "Equipo",
       minWidth: 100,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
       valueGetter: (params) => {
@@ -82,7 +82,7 @@ export default function TablaMantenimientos2() {
       headerName: "Prioridad",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
       valueGetter: (params) => {
@@ -100,7 +100,7 @@ export default function TablaMantenimientos2() {
       headerName: "Usuario",
       minWidth: 100,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
       valueGetter: (params) => {
@@ -112,7 +112,7 @@ export default function TablaMantenimientos2() {
       headerName: "Fecha de Ingreso",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -121,7 +121,7 @@ export default function TablaMantenimientos2() {
       headerName: "Fecha de Egreso",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -131,7 +131,7 @@ export default function TablaMantenimientos2() {
       headerName: "Costo",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -140,7 +140,7 @@ export default function TablaMantenimientos2() {
       headerName: "Estado",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -149,7 +149,7 @@ export default function TablaMantenimientos2() {
       headerName: "Procedimiento",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -158,7 +158,7 @@ export default function TablaMantenimientos2() {
       headerName: "Piezas",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -167,7 +167,7 @@ export default function TablaMantenimientos2() {
       headerName: "Resultado",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -176,7 +176,7 @@ export default function TablaMantenimientos2() {
       headerName: "Tiempo empleado",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -185,7 +185,7 @@ export default function TablaMantenimientos2() {
       headerName: "Ticket",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -214,6 +214,8 @@ export default function TablaMantenimientos2() {
       <DataGrid
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
         rows={data.data_mantenimiento}
+        autoHeight
+        {...data.data_mantenimiento}
         columns={columns}
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}

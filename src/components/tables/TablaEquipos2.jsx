@@ -5,13 +5,24 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { DataGrid, esES, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  esES,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
+} from "@mui/x-data-grid";
 import React, { useEffect, useMemo, useState } from "react";
 import { getEquipos, getHojaDeVida } from "../../grapqhql/Queries";
 import AMEquipo from "../AMEquipo";
 import HDVContext from "../context/HDVContext";
 import CustomizedDialogs from "../dialogs/dialog";
 import DialogHDV from "../dialogs/DialogHDV";
+import ListItemText from "@mui/material/ListItemText";
+import ListItem from "@mui/material/ListItem";
+import List from "@mui/material/List";
 
 const equipo = getEquipos();
 
@@ -20,6 +31,7 @@ export default function TablaEquipos2() {
   const { loading, data, refetch } = useQuery(equipo);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [editEquipo, setEditEquipo] = useState([]);
   const [reload, setReload] = useState(false);
   const [hoja, setHoja] = useState([]);
@@ -48,11 +60,23 @@ export default function TablaEquipos2() {
     setAddDialogOpen(true);
   };
 
+  const handleClickOpenDetailsDialog = () => {
+    setDetailsDialogOpen(true);
+  };
+
   const handleOpenHDV = (id) => {
     setHDVid(id);
     getHDV();
     setDialogHDVOpen(true);
   };
+
+  function CustomToolBar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarExport />
+      </GridToolbarContainer>
+    );
+  }
 
   const columns = [
     {
@@ -91,7 +115,7 @@ export default function TablaEquipos2() {
       headerName: "Nombre",
       minWidth: 100,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -100,7 +124,7 @@ export default function TablaEquipos2() {
       headerName: "Marca",
       minWidth: 100,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -109,7 +133,7 @@ export default function TablaEquipos2() {
       headerName: "Modelo",
       minWidth: 100,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -118,7 +142,7 @@ export default function TablaEquipos2() {
       headerName: "N_serie",
       minWidth: 100,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -128,7 +152,7 @@ export default function TablaEquipos2() {
       type: "number",
       minWidth: 100,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -137,7 +161,7 @@ export default function TablaEquipos2() {
       headerName: "Garantia",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -146,7 +170,7 @@ export default function TablaEquipos2() {
       headerName: "Servicio",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -155,7 +179,7 @@ export default function TablaEquipos2() {
       headerName: "Ubicacion",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -164,7 +188,7 @@ export default function TablaEquipos2() {
       headerName: "Estado Funcional",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -173,16 +197,16 @@ export default function TablaEquipos2() {
       headerName: "Estado fisico",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
     {
       field: "clasificacion_riesgo",
-      headerName: "Clsificacion de riesgo",
+      headerName: "Clasificacion de riesgo",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -191,7 +215,7 @@ export default function TablaEquipos2() {
       headerName: "Observaciones",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
     },
@@ -200,9 +224,89 @@ export default function TablaEquipos2() {
       headerName: "Prioridad",
       minWidth: 70,
       flex: 1,
-      editable: true,
+      editable: false,
       headerAlign: "left",
       align: "left",
+      valueGetter: (params) => {
+        if (params.row.prioridad === 3) {
+          return "Alta";
+        }
+        if (params.row.prioridad === 2) {
+          return "Media";
+        }
+        if (params.row.prioridad === 1) {
+          return "Baja";
+        }
+      },
+    },
+    {
+      field: "action1",
+      type: "actions",
+      headerName: "Detalles",
+      minWidth: 70,
+      flex: 1,
+      headerAlign: "left",
+      align: "left",
+      getActions: (params) => [
+        <>
+          <Button
+            title="Mostrar detalles"
+            onClick={handleClickOpenDetailsDialog}
+          >
+            ...
+          </Button>
+          <CustomizedDialogs
+            modalTitle="Detalles"
+            dialogOpen={detailsDialogOpen}
+            setDialogOpen={setDetailsDialogOpen}
+          >
+            <Box
+              sx={{
+                width: 300,
+                height: 300,
+              }}
+            >
+              <List>
+                <ListItem>
+                  <ListItemText
+                    primary="No activo fijo"
+                    secondary={params.row.n_activo_fijo}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Marca" secondary={params.row.marca} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Modelo"
+                    secondary={params.row.modelo}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Garantia"
+                    secondary={params.row.garantia}
+                  />
+                </ListItem>
+
+                <ListItem>
+                  <ListItemText
+                    primary="Clasificacion"
+                    secondary={params.row.clasificacion_riesgo}
+                  />
+                </ListItem>
+
+                <ListItem>
+                  <ListItemText
+                    primary="Observaciones"
+                    secondary={params.row.Observaciones}
+                  />
+                </ListItem>
+              </List>
+            </Box>
+          </CustomizedDialogs>
+        </>,
+      ],
     },
     {
       field: "action",
@@ -227,15 +331,6 @@ export default function TablaEquipos2() {
         </>,
       ],
     },
-    //   {
-    //     field: "direccion",
-    //     headerName: "Direccion",
-    //     description: "This column has a value getter and is not sortable.",
-    //     sortable: false,
-    //     width: 160,
-    //     valueGetter: (params) =>
-    //       `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    //   },
   ];
 
   const cargando = useMemo(() => {
@@ -277,16 +372,31 @@ export default function TablaEquipos2() {
       <DataGrid
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
         rows={data.data_equipo}
+        autoHeight
+        {...data.data_equipo}
+        initialState={{
+          columns: {
+            columnVisibilityModel: {
+              // Hide columns status and traderName, the other columns will remain visible
+              n_activo_fijo: false,
+              marca: false,
+              modelo: false,
+              garantia: false,
+              clasificacion_riesgo: false,
+              Observaciones: false,
+            },
+          },
+        }}
         columns={columns}
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         disableSelectionOnClick
-        components={{ Toolbar: GridToolbar }}
-        // componentsProps={{
-        //   toolbar: { showQuickFilter: true },
-        // }}
+        components={{ Toolbar: CustomToolBar }}
+        componentsProps={{
+          toolbar: { showQuickFilter: true },
+        }}
         sx={{
           boxShadow: 2,
           "& .MuiDataGrid-cell:hover": {

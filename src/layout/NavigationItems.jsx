@@ -1,10 +1,12 @@
 import BarChartIcon from "@mui/icons-material/BarChart";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import HandymanIcon from "@mui/icons-material/Handyman";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -31,7 +33,7 @@ export const mainListItems = (
     <NavLink to="/equipo" style={navLinkStyle}>
       <ListItemButton>
         <ListItemIcon>
-          <ShoppingCartIcon />
+          <MedicalInformationIcon />
         </ListItemIcon>
         <ListItemText primary="Equipos" />
       </ListItemButton>
@@ -39,7 +41,7 @@ export const mainListItems = (
     <NavLink to="/ticket" style={navLinkStyle}>
       <ListItemButton>
         <ListItemIcon>
-          <PeopleIcon />
+          <ConfirmationNumberIcon />
         </ListItemIcon>
         <ListItemText primary="Tickets" />
       </ListItemButton>
@@ -47,7 +49,7 @@ export const mainListItems = (
     <NavLink to="/mantenimiento" style={navLinkStyle}>
       <ListItemButton>
         <ListItemIcon>
-          <BarChartIcon />
+          <HandymanIcon />
         </ListItemIcon>
         <ListItemText primary="Mantenimientos" />
       </ListItemButton>

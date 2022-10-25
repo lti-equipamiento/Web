@@ -10,8 +10,9 @@ import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
-import DateFnsUtils from '@date-io/date-fns';
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 
 export default function AMEquipo({
   setReload,
@@ -35,13 +36,6 @@ export default function AMEquipo({
   const [ubicaciones, setUbicaciones] = useState([]);
   const [ubicacionesDisabled, setUbicacionesDisabled] = useState(true);
   const [selectedDate, handleDateChange] = useState(new Date());
-
-  const prio = [1, 2, 3];
-  const prioridades = [
-    { label: "Baja", value: 1 },
-    { label: "Media", value: 2 },
-    { label: "Alta", value: 3 },
-  ];
 
   const cargando = useMemo(() => {
     if (load) {
@@ -214,30 +208,20 @@ export default function AMEquipo({
         />
       </Grid>
       <Grid item xs={12}>
-
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DatePicker
-               label="Garantia"
-               value={selectedDate}
-               onChange={handleDateChange}
-
-               showTodayButton
-     />
-      </MuiPickersUtilsProvider>
-
-        {/* 
-        <TextField
-          label="Garantia"
-          value={equipoData["garantia"]}
-          onChange={(e) =>
-            setEquipoData({ ...equipoData, garantia: e.target.value })
-          }
-          margin="normal"
-          variant="outlined"
-          color="secondary"
-          fullWidth
-        />
-        */}  
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+          <DesktopDatePicker
+            label="Garantía"
+            value={equipoData["garantia"]}
+            onChange={(e) =>
+              setEquipoData({ ...equipoData, garantia: e.format("L") })
+            }
+            renderInput={(params) => <TextField {...params} />}
+            margin="normal"
+            variant="outlined"
+            color="secondary"
+            fullWidth
+          />
+        </LocalizationProvider>
       </Grid>
       <Grid item xs={12} marginTop={2} marginBottom={1}>
         <Autocomplete
@@ -275,7 +259,7 @@ export default function AMEquipo({
           options={estado_funcional}
           value={equipoData["estado_funcional"]}
           renderInput={(params) => (
-            <TextField {...params}  label="Estado funcional" />
+            <TextField {...params} label="Estado funcional" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, estado_funcional: newValue })
@@ -290,7 +274,7 @@ export default function AMEquipo({
           options={estado_fisico}
           value={equipoData["estado_fisico"]}
           renderInput={(params) => (
-            <TextField {...params}  label="Estado fisico" />
+            <TextField {...params} label="Estado fisico" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, estado_fisico: newValue })
@@ -305,7 +289,7 @@ export default function AMEquipo({
           options={clasif_riesgo}
           value={equipoData["clasificacion_riesgo"]}
           renderInput={(params) => (
-            <TextField {...params}  label="Clasificación de riesgo" />
+            <TextField {...params} label="Clasificación de riesgo" />
           )}
           onChange={(e, newValue) =>
             setEquipoData({ ...equipoData, clasificacion_riesgo: newValue })
@@ -315,7 +299,7 @@ export default function AMEquipo({
       <Grid item xs={12}>
         <TextField
           label="Observaciones"
-          inputProps={{ maxLength: 5000 }} 
+          inputProps={{ maxLength: 5000 }}
           value={equipoData["Observaciones"]}
           onChange={(e) =>
             setEquipoData({ ...equipoData, Observaciones: e.target.value })
