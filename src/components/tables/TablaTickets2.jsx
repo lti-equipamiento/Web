@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Box from "@mui/material/Box";
-import { DataGrid, esES, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  esES,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import { getTickets } from "../../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
@@ -10,7 +15,6 @@ import Button from "@mui/material/Button";
 import CustomizedDialogs from "../dialogs/dialog";
 import { Edit } from "@mui/icons-material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-
 
 const ticket = getTickets();
 
@@ -35,6 +39,30 @@ export default function TablaTickets2() {
   const handleClickOpenDialog = () => {
     setDialogOpen(true);
   };
+
+  function CustomToolBar() {
+    return (
+      <GridToolbarContainer sx={{ justifyContent: "right" }}>
+        <GridToolbarExport />
+        <div>
+          <Button onClick={handleClickOpenDialog}>
+            <PostAddIcon />
+          </Button>
+          <CustomizedDialogs
+            modalTitle="Registro de Ticket"
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+          >
+            <AMTicket
+              setDialogOpen={setDialogOpen}
+              submitButtonText="Registrar"
+              setReload={setReload}
+            />
+          </CustomizedDialogs>
+        </div>
+      </GridToolbarContainer>
+    );
+  }
 
   const columns = [
     {
@@ -222,24 +250,7 @@ export default function TablaTickets2() {
         component="div"
       >
         Tickets
-        
       </Typography>
-      <div>
-            <Button onClick={handleClickOpenDialog}>
-              <PostAddIcon />
-            </Button>
-            <CustomizedDialogs
-              modalTitle="Registro de Ticket"
-              dialogOpen={dialogOpen}
-              setDialogOpen={setDialogOpen}
-            >
-              <AMTicket
-                setDialogOpen={setDialogOpen}
-                submitButtonText="Registrar"
-                setReload={setReload}
-              />
-            </CustomizedDialogs>
-          </div>
       <DataGrid
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
         rows={data.data_ticket}
@@ -251,7 +262,7 @@ export default function TablaTickets2() {
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         disableSelectionOnClick
-        components={{ Toolbar: GridToolbar }}
+        components={{ Toolbar: CustomToolBar }}
         componentsProps={{
           toolbar: { showQuickFilter: true },
         }}

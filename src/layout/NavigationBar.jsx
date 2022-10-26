@@ -130,7 +130,7 @@ export default function NavigationBar({ children }) {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              {headerTitle}
+              AGEM
             </Typography>
             {/* <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">

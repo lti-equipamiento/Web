@@ -4,15 +4,8 @@ import Paper from "@mui/material/Paper";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
-import { LayoutContextProvider } from "../../layout/LayoutContext";
 
 export default function Dashboard() {
-  const { setHeaderTitle } = useContext(LayoutContextProvider);
-
-  useEffect(() => {
-    setHeaderTitle("Dashboard");
-  }, [setHeaderTitle]);
-
   return (
     <Grid container spacing={3}>
       {/* Chart */}

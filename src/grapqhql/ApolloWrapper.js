@@ -20,7 +20,7 @@ function ApolloWrapper({ children }) {
   }, [getAccessTokenSilently, isAuthenticated]);
 
   const httpLink = createHttpLink({
-    uri: "https://test-api-agem.hasura.app/v1/graphql",
+    uri: "https://lti-equipamiento.hasura.app/v1/graphql",
   });
 
   const authLink = setContext((_, { headers, ...rest }) => {

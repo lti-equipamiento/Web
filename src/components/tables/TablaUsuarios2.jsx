@@ -1,11 +1,24 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Box from "@mui/material/Box";
-import { DataGrid, esES, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  esES,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import { getUsuarios } from "../../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
 
 const usuario = getUsuarios();
+
+function CustomToolBar() {
+  return (
+    <GridToolbarContainer sx={{ justifyContent: "right" }}>
+      <GridToolbarExport />
+    </GridToolbarContainer>
+  );
+}
 
 const columns = [
   {
@@ -110,7 +123,7 @@ export default function TablaUsuarios2() {
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         disableSelectionOnClick
-        components={{ Toolbar: GridToolbar }}
+        components={{ Toolbar: CustomToolBar }}
         componentsProps={{
           toolbar: { showQuickFilter: true },
         }}

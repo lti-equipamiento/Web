@@ -3,7 +3,12 @@ import { Edit } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { DataGrid, esES, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  esES,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 import React, { useMemo, useState } from "react";
 import { getMantenimientos } from "../../grapqhql/Queries";
 import CustomizedDialogs from "../dialogs/dialog";
@@ -28,6 +33,15 @@ export default function TablaMantenimientos2() {
   const handleClickOpenDialog = () => {
     setDialogOpen(true);
   };
+
+  function CustomToolBar() {
+    return (
+      <GridToolbarContainer sx={{ justifyContent: "right" }}>
+        <GridToolbarExport />
+      </GridToolbarContainer>
+    );
+  }
+
   const columns = [
     {
       field: "editar",
@@ -222,7 +236,7 @@ export default function TablaMantenimientos2() {
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         disableSelectionOnClick
-        components={{ Toolbar: GridToolbar }}
+        components={{ Toolbar: CustomToolBar }}
         componentsProps={{
           toolbar: { showQuickFilter: true },
         }}
