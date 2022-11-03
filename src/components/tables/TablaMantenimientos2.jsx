@@ -9,7 +9,7 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import React, { useMemo, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getMantenimientos } from "../../grapqhql/Queries";
 import CustomizedDialogs from "../dialogs/dialog";
 import MMantenimiento from "../MMantenimiento";
@@ -17,13 +17,12 @@ import MMantenimiento from "../MMantenimiento";
 const mantenimientos = getMantenimientos();
 
 export default function TablaMantenimientos2() {
-  const [pageSize, setPageSize] = React.useState(5);
+  const [pageSize, setPageSize] = useState(5);
   const { loading, data, refetch } = useQuery(mantenimientos);
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [rows, setRows] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [editMantenimiento, setEditMantenimiento] = useState([]);
   const [reload, setReload] = useState(false);
-
-  const [dialogMantOpen, setDialogMantOpen] = useState(false);
 
   const handleEdit = (equipo) => {
     handleClickOpenDialog();
@@ -205,49 +204,55 @@ export default function TablaMantenimientos2() {
     },
   ];
 
-  const cargando = useMemo(() => {
-    if (loading) {
-      return true;
+  useEffect(() => {
+    if (reload) {
+      refetch();
+      setReload(false);
     }
-    return false;
-  }, [loading]);
+  }, [reload, refetch]);
 
-  if (cargando) {
-    return "Cargando datos, por favor espere...";
-  }
+  useEffect(() => {
+    if (!loading && data) {
+      setRows(data.data_mantenimiento);
+    }
+  }, [data, loading]);
+
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
-      <Typography
-        sx={{ flex: "1 1 100%" }}
-        variant="h5"
-        id="tableTitle"
-        component="div"
-      >
-        Mantenimientos
-      </Typography>
-      <DataGrid
-        localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-        rows={data.data_mantenimiento}
-        autoHeight
-        {...data.data_mantenimiento}
-        columns={columns}
-        pageSize={pageSize}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        rowsPerPageOptions={[5, 10, 20]}
-        pagination
-        disableSelectionOnClick
-        components={{ Toolbar: CustomToolBar }}
-        componentsProps={{
-          toolbar: { showQuickFilter: true },
-        }}
-        sx={{
-          boxShadow: 2,
-          "& .MuiDataGrid-cell:hover": {
-            color: "primary.main",
-          },
-          backgroundColor: "white",
-        }}
-      />
-    </Box>
+    <>
+      <Box sx={{ height: 400, width: "100%" }}>
+        <Typography
+          sx={{ flex: "1 1 100%" }}
+          variant="h5"
+          id="tableTitle"
+          component="div"
+        >
+          Mantenimientos
+        </Typography>
+        <DataGrid
+          loading={loading}
+          localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+          rows={rows}
+          autoHeight
+          {...rows}
+          columns={columns}
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          rowsPerPageOptions={[5, 10, 20]}
+          pagination
+          disableSelectionOnClick
+          components={{ Toolbar: CustomToolBar }}
+          componentsProps={{
+            toolbar: { showQuickFilter: true },
+          }}
+          sx={{
+            boxShadow: 2,
+            "& .MuiDataGrid-cell:hover": {
+              color: "primary.main",
+            },
+            backgroundColor: "white",
+          }}
+        />
+      </Box>
+    </>
   );
 }
