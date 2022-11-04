@@ -155,15 +155,6 @@ export default function TablaEquipos2() {
       align: "left",
     },
     {
-      field: "n_serie",
-      headerName: "N_serie",
-      minWidth: 100,
-      flex: 1,
-      editable: false,
-      headerAlign: "left",
-      align: "left",
-    },
-    {
       field: "n_activo_fijo",
       headerName: "N_activo_fijo",
       type: "number",
@@ -284,6 +275,13 @@ export default function TablaEquipos2() {
               }}
             >
               <List>
+                <ListItem>
+                  <ListItemText
+                    primary="No serie"
+                    secondary={params.row.n_serie}
+                  />
+                </ListItem>
+                <Divider sx={{ my: 0 }} />
                 <ListItem>
                   <ListItemText
                     primary="No activo fijo"
