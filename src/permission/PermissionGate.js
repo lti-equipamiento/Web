@@ -1,6 +1,7 @@
 import { cloneElement } from "react";
 import { PERMISSIONS } from "./PermissionMaps";
-import { useGetRole } from "./useGetRole";
+import { getToken } from "../grapqhql/ApolloWrapper";
+import jwt_decode from "jwt-decode";
 
 const hasPermission = ({ permissions, scopes }) => {
   const scopesMap = {};
@@ -17,9 +18,10 @@ export default function PermissionsGate({
   errorProps = null,
   scopes = [],
 }) {
-  // const { role } = useGetRole();
-  const permissions = PERMISSIONS["admin"];
-
+  const role = jwt_decode(getToken())["https://hasura.io/jwt/claims"][
+    "x-hasura-custom"
+  ];
+  const permissions = PERMISSIONS[role];
   const permissionGranted = hasPermission({ permissions, scopes });
 
   if (!permissionGranted && !errorProps) return <RenderError />;
