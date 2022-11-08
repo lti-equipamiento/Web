@@ -8,16 +8,14 @@ import { setContext } from "@apollo/client/link/context";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 
-let permToken;
-
 function ApolloWrapper({ children }) {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [bearerToken, setBearerToken] = useState("");
+
   useEffect(() => {
     const getToken = async () => {
       const token = isAuthenticated ? await getAccessTokenSilently() : "empty";
       setBearerToken(token);
-      permToken = token;
     };
     getToken();
   }, [getAccessTokenSilently, isAuthenticated]);
@@ -51,7 +49,3 @@ function ApolloWrapper({ children }) {
 }
 
 export default ApolloWrapper;
-
-export const getToken = () => {
-  return permToken;
-};

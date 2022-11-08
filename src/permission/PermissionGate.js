@@ -1,6 +1,5 @@
 import { cloneElement } from "react";
 import { PERMISSIONS } from "./PermissionMaps";
-import { getToken } from "../grapqhql/ApolloWrapper";
 import jwt_decode from "jwt-decode";
 
 const hasPermission = ({ permissions, scopes }) => {
@@ -18,9 +17,11 @@ export default function PermissionsGate({
   errorProps = null,
   scopes = [],
 }) {
-  const role = jwt_decode(getToken())["https://hasura.io/jwt/claims"][
-    "x-hasura-custom"
-  ];
+  const token = localStorage.getItem(
+    `@@auth0spajs@@::TU1HzLoMRbH5X4gA7FIFYji7hL88VXTi::https://test-api-agem.hasura.app/v1/graphql::openid profile email offline_access`
+  );
+  const role =
+    jwt_decode(token)["https://hasura.io/jwt/claims"]["x-hasura-custom"];
   const permissions = PERMISSIONS[role];
   const permissionGranted = hasPermission({ permissions, scopes });
 
