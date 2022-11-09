@@ -1,15 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
+import { editRolUsuario } from "../grapqhql/Queries";
+import { useMutation } from "@apollo/client";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
 export default function MUsuarioRol({ setDialogOpen, user, setReload }) {
   const roles = ["admin", "normal"];
-
   const [rol, setRol] = useState("");
+  const [editRol] = useMutation(editRolUsuario());
 
   const onSubmit = () => {
-    console.log("Submit");
+    editRol({
+      variables: {
+        id: user.id,
+        rol: rol,
+      },
+    });
+    setDialogOpen(false);
+    setReload(true);
   };
 
   return (
