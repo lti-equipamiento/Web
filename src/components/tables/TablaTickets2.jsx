@@ -89,7 +89,7 @@ export default function TablaTickets2() {
             <AMTicket
               setDialogOpen={setDialogOpen}
               setReload={setReload}
-              ticket={editTicket}
+              ticket={params.row}
               submitButtonText="Editar"
             />
           </CustomizedDialogs>
@@ -222,7 +222,7 @@ export default function TablaTickets2() {
             <AMantenimiento
               setDialogMantOpen={setDialogMantOpen}
               setReload={setReload}
-              ticket={editTicket}
+              ticket={params.row}
               submitButtonText="Asignar"
             />
           </CustomizedDialogs>
