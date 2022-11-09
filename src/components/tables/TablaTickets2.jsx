@@ -17,13 +17,22 @@ import CustomizedDialogs from "../dialogs/dialog";
 const ticket = getTickets();
 
 export default function TablaTickets2() {
+  // tabla
   const { loading, data, refetch } = useQuery(ticket);
   const [pageSize, setPageSize] = useState(5);
   const [reload, setReload] = useState(false);
   const [rows, setRows] = useState([]);
+
+  // modificacion de ticket
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [modTicket, setModTicket] = useState([]);
+
+  // registro de ticket
   const [dialogAddOpen, setDialogAddOpen] = useState(false);
+
+  // mantenimiento de ticket
   const [dialogMantOpen, setDialogMantOpen] = useState(false);
+  const [mant, setMant] = useState([]);
 
   useEffect(() => {
     if (reload) {
@@ -46,17 +55,6 @@ export default function TablaTickets2() {
           <Button onClick={() => setDialogAddOpen(true)}>
             <PostAddIcon />
           </Button>
-          <CustomizedDialogs
-            modalTitle="Registro de Ticket"
-            dialogOpen={dialogAddOpen}
-            setDialogOpen={setDialogAddOpen}
-          >
-            <AMTicket
-              setDialogOpen={setDialogAddOpen}
-              submitButtonText="Registrar"
-              setReload={setReload}
-            />
-          </CustomizedDialogs>
         </div>
       </GridToolbarContainer>
     );
@@ -73,21 +71,15 @@ export default function TablaTickets2() {
       align: "left",
       getActions: (params) => [
         <>
-          <Button title="Modificar ticket" onClick={() => setDialogOpen(true)}>
+          <Button
+            title="Modificar ticket"
+            onClick={() => {
+              setDialogOpen(true);
+              setModTicket(params.row);
+            }}
+          >
             <Edit color="primary" />
           </Button>
-          <CustomizedDialogs
-            modalTitle="Edición de Ticket"
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-          >
-            <AMTicket
-              setDialogOpen={setDialogOpen}
-              setReload={setReload}
-              ticket={params.row}
-              submitButtonText="Editar"
-            />
-          </CustomizedDialogs>
         </>,
       ],
     },
@@ -205,61 +197,89 @@ export default function TablaTickets2() {
         <>
           <Button
             title="Asignar ticket"
-            onClick={() => setDialogMantOpen(true)}
+            onClick={() => {
+              setDialogMantOpen(true);
+              setMant(params.row);
+            }}
           >
             Asignar
           </Button>
-          <CustomizedDialogs
-            modalTitle="Asignar ticket"
-            dialogOpen={dialogMantOpen}
-            setDialogOpen={setDialogMantOpen}
-          >
-            <AMantenimiento
-              setDialogMantOpen={setDialogMantOpen}
-              setReload={setReload}
-              ticket={params.row}
-              submitButtonText="Asignar"
-            />
-          </CustomizedDialogs>
         </>,
       ],
     },
   ];
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
-      <Typography
-        sx={{ flex: "1 1 100%" }}
-        variant="h5"
-        id="tableTitle"
-        component="div"
+    <>
+      <Box sx={{ height: 400, width: "100%" }}>
+        <Typography
+          sx={{ flex: "1 1 100%" }}
+          variant="h5"
+          id="tableTitle"
+          component="div"
+        >
+          Tickets
+        </Typography>
+        <DataGrid
+          loading={loading}
+          localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+          rows={rows}
+          autoHeight
+          {...rows}
+          columns={columns}
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          rowsPerPageOptions={[5, 10, 20]}
+          pagination
+          disableSelectionOnClick
+          components={{ Toolbar: CustomToolBar }}
+          componentsProps={{
+            toolbar: { showQuickFilter: true },
+          }}
+          sx={{
+            boxShadow: 2,
+            "& .MuiDataGrid-cell:hover": {
+              color: "primary.main",
+            },
+            backgroundColor: "white",
+          }}
+        />
+      </Box>
+      <CustomizedDialogs
+        modalTitle="Asignar ticket"
+        dialogOpen={dialogMantOpen}
+        setDialogOpen={setDialogMantOpen}
       >
-        Tickets
-      </Typography>
-      <DataGrid
-        loading={loading}
-        localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-        rows={rows}
-        autoHeight
-        {...rows}
-        columns={columns}
-        pageSize={pageSize}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        rowsPerPageOptions={[5, 10, 20]}
-        pagination
-        disableSelectionOnClick
-        components={{ Toolbar: CustomToolBar }}
-        componentsProps={{
-          toolbar: { showQuickFilter: true },
-        }}
-        sx={{
-          boxShadow: 2,
-          "& .MuiDataGrid-cell:hover": {
-            color: "primary.main",
-          },
-          backgroundColor: "white",
-        }}
-      />
-    </Box>
+        <AMantenimiento
+          setDialogMantOpen={setDialogMantOpen}
+          setReload={setReload}
+          ticket={mant}
+          submitButtonText="Asignar"
+        />
+      </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Edición de Ticket"
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+      >
+        <AMTicket
+          setDialogOpen={setDialogOpen}
+          setReload={setReload}
+          ticket={modTicket}
+          submitButtonText="Editar"
+        />
+      </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Registro de Ticket"
+        dialogOpen={dialogAddOpen}
+        setDialogOpen={setDialogAddOpen}
+      >
+        <AMTicket
+          setDialogOpen={setDialogAddOpen}
+          submitButtonText="Registrar"
+          setReload={setReload}
+        />
+      </CustomizedDialogs>
+    </>
   );
 }
