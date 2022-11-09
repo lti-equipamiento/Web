@@ -85,6 +85,16 @@ export function editUsuario() {
   `;
 }
 
+export function editRolUsuario() {
+  return gql`
+    mutation editRolUsuario($id: String!) {
+      update_data_usuario_by_pk(pk_columns: { id: $id }, _set: { rol: $rol }) {
+        id
+      }
+    }
+  `;
+}
+
 export function deleteUsuario(mail) {
   return gql`
 mutation deleteUsuario {
