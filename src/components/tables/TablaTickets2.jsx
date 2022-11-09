@@ -1,60 +1,58 @@
-import React, { useEffect, useState, useMemo } from "react";
-import Box from "@mui/material/Box";
+import React, { useEffect, useState } from "react";
 import {
   DataGrid,
   esES,
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
+import { Typography, Button, Box } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import { getTickets } from "../../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
 import AMTicket from "../AMTicket";
 import AMantenimiento from "../AMantenimiento";
-import Button from "@mui/material/Button";
 import CustomizedDialogs from "../dialogs/dialog";
-import { Edit } from "@mui/icons-material";
-import PostAddIcon from "@mui/icons-material/PostAdd";
 
 const ticket = getTickets();
 
 export default function TablaTickets2() {
-  const [pageSize, setPageSize] = React.useState(5);
   const { loading, data, refetch } = useQuery(ticket);
-  const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [editTicket, setEditTicket] = useState([]);
+  const [pageSize, setPageSize] = useState(5);
   const [reload, setReload] = useState(false);
-
+  const [rows, setRows] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogAddOpen, setDialogAddOpen] = useState(false);
   const [dialogMantOpen, setDialogMantOpen] = useState(false);
 
-  const handleEdit = (ticket) => {
-    setDialogOpen(true);
-    setEditTicket(ticket);
-  };
-  const handleMantAssign = (ticket) => {
-    setDialogMantOpen(true);
-    setEditTicket(ticket);
-  };
+  useEffect(() => {
+    if (reload) {
+      refetch();
+      setReload(false);
+    }
+  }, [refetch, reload]);
 
-  const handleClickOpenDialog = () => {
-    setDialogOpen(true);
-  };
+  useEffect(() => {
+    if (!loading && data) {
+      setRows(data.data_ticket);
+    }
+  }, [data, loading]);
 
   function CustomToolBar() {
     return (
       <GridToolbarContainer sx={{ justifyContent: "right" }}>
         <GridToolbarExport />
         <div>
-          <Button onClick={handleClickOpenDialog}>
+          <Button onClick={() => setDialogAddOpen(true)}>
             <PostAddIcon />
           </Button>
           <CustomizedDialogs
             modalTitle="Registro de Ticket"
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
+            dialogOpen={dialogAddOpen}
+            setDialogOpen={setDialogAddOpen}
           >
             <AMTicket
-              setDialogOpen={setDialogOpen}
+              setDialogOpen={setDialogAddOpen}
               submitButtonText="Registrar"
               setReload={setReload}
             />
@@ -75,10 +73,7 @@ export default function TablaTickets2() {
       align: "left",
       getActions: (params) => [
         <>
-          <Button
-            title="Modificar ticket"
-            onClick={() => handleEdit(params.row)}
-          >
+          <Button title="Modificar ticket" onClick={() => setDialogOpen(true)}>
             <Edit color="primary" />
           </Button>
           <CustomizedDialogs
@@ -210,7 +205,7 @@ export default function TablaTickets2() {
         <>
           <Button
             title="Asignar ticket"
-            onClick={() => handleMantAssign(params.row)}
+            onClick={() => setDialogMantOpen(true)}
           >
             Asignar
           </Button>
@@ -231,16 +226,6 @@ export default function TablaTickets2() {
     },
   ];
 
-  const cargando = useMemo(() => {
-    if (loading) {
-      return true;
-    }
-    return false;
-  }, [loading]);
-
-  if (cargando) {
-    return "Cargando datos, por favor espere...";
-  }
   return (
     <Box sx={{ height: 400, width: "100%" }}>
       <Typography
@@ -252,10 +237,11 @@ export default function TablaTickets2() {
         Tickets
       </Typography>
       <DataGrid
+        loading={loading}
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-        rows={data.data_ticket}
+        rows={rows}
         autoHeight
-        {...data.data_ticket}
+        {...rows}
         columns={columns}
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
