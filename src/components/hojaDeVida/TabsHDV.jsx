@@ -4,10 +4,10 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import PageAdquisicion from "./PageAdquisicion";
-import PageCTecnica from "./PageCTecnica";
-import PageApoyoTecnico from "./PageApoyoTecnico";
-import PageMantenimiento from "./PageMantenimiento";
+import TabAdquisicion from "./TabAdquisicion";
+import TabCTecnica from "./TabCTecnica";
+import TabApoyoTecnico from "./TabApoyoTecnico";
+import TabMantenimiento from "./TabMantenimiento";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -62,16 +62,16 @@ export default function TabsHDV() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <PageAdquisicion />
+        <TabAdquisicion />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <PageCTecnica />
+        <TabCTecnica />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <PageApoyoTecnico />
+        <TabApoyoTecnico />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <PageMantenimiento />
+        <TabMantenimiento />
       </TabPanel>
     </Box>
   );

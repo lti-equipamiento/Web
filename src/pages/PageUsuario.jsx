@@ -7,14 +7,14 @@ import {
 } from "@mui/x-data-grid";
 import { Typography, Box, Button } from "@mui/material";
 import { Edit } from "@mui/icons-material";
-import { getUsuarios } from "../../grapqhql/Queries";
+import { getUsuarios } from "../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
-import CustomizedDialogs from "../dialogs/dialog";
-import MUsuarioRol from "./../MUsuarioRol";
+import CustomizedDialogs from "../components/dialogs/dialog";
+import MUsuarioRol from "../components/usuario/MUsuarioRol";
 
 const usuario = getUsuarios();
 
-export default function TablaUsuarios2() {
+export default function PageUsuario() {
   // tabla
   const [pageSize, setPageSize] = useState(5);
   const { loading, data, refetch } = useQuery(usuario);

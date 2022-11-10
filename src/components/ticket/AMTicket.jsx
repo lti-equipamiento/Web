@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { TextField, Button } from "@mui/material";
-import { addTicket, editTicket } from "../grapqhql/Queries";
+import { addTicket, editTicket, getDDTickets } from "../../grapqhql/Queries";
 import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getDDTickets } from "../grapqhql/Queries";
+
 import Autocomplete from "@mui/material/Autocomplete";
 import moment from "moment";
 
@@ -148,7 +148,7 @@ export default function AMTicket({
           id="Servicio"
           options={servicios}
           value={ticketData.servicio}
-          renderInput={(params) => <TextField {...params}  label="Servicios" />}
+          renderInput={(params) => <TextField {...params} label="Servicios" />}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, servicio: newValue });
             setUbicacionesDisabled(false);
@@ -180,7 +180,7 @@ export default function AMTicket({
           disabled={equiposDisabled}
           options={equipos}
           value={ticketData.equipo}
-          renderInput={(params) => <TextField {...params}  label="Equipo" />}
+          renderInput={(params) => <TextField {...params} label="Equipo" />}
           onChange={(e, newValue) => {
             setTicketData({ ...ticketData, equipo: newValue });
           }}

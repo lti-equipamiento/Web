@@ -10,11 +10,11 @@ import {
   TableBody,
   Paper,
 } from "@mui/material";
-import { HDVContextProvider } from "./../context/HDVContext";
+import { HDVContextProvider } from "../../context/HDVContext";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import DialogShowMantenimiento from "../dialogs/DialogShowMantenimiento";
 
-export default function PageMantenimiento() {
+export default function TabMantenimiento() {
   const { mantenimientosData } = useContext(HDVContextProvider);
   const [openShowMantenimientoDialog, setOpenShowMantenimientoDialog] =
     useState(false);

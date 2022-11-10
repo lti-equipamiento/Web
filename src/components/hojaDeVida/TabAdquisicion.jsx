@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Grid, TextField } from "@mui/material";
-import { HDVContextProvider } from "./../context/HDVContext";
+import { HDVContextProvider } from "../../context/HDVContext";
 
-export default function PageAdquisicion() {
+export default function TabAdquisicion() {
   const { HDVData, setHDVData, disabledMode } = useContext(HDVContextProvider);
   return (
     <Grid container rowSpacing={0} columnSpacing={1}>

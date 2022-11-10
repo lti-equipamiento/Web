@@ -3,7 +3,7 @@ import { TextField, Button, Typography } from "@mui/material";
 import {
   editMantenimiento,
   getEstadosMantenimiento,
-} from "../grapqhql/Queries";
+} from "../../grapqhql/Queries";
 import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";

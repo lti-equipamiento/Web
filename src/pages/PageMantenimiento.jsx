@@ -10,13 +10,13 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
-import { getMantenimientos } from "../../grapqhql/Queries";
-import CustomizedDialogs from "../dialogs/dialog";
-import MMantenimiento from "../MMantenimiento";
+import { getMantenimientos } from "../grapqhql/Queries";
+import CustomizedDialogs from "../components/dialogs/dialog";
+import MMantenimiento from "../components/mantenimiento/MMantenimiento";
 
 const mantenimientos = getMantenimientos();
 
-export default function TablaMantenimientos2() {
+export default function PageMantenimiento() {
   const [pageSize, setPageSize] = useState(5);
   const { loading, data, refetch } = useQuery(mantenimientos);
   const [rows, setRows] = useState([]);

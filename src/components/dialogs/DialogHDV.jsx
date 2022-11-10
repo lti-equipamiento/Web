@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import React, { useContext, useEffect, useState } from "react";
 import { editHojaDeVida } from "../../grapqhql/Queries";
 import TabsHDV from "../hojaDeVida/TabsHDV";
-import { HDVContextProvider } from "./../context/HDVContext";
+import { HDVContextProvider } from "../../context/HDVContext";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {

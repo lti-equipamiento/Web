@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import { Grid, TextField, Autocomplete, Typography } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
-import { HDVContextProvider } from "./../context/HDVContext";
+import { HDVContextProvider } from "../../context/HDVContext";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function PageCTecnica() {
+export default function TabCTecnica() {
   const {
     HDVData,
     setHDVData,

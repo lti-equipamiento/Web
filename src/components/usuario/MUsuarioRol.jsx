@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
-import { editRolUsuario } from "../grapqhql/Queries";
+import { editRolUsuario } from "../../grapqhql/Queries";
 import { useMutation } from "@apollo/client";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";

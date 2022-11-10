@@ -4,7 +4,7 @@ import {
   addEquipo,
   editEquipo,
   getAllEquipoDetails,
-} from "../grapqhql/Queries";
+} from "../../grapqhql/Queries";
 import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";

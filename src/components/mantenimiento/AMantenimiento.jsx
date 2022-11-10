@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { TextField, Button } from "@mui/material";
-import { getUsuarios } from "../grapqhql/Queries";
-import { addMantenimiento } from "../grapqhql/Queries";
+import { getUsuarios } from "../../grapqhql/Queries";
+import { addMantenimiento } from "../../grapqhql/Queries";
 import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";

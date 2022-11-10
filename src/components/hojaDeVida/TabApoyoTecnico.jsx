@@ -12,10 +12,10 @@ import {
   TableBody,
   Paper,
 } from "@mui/material";
-import { HDVContextProvider } from "./../context/HDVContext";
+import { HDVContextProvider } from "../../context/HDVContext";
 import DialogAddAccesorio from "../dialogs/DialogAddAccesorio";
 
-export default function PageApoyoTecnico() {
+export default function TabApoyoTecnico() {
   const {
     HDVData,
     setHDVData,

@@ -8,15 +8,15 @@ import {
 import { Typography, Button, Box } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-import { getTickets } from "../../grapqhql/Queries";
+import { getTickets } from "../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
-import AMTicket from "../AMTicket";
-import AMantenimiento from "../AMantenimiento";
-import CustomizedDialogs from "../dialogs/dialog";
+import AMTicket from "../components/ticket/AMTicket";
+import AMantenimiento from "../components/mantenimiento/AMantenimiento";
+import CustomizedDialogs from "../components/dialogs/dialog";
 
 const ticket = getTickets();
 
-export default function TablaTickets2() {
+export default function PageTicket() {
   // tabla
   const { loading, data, refetch } = useQuery(ticket);
   const [pageSize, setPageSize] = useState(5);
