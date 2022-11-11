@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
 export default function MUsuarioRol({ setDialogOpen, user, setReload }) {
-  const roles = ["admin", "normal"];
+  const roles = ["admin", "normal", "mantenimiento", "jefe-mantenimiento"];
   const [rol, setRol] = useState("");
   const [editRol] = useMutation(editRolUsuario());
 

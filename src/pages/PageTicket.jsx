@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   DataGrid,
   esES,
+  GridToolbarQuickFilter,
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
@@ -13,6 +14,7 @@ import { useQuery } from "@apollo/client";
 import AMTicket from "../components/ticket/AMTicket";
 import AMantenimiento from "../components/mantenimiento/AMantenimiento";
 import CustomizedDialogs from "../components/dialogs/dialog";
+import Popover from "@mui/material/Popover";
 
 const ticket = getTickets();
 
@@ -34,6 +36,10 @@ export default function PageTicket() {
   const [dialogMantOpen, setDialogMantOpen] = useState(false);
   const [mant, setMant] = useState([]);
 
+  //PopOver
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [value, setValue] = useState("");
+
   useEffect(() => {
     if (reload) {
       refetch();
@@ -50,7 +56,16 @@ export default function PageTicket() {
   function CustomToolBar() {
     return (
       <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <GridToolbarExport />
+        <GridToolbarExport
+          csvOptions={{ allColumns: true }}
+          printOptions={{
+            allColumns: true,
+            hideFooter: true,
+            hideToolbar: true,
+            disableToolbarButton: true,
+          }}
+        />
+        <GridToolbarQuickFilter />
         <div>
           <Button onClick={() => setDialogAddOpen(true)}>
             <PostAddIcon />
@@ -209,6 +224,21 @@ export default function PageTicket() {
     },
   ];
 
+  const handlePopoverOpen = (event) => {
+    const dataCell = event.target.textContent;
+    if (!dataCell) {
+      return;
+    }
+    setValue(dataCell);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   return (
     <>
       <Box sx={{ height: 400, width: "100%" }}>
@@ -234,7 +264,10 @@ export default function PageTicket() {
           disableSelectionOnClick
           components={{ Toolbar: CustomToolBar }}
           componentsProps={{
-            toolbar: { showQuickFilter: true },
+            cell: {
+              onMouseEnter: handlePopoverOpen,
+              onMouseLeave: handlePopoverClose,
+            },
           }}
           sx={{
             boxShadow: 2,
@@ -244,6 +277,25 @@ export default function PageTicket() {
             backgroundColor: "white",
           }}
         />
+        <Popover
+          sx={{
+            pointerEvents: "none",
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Typography sx={{ p: 1 }}>{`${value}`}</Typography>
+        </Popover>
       </Box>
       <CustomizedDialogs
         modalTitle="Asignar ticket"

@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import {
   DataGrid,
   esES,
+  GridToolbarQuickFilter,
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
@@ -18,6 +19,7 @@ import HDVContext from "../context/HDVContext";
 import CustomizedDialogs from "../components/dialogs/dialog";
 import DialogHDV from "../components/dialogs/DialogHDV";
 import EquipoDetails from "../components/equipo/EquipoDetails";
+import Popover from "@mui/material/Popover";
 
 const equipo = getEquipos();
 
@@ -45,6 +47,10 @@ export default function PageEquipo() {
   const [detailsData, setDetailsData] = useState([]);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
 
+  //PopOver
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [value, setValue] = useState("");
+
   // useEffect Tabla
   useEffect(() => {
     if (reload) {
@@ -69,7 +75,16 @@ export default function PageEquipo() {
   function CustomToolBar() {
     return (
       <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <GridToolbarExport />
+        <GridToolbarExport
+          csvOptions={{ allColumns: true }}
+          printOptions={{
+            allColumns: true,
+            hideFooter: true,
+            hideToolbar: true,
+            disableToolbarButton: true,
+          }}
+        />
+        <GridToolbarQuickFilter />
         <div style={{ display: "flex", justifyContent: "right" }}>
           <Button
             onClick={() => {
@@ -276,6 +291,21 @@ export default function PageEquipo() {
     },
   ];
 
+  const handlePopoverOpen = (event) => {
+    const dataCell = event.target.textContent;
+    if (!dataCell) {
+      return;
+    }
+    setValue(dataCell);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   return (
     <>
       {/* Tabla */}
@@ -297,7 +327,7 @@ export default function PageEquipo() {
           initialState={{
             columns: {
               columnVisibilityModel: {
-                // Hide columns status and traderName, the other columns will remain visible
+                // Hide columns
                 n_activo_fijo: false,
                 marca: false,
                 modelo: false,
@@ -315,7 +345,10 @@ export default function PageEquipo() {
           disableSelectionOnClick
           components={{ Toolbar: CustomToolBar }}
           componentsProps={{
-            toolbar: { showQuickFilter: true },
+            cell: {
+              onMouseEnter: handlePopoverOpen,
+              onMouseLeave: handlePopoverClose,
+            },
           }}
           sx={{
             boxShadow: 2,
@@ -325,6 +358,25 @@ export default function PageEquipo() {
             backgroundColor: "white",
           }}
         />
+        <Popover
+          sx={{
+            pointerEvents: "none",
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Typography sx={{ p: 1 }}>{`${value}`}</Typography>
+        </Popover>
       </Box>
 
       {/* Dialogs */}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   DataGrid,
   esES,
+  GridToolbarQuickFilter,
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
@@ -11,6 +12,7 @@ import { getUsuarios } from "../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
 import CustomizedDialogs from "../components/dialogs/dialog";
 import MUsuarioRol from "../components/usuario/MUsuarioRol";
+import Popover from "@mui/material/Popover";
 
 const usuario = getUsuarios();
 
@@ -24,6 +26,10 @@ export default function PageUsuario() {
   // edicion rol
   const [user, setUser] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  //PopOver
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [value, setValue] = useState("");
 
   useEffect(() => {
     if (reload) {
@@ -41,7 +47,16 @@ export default function PageUsuario() {
   function CustomToolBar() {
     return (
       <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <GridToolbarExport />
+        <GridToolbarExport
+          csvOptions={{ allColumns: true }}
+          printOptions={{
+            allColumns: true,
+            hideFooter: true,
+            hideToolbar: true,
+            disableToolbarButton: true,
+          }}
+        />
+        <GridToolbarQuickFilter />
       </GridToolbarContainer>
     );
   }
@@ -127,6 +142,21 @@ export default function PageUsuario() {
     },
   ];
 
+  const handlePopoverOpen = (event) => {
+    const dataCell = event.target.textContent;
+    if (!dataCell) {
+      return;
+    }
+    setValue(dataCell);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   return (
     <>
       <Box sx={{ height: 400, width: "100%" }}>
@@ -151,7 +181,10 @@ export default function PageUsuario() {
           disableSelectionOnClick
           components={{ Toolbar: CustomToolBar }}
           componentsProps={{
-            toolbar: { showQuickFilter: true },
+            cell: {
+              onMouseEnter: handlePopoverOpen,
+              onMouseLeave: handlePopoverClose,
+            },
           }}
           sx={{
             boxShadow: 2,
@@ -161,6 +194,25 @@ export default function PageUsuario() {
             backgroundColor: "white",
           }}
         />
+        <Popover
+          sx={{
+            pointerEvents: "none",
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Typography sx={{ p: 1 }}>{`${value}`}</Typography>
+        </Popover>
       </Box>
       <CustomizedDialogs
         modalTitle="Edición de Rol"

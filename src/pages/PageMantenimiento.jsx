@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import {
   DataGrid,
   esES,
+  GridToolbarQuickFilter,
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
@@ -13,6 +14,7 @@ import React, { useState, useEffect } from "react";
 import { getMantenimientos } from "../grapqhql/Queries";
 import CustomizedDialogs from "../components/dialogs/dialog";
 import MMantenimiento from "../components/mantenimiento/MMantenimiento";
+import Popover from "@mui/material/Popover";
 
 const mantenimientos = getMantenimientos();
 
@@ -23,6 +25,8 @@ export default function PageMantenimiento() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editMantenimiento, setEditMantenimiento] = useState([]);
   const [reload, setReload] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [value, setValue] = useState("");
 
   const handleEdit = (equipo) => {
     handleClickOpenDialog();
@@ -36,7 +40,16 @@ export default function PageMantenimiento() {
   function CustomToolBar() {
     return (
       <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <GridToolbarExport />
+        <GridToolbarExport
+          csvOptions={{ allColumns: true }}
+          printOptions={{
+            allColumns: true,
+            hideFooter: true,
+            hideToolbar: true,
+            disableToolbarButton: true,
+          }}
+        />
+        <GridToolbarQuickFilter />
       </GridToolbarContainer>
     );
   }
@@ -217,6 +230,22 @@ export default function PageMantenimiento() {
     }
   }, [data, loading]);
 
+  //On Hover
+  const handlePopoverOpen = (event) => {
+    const dataCell = event.target.textContent;
+    if (!dataCell) {
+      return;
+    }
+    setValue(dataCell);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   return (
     <>
       <Box sx={{ height: 400, width: "100%" }}>
@@ -242,7 +271,10 @@ export default function PageMantenimiento() {
           disableSelectionOnClick
           components={{ Toolbar: CustomToolBar }}
           componentsProps={{
-            toolbar: { showQuickFilter: true },
+            cell: {
+              onMouseEnter: handlePopoverOpen,
+              onMouseLeave: handlePopoverClose,
+            },
           }}
           sx={{
             boxShadow: 2,
@@ -252,6 +284,25 @@ export default function PageMantenimiento() {
             backgroundColor: "white",
           }}
         />
+        <Popover
+          sx={{
+            pointerEvents: "none",
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Typography sx={{ p: 1 }}>{`${value}`}</Typography>
+        </Popover>
       </Box>
     </>
   );
