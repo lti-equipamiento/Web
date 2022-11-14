@@ -642,7 +642,6 @@ export function getHojaDeVida(id) {
           electricidad
           emergencia
           estandar
-          otros
           oxigeno
           regulada
           servicio
@@ -670,7 +669,6 @@ export function editHojaDeVida() {
       $electricidad: Boolean!
       $emergencia: Boolean!
       $estandar: Boolean!
-      $otrosAlimentacion: String!
       $oxigeno: Boolean!
       $regulada: Boolean!
       $servicio: Boolean!
@@ -727,7 +725,6 @@ export function editHojaDeVida() {
           electricidad: $electricidad
           emergencia: $emergencia
           estandar: $estandar
-          otros: $otrosAlimentacion
           oxigeno: $oxigeno
           regulada: $regulada
           servicio: $servicio
@@ -905,7 +902,6 @@ export function getTipoAlimentacion() {
         servicio
         vacio
         vapor
-        otros
       }
     }
   `;
