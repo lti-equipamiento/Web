@@ -5,7 +5,6 @@ import Rutas from "./rutas";
 import { Auth0Provider } from "@auth0/auth0-react";
 import ApolloWrapper from "./grapqhql/ApolloWrapper";
 import NavigationBar from "./layout/NavigationBar";
-import LayoutContext from "./layout/LayoutContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -21,11 +20,9 @@ root.render(
   >
     <ApolloWrapper>
       <BrowserRouter>
-        <LayoutContext>
-          <NavigationBar>
-            <Rutas />
-          </NavigationBar>
-        </LayoutContext>
+        <NavigationBar>
+          <Rutas />
+        </NavigationBar>
       </BrowserRouter>
     </ApolloWrapper>
   </Auth0Provider>

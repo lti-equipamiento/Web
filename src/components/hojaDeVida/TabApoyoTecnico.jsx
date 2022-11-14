@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Grid,
@@ -12,23 +12,20 @@ import {
   TableBody,
   Paper,
 } from "@mui/material";
-import { HDVContextProvider } from "../../context/HDVContext";
 import DialogAddAccesorio from "../dialogs/DialogAddAccesorio";
 
-export default function TabApoyoTecnico() {
+export default function TabApoyoTecnico(props) {
   const {
+    disabledMode,
     HDVData,
     setHDVData,
-    disabledMode,
     docTecnicaData,
     setDocTecnicaData,
     accesoriosData,
-  } = useContext(HDVContextProvider);
-  const [openAddAccesorio, setOpenAddAccesorio] = useState(false);
+    setReload,
+  } = props;
 
-  const handleOpenAddAccesorio = () => {
-    setOpenAddAccesorio(true);
-  };
+  const [openAddAccesorio, setOpenAddAccesorio] = useState(false);
 
   return (
     <Grid container rowSpacing={0} columnSpacing={1}>
@@ -131,10 +128,12 @@ export default function TabApoyoTecnico() {
           <Typography>Accesorios</Typography>
         </Grid>
         <Grid item marginTop={0} marginLeft={2} marginBottom={1} xs={6}>
-          <Button onClick={() => handleOpenAddAccesorio()}>Agregar</Button>
+          <Button onClick={() => setOpenAddAccesorio(true)}>Agregar</Button>
           <DialogAddAccesorio
             dialogOpen={openAddAccesorio}
             setDialogOpen={setOpenAddAccesorio}
+            HDVData={HDVData}
+            setReload={setReload}
           />
         </Grid>
       </Grid>

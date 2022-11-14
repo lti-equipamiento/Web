@@ -13,7 +13,7 @@ import { getTickets } from "../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
 import AMTicket from "../components/ticket/AMTicket";
 import AMantenimiento from "../components/mantenimiento/AMantenimiento";
-import CustomizedDialogs from "../components/dialogs/dialog";
+import CustomizedDialogs from "../components/dialogs/Dialog";
 import Popover from "@mui/material/Popover";
 
 const ticket = getTickets();

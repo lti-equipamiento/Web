@@ -1,34 +1,41 @@
-import React, { useContext } from "react";
-import { Grid, TextField, Autocomplete, Typography } from "@mui/material";
+import React from "react";
+import {
+  Grid,
+  TextField,
+  Autocomplete,
+  Typography,
+  InputAdornment,
+} from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
-import { HDVContextProvider } from "../../context/HDVContext";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function TabCTecnica() {
+export default function TabCTecnica(props) {
   const {
+    disabledMode,
     HDVData,
     setHDVData,
+    tipoAlimentacionData,
+    setTipoAlimentacionData,
     fuenteAlimentacionData,
     setFuenteAlimentacionData,
-    disabledMode,
-  } = useContext(HDVContextProvider);
+  } = props;
 
   const tipo_de_alimentacion = [
-    { label: "electricidad" },
-    { label: "regulada" },
-    { label: "estandar" },
-    { label: "emergencia" },
-    { label: "baterias" },
-    { label: "servicio" },
-    { label: "vapor" },
-    { label: "oxigeno" },
-    { label: "aire" },
-    { label: "vacio" },
-    { label: "agua" },
+    { label: "electricidad", value: true },
+    { label: "regulada", value: true },
+    { label: "estandar", value: true },
+    { label: "emergencia", value: true },
+    { label: "baterias", value: true },
+    { label: "servicio", value: true },
+    { label: "vapor", value: true },
+    { label: "oxigeno", value: true },
+    { label: "aire", value: true },
+    { label: "vacio", value: true },
+    { label: "agua", value: true },
   ];
 
   const periodicidad = [
@@ -37,6 +44,20 @@ export default function TabCTecnica() {
     { label: "Semestral" },
     { label: "Anual" },
   ];
+
+  const setTipoAlimentacion = (tipo) => {
+    // setHDVData({ ...HDVData, tipo_alimentacion: newValue });
+
+    if (tipo) {
+      tipo.forEach((t) => {
+        console.log(t.label);
+        console.log(tipoAlimentacionData);
+        // setTipoAlimentacionData({ ...tipoAlimentacionData, `t.label`:});
+      });
+    }
+
+    console.log();
+  };
 
   return (
     <Grid container rowSpacing={0} columnSpacing={1}>
@@ -147,9 +168,9 @@ export default function TabCTecnica() {
           renderInput={(params) => (
             <TextField {...params} label="Tipo de alimentación" />
           )}
-          onChange={(e, newValue) =>
-            setHDVData({ ...HDVData, tipo_alimentacion: newValue })
-          }
+          onChange={(e, newValue) => {
+            setTipoAlimentacion(newValue);
+          }}
         />
       </Grid>
       <Grid item xs={12}>
@@ -161,11 +182,11 @@ export default function TabCTecnica() {
             <TextField
               disabled={disabledMode}
               label="Voltaje"
-              value={
-                fuenteAlimentacionData.voltaje == null
-                  ? 0
-                  : fuenteAlimentacionData.voltaje
-              }
+              type="number"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">V</InputAdornment>,
+              }}
+              value={fuenteAlimentacionData.voltaje}
               onChange={(e) =>
                 setFuenteAlimentacionData({
                   ...fuenteAlimentacionData,
@@ -182,6 +203,10 @@ export default function TabCTecnica() {
             <TextField
               disabled={disabledMode}
               label="Corriente"
+              type="number"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">A</InputAdornment>,
+              }}
               value={fuenteAlimentacionData.corriente}
               onChange={(e) =>
                 setFuenteAlimentacionData({
@@ -199,6 +224,10 @@ export default function TabCTecnica() {
             <TextField
               disabled={disabledMode}
               label="Potencia"
+              type="number"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">W</InputAdornment>,
+              }}
               value={fuenteAlimentacionData.potencia}
               onChange={(e) =>
                 setFuenteAlimentacionData({
@@ -216,6 +245,12 @@ export default function TabCTecnica() {
             <TextField
               disabled={disabledMode}
               label="Frecuencia"
+              type="number"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">Hz</InputAdornment>
+                ),
+              }}
               value={fuenteAlimentacionData.frecuencia}
               onChange={(e) =>
                 setFuenteAlimentacionData({
@@ -233,6 +268,12 @@ export default function TabCTecnica() {
             <TextField
               disabled={disabledMode}
               label="Presión"
+              type="number"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">Bar</InputAdornment>
+                ),
+              }}
               value={fuenteAlimentacionData.presion}
               onChange={(e) =>
                 setFuenteAlimentacionData({
@@ -250,6 +291,12 @@ export default function TabCTecnica() {
             <TextField
               disabled={disabledMode}
               label="Temperatura"
+              type="number"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">C°</InputAdornment>
+                ),
+              }}
               value={fuenteAlimentacionData.temperatura}
               onChange={(e) =>
                 setFuenteAlimentacionData({

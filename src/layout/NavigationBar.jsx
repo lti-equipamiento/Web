@@ -2,9 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import MuiAppBar from "@mui/material/AppBar";
-import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,7 +10,6 @@ import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -20,9 +17,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import React, { useContext } from "react";
+import React from "react";
 import LoginButton from "../components/LoginButton";
-import { LayoutContextProvider } from "./LayoutContext";
 import { mainListItems } from "./NavigationItems";
 import { Avatar } from "@mui/material";
 import { Button } from "@mui/material";
@@ -95,7 +91,6 @@ const mdTheme = createTheme();
 
 export default function NavigationBar({ children }) {
   const [open, setOpen] = React.useState(true);
-  const { headerTitle } = useContext(LayoutContextProvider);
   const { user, logout, isAuthenticated } = useAuth0();
   const toggleDrawer = () => {
     setOpen(!open);

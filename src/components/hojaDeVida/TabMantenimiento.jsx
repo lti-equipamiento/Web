@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Grid,
@@ -10,12 +10,12 @@ import {
   TableBody,
   Paper,
 } from "@mui/material";
-import { HDVContextProvider } from "../../context/HDVContext";
+
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import DialogShowMantenimiento from "../dialogs/DialogShowMantenimiento";
 
-export default function TabMantenimiento() {
-  const { mantenimientosData } = useContext(HDVContextProvider);
+export default function TabMantenimiento(props) {
+  const { mantenimientosData } = props;
   const [openShowMantenimientoDialog, setOpenShowMantenimientoDialog] =
     useState(false);
   const handleShowMantenimiento = () => {

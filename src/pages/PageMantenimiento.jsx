@@ -12,7 +12,7 @@ import {
 } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import { getMantenimientos } from "../grapqhql/Queries";
-import CustomizedDialogs from "../components/dialogs/dialog";
+import CustomizedDialogs from "../components/dialogs/Dialog";
 import MMantenimiento from "../components/mantenimiento/MMantenimiento";
 import Popover from "@mui/material/Popover";
 

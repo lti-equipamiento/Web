@@ -40,19 +40,29 @@ function a11yProps(index) {
   };
 }
 
-export default function TabsHDV() {
+export default function TabsHDV(props) {
+  const {
+    disabledMode,
+    HDVData,
+    setHDVData,
+    tipoAlimentacionData,
+    setTipoAlimentacionData,
+    fuenteAlimentacionData,
+    setFuenteAlimentacionData,
+    docTecnicaData,
+    setDocTecnicaData,
+    accesoriosData,
+    mantenimientosData,
+    setReload,
+  } = props;
   const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
-          onChange={handleChange}
+          onChange={(_e, value) => setValue(value)}
           aria-label="Tabs Hoja de vida"
         >
           <Tab label="Adquisición" {...a11yProps(0)} />
@@ -62,16 +72,36 @@ export default function TabsHDV() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <TabAdquisicion />
+        <TabAdquisicion
+          disabledMode={disabledMode}
+          HDVData={HDVData}
+          setHDVData={setHDVData}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <TabCTecnica />
+        <TabCTecnica
+          disabledMode={disabledMode}
+          HDVData={HDVData}
+          setHDVData={setHDVData}
+          tipoAlimentacionData={tipoAlimentacionData}
+          setTipoAlimentacionData={setTipoAlimentacionData}
+          fuenteAlimentacionData={fuenteAlimentacionData}
+          setFuenteAlimentacionData={setFuenteAlimentacionData}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <TabApoyoTecnico />
+        <TabApoyoTecnico
+          disabledMode={disabledMode}
+          HDVData={HDVData}
+          setHDVData={setHDVData}
+          docTecnicaData={docTecnicaData}
+          setDocTecnicaData={setDocTecnicaData}
+          accesoriosData={accesoriosData}
+          setReload={setReload}
+        />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <TabMantenimiento />
+        <TabMantenimiento mantenimientosData={mantenimientosData} />
       </TabPanel>
     </Box>
   );

@@ -10,7 +10,7 @@ import { Typography, Box, Button } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { getUsuarios } from "../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
-import CustomizedDialogs from "../components/dialogs/dialog";
+import CustomizedDialogs from "../components/dialogs/Dialog";
 import MUsuarioRol from "../components/usuario/MUsuarioRol";
 import Popover from "@mui/material/Popover";
 

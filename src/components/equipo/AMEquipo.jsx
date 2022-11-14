@@ -207,8 +207,9 @@ export default function AMEquipo({
         />
       </Grid>
       <Grid item xs={12} marginTop={2} marginBottom={1}>
-        <LocalizationProvider dateAdapter={AdapterMoment}>
+        <LocalizationProvider adapterLocale={"es"} dateAdapter={AdapterMoment}>
           <DesktopDatePicker
+            fullWidth
             label="Garantía"
             value={equipoData["garantia"]}
             onChange={(e) =>
@@ -218,7 +219,6 @@ export default function AMEquipo({
             margin="normal"
             variant="outlined"
             color="secondary"
-            fullWidth
           />
         </LocalizationProvider>
       </Grid>

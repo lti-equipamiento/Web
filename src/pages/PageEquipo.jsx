@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Edit } from "@mui/icons-material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
@@ -13,10 +13,9 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import { getEquipos, getHojaDeVida } from "../grapqhql/Queries";
+import { getEquipos } from "../grapqhql/Queries";
 import AMEquipo from "../components/equipo/AMEquipo";
-import HDVContext from "../context/HDVContext";
-import CustomizedDialogs from "../components/dialogs/dialog";
+import CustomizedDialogs from "../components/dialogs/Dialog";
 import DialogHDV from "../components/dialogs/DialogHDV";
 import EquipoDetails from "../components/equipo/EquipoDetails";
 import Popover from "@mui/material/Popover";
@@ -38,10 +37,8 @@ export default function PageEquipo() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   // Hoja de vida
-  const [hoja, setHoja] = useState([]);
   const [dialogHDV, setDialogHDVOpen] = useState(false);
   const [HDVid, setHDVid] = useState(0);
-  const [getHDV, { data: dataHDV }] = useLazyQuery(getHojaDeVida(HDVid));
 
   // Detalles de equipo
   const [detailsData, setDetailsData] = useState([]);
@@ -64,13 +61,6 @@ export default function PageEquipo() {
       setRows(data.data_equipo);
     }
   }, [data, loading]);
-
-  // useEffect HDV
-  useEffect(() => {
-    if (dataHDV) {
-      setHoja(dataHDV.data_hoja_de_vida_by_pk);
-    }
-  }, [dataHDV]);
 
   function CustomToolBar() {
     return (
@@ -280,7 +270,6 @@ export default function PageEquipo() {
           <Button
             onClick={() => {
               setHDVid(params.row.hoja_de_vida);
-              getHDV();
               setDialogHDVOpen(true);
             }}
           >
@@ -398,13 +387,11 @@ export default function PageEquipo() {
       >
         <EquipoDetails data={detailsData} />
       </CustomizedDialogs>
-      <HDVContext>
-        <DialogHDV
-          dialogOpen={dialogHDV}
-          setDialogOpen={setDialogHDVOpen}
-          datos={hoja}
-        ></DialogHDV>
-      </HDVContext>
+      <DialogHDV
+        id={HDVid}
+        dialogOpen={dialogHDV}
+        setDialogOpen={setDialogHDVOpen}
+      ></DialogHDV>
       <CustomizedDialogs
         modalTitle="Edición de Equipo"
         dialogOpen={editDialogOpen}
