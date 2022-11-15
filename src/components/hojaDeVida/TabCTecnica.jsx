@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   TextField,
@@ -9,6 +9,7 @@ import {
 import Checkbox from "@mui/material/Checkbox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import Tags from "./asd";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -24,6 +25,7 @@ export default function TabCTecnica(props) {
     setFuenteAlimentacionData,
   } = props;
 
+  const [showTipoAlimentacionData, setShowTipoAlimentacionData] = useState([]);
   const tipo_de_alimentacion = [
     { label: "electricidad", value: true },
     { label: "regulada", value: true },
@@ -45,19 +47,43 @@ export default function TabCTecnica(props) {
     { label: "Anual" },
   ];
 
+  // --TODO: hay que acomodar el tipodealimentacioN
+
+  //Funciona, nos coloca en true y false a las property que necesitamos en la mutation
   const setTipoAlimentacion = (tipo) => {
-    // setHDVData({ ...HDVData, tipo_alimentacion: newValue });
+    setShowTipoAlimentacionData(tipo);
 
+    // si hay tipos seleccionados
     if (tipo) {
+      // creamos un newTipos que lo asignaremos dsp
+      var newTipos = tipoAlimentacionData;
+      // por cada tipo hacemos lo siguiente
       tipo.forEach((t) => {
-        console.log(t.label);
-        console.log(tipoAlimentacionData);
-        // setTipoAlimentacionData({ ...tipoAlimentacionData, `t.label`:});
+        // entramos a la property de newTipos y le asignamos la value
+        // ej: newTipos.electrecidad = true;
+        let property = t.label;
+        newTipos[property] = t.value;
       });
+      // Setteamos el tipoAlimentacion con newTipos
+      setTipoAlimentacionData(newTipos);
     }
-
-    console.log();
   };
+
+  // Aca traemos de la base de datos todas las property con booleanos
+  // creamos una biblioteca para que lo pueda mostrar el autocomplete
+  useEffect(() => {
+    if (tipoAlimentacionData) {
+      var tiposData = [];
+      Object.keys(tipoAlimentacionData).forEach((key) => {
+        if (tipoAlimentacionData[key] === true) {
+          tiposData.push({ label: key, value: true });
+        }
+      });
+      setShowTipoAlimentacionData(tiposData);
+    }
+  }, [tipoAlimentacionData]);
+
+  console.log(showTipoAlimentacionData);
 
   return (
     <Grid container rowSpacing={0} columnSpacing={1}>
@@ -154,19 +180,20 @@ export default function TabCTecnica(props) {
           options={tipo_de_alimentacion}
           disableCloseOnSelect
           getOptionLabel={(option) => option.label}
+          value={showTipoAlimentacionData}
+          renderInput={(params) => (
+            <TextField {...params} label="Tipo de alimentación" />
+          )}
           renderOption={(props, option, { selected }) => (
             <li {...props}>
               <Checkbox
                 icon={icon}
                 checkedIcon={checkedIcon}
                 style={{ marginRight: 8 }}
-                checked={selected}
+                checked={showTipoAlimentacionData.value}
               />
               {option.label}
             </li>
-          )}
-          renderInput={(params) => (
-            <TextField {...params} label="Tipo de alimentación" />
           )}
           onChange={(e, newValue) => {
             setTipoAlimentacion(newValue);

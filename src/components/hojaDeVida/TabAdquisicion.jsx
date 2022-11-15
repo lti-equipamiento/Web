@@ -1,14 +1,19 @@
 import React from "react";
 import { Grid, TextField } from "@mui/material";
-import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import {
+  DatePicker,
+  DesktopDatePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import "moment/locale/es";
 
 export default function TabAdquisicion(props) {
   const { disabledMode, HDVData, setHDVData } = props;
 
   return (
     <Grid container rowSpacing={0} columnSpacing={1}>
-      <Grid item xs={6} paddingRight={1.5}>
+      <Grid item xs={12}>
         <TextField
           disabled={disabledMode}
           label="Fabricante"
@@ -22,7 +27,7 @@ export default function TabAdquisicion(props) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={6} paddingRight={1.5}>
+      <Grid item xs={12}>
         <TextField
           disabled={disabledMode}
           label="Distribuidor"
@@ -36,7 +41,7 @@ export default function TabAdquisicion(props) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={6} paddingRight={1.5}>
+      <Grid item xs={12}>
         <TextField
           disabled={disabledMode}
           label="RUT"
@@ -48,24 +53,8 @@ export default function TabAdquisicion(props) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={6} marginTop={2} marginRight={-2}>
-        <LocalizationProvider adapterLocale={"es"} dateAdapter={AdapterMoment}>
-          <DesktopDatePicker
-            fullWidth
-            disabled={disabledMode}
-            label="Fecha de Adquisición"
-            value={HDVData.fecha_adquisicion}
-            onChange={(e) =>
-              setHDVData({ ...HDVData, fecha_adquisicion: e.format("L") })
-            }
-            renderInput={(params) => <TextField {...params} />}
-            margin="normal"
-            variant="outlined"
-            color="secondary"
-          />
-        </LocalizationProvider>
-      </Grid>
-      <Grid item xs={6} paddingRight={1.5}>
+
+      <Grid item xs={12}>
         <TextField
           disabled={disabledMode}
           label="MSP"
@@ -79,7 +68,7 @@ export default function TabAdquisicion(props) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={6} paddingRight={1.5}>
+      <Grid item xs={6}>
         <TextField
           disabled={disabledMode}
           label="Ciudad fabricante"
@@ -93,7 +82,7 @@ export default function TabAdquisicion(props) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={6} paddingRight={1.5}>
+      <Grid item xs={6}>
         <TextField
           disabled={disabledMode}
           label="Ciudad distribuidor"
@@ -107,7 +96,7 @@ export default function TabAdquisicion(props) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={6} paddingRight={1.5}>
+      <Grid item xs={6}>
         <TextField
           disabled={disabledMode}
           label="Telefono"
@@ -119,24 +108,7 @@ export default function TabAdquisicion(props) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={6} marginTop={2}>
-        <LocalizationProvider adapterLocale={"es"} dateAdapter={AdapterMoment}>
-          <DesktopDatePicker
-            fullWidth
-            disabled={disabledMode}
-            label="Fecha de instalación"
-            value={HDVData.fecha_instalacion}
-            onChange={(e) =>
-              setHDVData({ ...HDVData, fecha_instalacion: e.format("L") })
-            }
-            renderInput={(params) => <TextField {...params} />}
-            margin="normal"
-            variant="outlined"
-            color="secondary"
-          />
-        </LocalizationProvider>
-      </Grid>
-      <Grid item xs={6} paddingRight={1.5}>
+      <Grid item xs={6}>
         <TextField
           disabled={disabledMode}
           label="Forma de adquisición"
@@ -149,6 +121,40 @@ export default function TabAdquisicion(props) {
           color="secondary"
           fullWidth
         />
+      </Grid>
+      {/* TODO: se esta guardando mal el format, fijarse en el onchange tal vez */}
+      <Grid item xs={6} marginTop={2}>
+        <LocalizationProvider adapterLocale={"es"} dateAdapter={AdapterMoment}>
+          <DatePicker
+            disabled={disabledMode}
+            label="Fecha de instalación"
+            inputFormat="DD-MM-YYYY"
+            value={HDVData.fecha_instalacion}
+            onChange={(e) =>
+              setHDVData({ ...HDVData, fecha_instalacion: e.format("L") })
+            }
+            renderInput={(params) => <TextField {...params} fullWidth />}
+            margin="normal"
+            variant="outlined"
+            color="secondary"
+          />
+        </LocalizationProvider>
+      </Grid>
+      <Grid item xs={6} marginTop={2} marginRight={-2}>
+        <LocalizationProvider adapterLocale={"es"} dateAdapter={AdapterMoment}>
+          <DesktopDatePicker
+            disabled={disabledMode}
+            label="Fecha de Adquisición"
+            value={HDVData.fecha_adquisicion}
+            onChange={(e) =>
+              setHDVData({ ...HDVData, fecha_adquisicion: e.format("L") })
+            }
+            renderInput={(params) => <TextField {...params} fullWidth />}
+            margin="normal"
+            variant="outlined"
+            color="secondary"
+          />
+        </LocalizationProvider>
       </Grid>
     </Grid>
   );

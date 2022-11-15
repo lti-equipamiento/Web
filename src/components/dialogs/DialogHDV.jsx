@@ -1,23 +1,16 @@
+import React, { useEffect, useState } from "react";
 import { useMutation, useLazyQuery } from "@apollo/client";
 import CloseIcon from "@mui/icons-material/Close";
-import { Button, Typography } from "@mui/material";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
+import {
+  Button,
+  Typography,
+  Dialog,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
 import { editHojaDeVida, getHojaDeVida } from "../../grapqhql/Queries";
 import TabsHDV from "../hojaDeVida/TabsHDV";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -171,15 +164,26 @@ export default function DialogHDV(props) {
   return (
     <>
       {loading ? (
-        <BootstrapDialog aria-labelledby="dialog-hdv" open={dialogOpen}>
+        <Dialog aria-labelledby="dialog-hdv" open={dialogOpen}>
           <BootstrapDialogTitle id="dialog-hdv" onClose={handleClose}>
             <label>Hoja de Vida</label>
           </BootstrapDialogTitle>
           <Typography>Cargando los datos, por favor espere...</Typography>
-        </BootstrapDialog>
+        </Dialog>
       ) : (
         <div>
-          <BootstrapDialog aria-labelledby="dialog-hdv" open={dialogOpen}>
+          <Dialog
+            PaperProps={{
+              sx: {
+                minHeight: "80vh",
+                maxHeight: "80vh",
+              },
+            }}
+            maxWidth="md"
+            fullWidth
+            aria-labelledby="dialog-hdv"
+            open={dialogOpen}
+          >
             <BootstrapDialogTitle id="dialog-hdv" onClose={handleClose}>
               <label>Hoja de Vida</label>
               <Button onClick={() => handleEdit()}>{editButtonText}</Button>
@@ -198,7 +202,7 @@ export default function DialogHDV(props) {
               mantenimientosData={mantenimientosData}
               setReload={setReload}
             ></TabsHDV>
-          </BootstrapDialog>
+          </Dialog>
         </div>
       )}
     </>
