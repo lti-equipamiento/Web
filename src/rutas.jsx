@@ -9,6 +9,7 @@ import PageEquipo from "./pages/PageEquipo";
 import PageUsuario from "./pages/PageUsuario";
 import PageTicket from "./pages/PageTicket";
 import PageMantenimiento from "./pages/PageMantenimiento";
+import PageProfile from "./pages/PageProfile";
 
 export default function Rutas() {
   const { isAuthenticated } = useAuth0();
@@ -18,6 +19,14 @@ export default function Rutas() {
       <Route path="/" element={<App />} />
       {isAuthenticated && (
         <>
+          <Route
+            path="/profile"
+            element={
+              <PermissionsGate scopes={[SCOPES.canViewPerfil]}>
+                <PageProfile />
+              </PermissionsGate>
+            }
+          />
           <Route
             path="/dashboard"
             element={

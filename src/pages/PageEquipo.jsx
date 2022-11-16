@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { Edit } from "@mui/icons-material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import { Typography } from "@mui/material";
+import { FormControlLabel, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {
@@ -19,6 +19,7 @@ import CustomizedDialogs from "../components/dialogs/Dialog";
 import DialogHDV from "../components/dialogs/DialogHDV";
 import EquipoDetails from "../components/equipo/EquipoDetails";
 import Popover from "@mui/material/Popover";
+import Switch from "@mui/material/Switch";
 
 const equipo = getEquipos();
 
@@ -48,6 +49,9 @@ export default function PageEquipo() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [value, setValue] = useState("");
 
+  //Filter rotos
+  const [show, setShow] = useState(false);
+
   // useEffect Tabla
   useEffect(() => {
     if (reload) {
@@ -58,13 +62,33 @@ export default function PageEquipo() {
 
   useEffect(() => {
     if (!loading && data) {
-      setRows(data.data_equipo);
+      if (!show) {
+        const filtered_data = data.data_equipo.filter(
+          (d) => d.estado_funcional !== "Inactivo"
+        );
+        setRows(filtered_data);
+      } else {
+        const filtered_data = data.data_equipo;
+        setRows(filtered_data);
+      }
     }
-  }, [data, loading]);
+  }, [data, loading, show]);
 
   function CustomToolBar() {
     return (
       <GridToolbarContainer sx={{ justifyContent: "right" }}>
+        <FormControlLabel
+          control={
+            <Switch
+              onChange={(e) => {
+                setShow(!show);
+              }}
+              checked={show}
+            />
+          }
+          label="Mostrar inactivos"
+          labelPlacement="start"
+        />
         <GridToolbarExport
           csvOptions={{ allColumns: true }}
           printOptions={{
