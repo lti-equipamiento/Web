@@ -690,8 +690,8 @@ export function editHojaDeVida() {
       $distribuidor: String!
       $doc_tecnica: Int!
       $fabricante: String!
-      $fecha_adquisicion: date!
-      $fecha_instalacion: date!
+      $fecha_adquisicion: String!
+      $fecha_instalacion: String!
       $forma_adquisicion: String!
       $fuente_alimentacion: Int!
       $guia_limpieza: String!
