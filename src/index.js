@@ -14,7 +14,8 @@ root.render(
     clientId="TU1HzLoMRbH5X4gA7FIFYji7hL88VXTi" //test
     redirectUri={window.location.origin}
     //audience="https://lti-equipamiento.hasura.app/v1/graphql" //prod
-    audience="https://test-api-agem.hasura.app/v1/graphql" //test
+    //audience="https://test-api-agem.hasura.app/v1/graphql" //test
+    audience="agem" //neon
     useRefreshTokens={true}
     cacheLocation="localstorage"
   >
