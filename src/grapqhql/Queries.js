@@ -31,27 +31,17 @@ export function getUsuarios() {
   `;
 }
 
-export function addUsuario() {
+export function getUsuario() {
   return gql`
-    mutation addUsuario(
-      $cedula: Int!
-      $direccion: String!
-      $mail: String!
-      $nombre: String!
-      $rol: String!
-      $telefono: String!
-    ) {
-      insert_data_usuario_one(
-        object: {
-          cedula: $cedula
-          direccion: $direccion
-          mail: $mail
-          nombre: $nombre
-          rol: $rol
-          telefono: $telefono
-        }
-      ) {
+    query MyQuery($id: String!) {
+      data_usuario_by_pk(id: $id) {
+        cedula
+        direccion
         id
+        mail
+        nombre
+        rol
+        telefono
       }
     }
   `;
@@ -93,17 +83,6 @@ export function editRolUsuario() {
       }
     }
   `;
-}
-
-export function deleteUsuario(mail) {
-  return gql`
-mutation deleteUsuario {
-  delete_data_usuario(where: {mail: {_eq: ${mail}}}) {
-    returning{
-
-    }
-  }
-}`;
 }
 
 //---------------------------------------------------Equipos-------------------------------------
