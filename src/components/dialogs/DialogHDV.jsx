@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useMutation, useLazyQuery } from "@apollo/client";
 import CloseIcon from "@mui/icons-material/Close";
+import CachedIcon from "@mui/icons-material/Cached";
 import {
   Button,
+  Grid,
   Typography,
   Dialog,
   DialogTitle,
@@ -61,7 +63,6 @@ export default function DialogHDV(props) {
   const [getHDV, { loading }] = useLazyQuery(getHojaDeVida(id), {
     fetchPolicy: "no-cache",
     onCompleted: (data) => {
-      console.log(data);
       setEditButtonText("Editar");
       setDisabledMode(true);
 
@@ -83,7 +84,6 @@ export default function DialogHDV(props) {
     if (reload) {
       try {
         getHDV();
-        console.log("reload");
         setReload(false);
       } catch (error) {
         console.log(error);
@@ -163,48 +163,64 @@ export default function DialogHDV(props) {
 
   return (
     <>
-      {loading ? (
-        <Dialog aria-labelledby="dialog-hdv" open={dialogOpen}>
-          <BootstrapDialogTitle id="dialog-hdv" onClose={handleClose}>
-            <label>Hoja de Vida</label>
-          </BootstrapDialogTitle>
-          <Typography>Cargando los datos, por favor espere...</Typography>
-        </Dialog>
-      ) : (
-        <div>
-          <Dialog
-            PaperProps={{
-              sx: {
-                minHeight: "80vh",
-                maxHeight: "80vh",
-              },
-            }}
-            maxWidth="md"
-            fullWidth
-            aria-labelledby="dialog-hdv"
-            open={dialogOpen}
+      <Dialog
+        PaperProps={{
+          sx: {
+            minHeight: "80vh",
+            maxHeight: "80vh",
+          },
+        }}
+        maxWidth="md"
+        fullWidth
+        aria-labelledby="dialog-hdv"
+        open={dialogOpen}
+      >
+        <BootstrapDialogTitle
+          maxHeight={50}
+          id="dialog-hdv"
+          onClose={handleClose}
+        >
+          <label>Hoja de Vida</label>
+          <Button onClick={() => handleEdit()}>{editButtonText}</Button>
+        </BootstrapDialogTitle>
+        {loading ? (
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
           >
-            <BootstrapDialogTitle id="dialog-hdv" onClose={handleClose}>
-              <label>Hoja de Vida</label>
-              <Button onClick={() => handleEdit()}>{editButtonText}</Button>
-            </BootstrapDialogTitle>
-            <TabsHDV
-              disabledMode={disabledMode}
-              HDVData={HDVData}
-              setHDVData={setHDVData}
-              tipoAlimentacionData={tipoAlimentacionData}
-              setTipoAlimentacionData={setTipoAlimentacionData}
-              fuenteAlimentacionData={fuenteAlimentacionData}
-              setFuenteAlimentacionData={setFuenteAlimentacionData}
-              docTecnicaData={docTecnicaData}
-              setDocTecnicaData={setDocTecnicaData}
-              accesoriosData={accesoriosData}
-              mantenimientosData={mantenimientosData}
-              setReload={setReload}
-            ></TabsHDV>
-          </Dialog>
-        </div>
-      )}
+            <Grid item xs={12} marginTop={25}>
+              <CachedIcon
+                sx={{
+                  height: "100px",
+                  width: "100px",
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h4">
+                Cargando los datos, por favor espere...
+              </Typography>
+            </Grid>
+          </Grid>
+        ) : (
+          <TabsHDV
+            disabledMode={disabledMode}
+            HDVData={HDVData}
+            setHDVData={setHDVData}
+            tipoAlimentacionData={tipoAlimentacionData}
+            setTipoAlimentacionData={setTipoAlimentacionData}
+            fuenteAlimentacionData={fuenteAlimentacionData}
+            setFuenteAlimentacionData={setFuenteAlimentacionData}
+            docTecnicaData={docTecnicaData}
+            setDocTecnicaData={setDocTecnicaData}
+            accesoriosData={accesoriosData}
+            mantenimientosData={mantenimientosData}
+            setReload={setReload}
+          ></TabsHDV>
+        )}
+      </Dialog>
     </>
   );
 }
