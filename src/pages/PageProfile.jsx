@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-//import AddPhoto from "../gcp/AddPhoto";
+//import AddPhoto from "../gcp/AddPhoto"; //esto rompe todo
 const { Button } = require("@mui/material");
 
+//meti esto aca para probar xD como ya estaba la ruta...
 export default function PageProfile() {
   const [image, setImage] = useState([]);
 
