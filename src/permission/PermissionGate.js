@@ -1,6 +1,7 @@
 import { cloneElement } from "react";
 import { PERMISSIONS } from "./PermissionMaps";
-import { useGetRole } from "./useGetRole";
+import jwt_decode from "jwt-decode";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const hasPermission = ({ permissions, scopes }) => {
   const scopesMap = {};
@@ -17,15 +18,22 @@ export default function PermissionsGate({
   errorProps = null,
   scopes = [],
 }) {
-  // const { role } = useGetRole();
-  const permissions = PERMISSIONS["admin"];
+  const { isAuthenticated } = useAuth0();
 
-  const permissionGranted = hasPermission({ permissions, scopes });
+  if (isAuthenticated) {
+    const token = localStorage.getItem(
+      `@@auth0spajs@@::TU1HzLoMRbH5X4gA7FIFYji7hL88VXTi::agem::openid profile email offline_access`
+    );
+    const role =
+      jwt_decode(token)["https://hasura.io/jwt/claims"]["x-hasura-custom"];
+    const permissions = PERMISSIONS[role];
+    const permissionGranted = hasPermission({ permissions, scopes });
 
-  if (!permissionGranted && !errorProps) return <RenderError />;
+    if (!permissionGranted && !errorProps) return <RenderError />;
 
-  if (!permissionGranted && errorProps)
-    return cloneElement(children, { ...errorProps });
+    if (!permissionGranted && errorProps)
+      return cloneElement(children, { ...errorProps });
+  }
 
   return <>{children}</>;
 }

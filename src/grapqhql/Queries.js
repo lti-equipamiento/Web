@@ -31,27 +31,17 @@ export function getUsuarios() {
   `;
 }
 
-export function addUsuario() {
+export function getUsuario() {
   return gql`
-    mutation addUsuario(
-      $cedula: Int!
-      $direccion: String!
-      $mail: String!
-      $nombre: String!
-      $rol: String!
-      $telefono: String!
-    ) {
-      insert_data_usuario_one(
-        object: {
-          cedula: $cedula
-          direccion: $direccion
-          mail: $mail
-          nombre: $nombre
-          rol: $rol
-          telefono: $telefono
-        }
-      ) {
+    query getUsuario($mail: String!) {
+      data_usuario_by_pk(mail: $mail) {
+        cedula
+        direccion
         id
+        mail
+        nombre
+        rol
+        telefono
       }
     }
   `;
@@ -85,15 +75,14 @@ export function editUsuario() {
   `;
 }
 
-export function deleteUsuario(mail) {
+export function editRolUsuario() {
   return gql`
-mutation deleteUsuario {
-  delete_data_usuario(where: {mail: {_eq: ${mail}}}) {
-    returning{
-
+    mutation editRolUsuario($id: String!, $rol: String!) {
+      update_data_usuario_by_pk(pk_columns: { id: $id }, _set: { rol: $rol }) {
+        id
+      }
     }
-  }
-}`;
+  `;
 }
 
 //---------------------------------------------------Equipos-------------------------------------
@@ -632,7 +621,6 @@ export function getHojaDeVida(id) {
           electricidad
           emergencia
           estandar
-          otros
           oxigeno
           regulada
           servicio
@@ -660,7 +648,6 @@ export function editHojaDeVida() {
       $electricidad: Boolean!
       $emergencia: Boolean!
       $estandar: Boolean!
-      $otrosAlimentacion: String!
       $oxigeno: Boolean!
       $regulada: Boolean!
       $servicio: Boolean!
@@ -682,8 +669,8 @@ export function editHojaDeVida() {
       $distribuidor: String!
       $doc_tecnica: Int!
       $fabricante: String!
-      $fecha_adquisicion: date!
-      $fecha_instalacion: date!
+      $fecha_adquisicion: String!
+      $fecha_instalacion: String!
       $forma_adquisicion: String!
       $fuente_alimentacion: Int!
       $guia_limpieza: String!
@@ -717,7 +704,6 @@ export function editHojaDeVida() {
           electricidad: $electricidad
           emergencia: $emergencia
           estandar: $estandar
-          otros: $otrosAlimentacion
           oxigeno: $oxigeno
           regulada: $regulada
           servicio: $servicio
@@ -895,7 +881,6 @@ export function getTipoAlimentacion() {
         servicio
         vacio
         vapor
-        otros
       }
     }
   `;

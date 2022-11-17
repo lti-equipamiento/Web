@@ -7,6 +7,7 @@ export const ROLES = {
 };
 
 export const SCOPES = {
+  canViewDashboard: "can-view-usuario",
   canCreateUsuario: "can-create-usuario",
   canEditUsuario: "can-edit-usuario",
   canDeleteUsuario: "can-delete-usuario",
@@ -23,6 +24,7 @@ export const SCOPES = {
   canEditMantenimiento: "can-edit-mantenimiento",
   canDeleteMantenimiento: "can-delete-mantenimiento",
   canViewMantenimiento: "can-view-mantenimiento",
+  canViewPerfil: "can-view-perfil",
 };
 
 export const PERMISSIONS = {
@@ -32,8 +34,10 @@ export const PERMISSIONS = {
     SCOPES.canEditTicket,
     SCOPES.canDeleteTicket,
     SCOPES.canViewTicket,
+    SCOPES.canViewPerfil,
   ],
   [ROLES.admin]: [
+    SCOPES.canViewDashboard,
     SCOPES.canCreateUsuario,
     SCOPES.canEditUsuario,
     SCOPES.canDeleteUsuario,
@@ -50,6 +54,7 @@ export const PERMISSIONS = {
     SCOPES.canEditMantenimiento,
     SCOPES.canDeleteMantenimiento,
     SCOPES.canViewMantenimiento,
+    SCOPES.canViewPerfil,
   ],
   [ROLES.mantenimiento]: [
     SCOPES.canViewEquipo,
@@ -59,6 +64,7 @@ export const PERMISSIONS = {
     SCOPES.canViewTicket,
     SCOPES.canEditMantenimiento,
     SCOPES.canViewMantenimiento,
+    SCOPES.canViewPerfil,
   ],
   [ROLES.jefeMantenimiento]: [
     SCOPES.canEditEquipo,
@@ -72,6 +78,7 @@ export const PERMISSIONS = {
     SCOPES.canEditMantenimiento,
     SCOPES.canDeleteMantenimiento,
     SCOPES.canViewMantenimiento,
+    SCOPES.canViewPerfil,
   ],
-  [ROLES.nulo]: [],
+  [ROLES.nulo]: [SCOPES.canViewPerfil],
 };

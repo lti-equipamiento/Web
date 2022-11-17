@@ -1,12 +1,15 @@
-import { Routes, Route } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Route, Routes } from "react-router-dom";
 import App from "./App";
-import TablaUsuarios from "./components/tables/TablaUsuarios2";
-import TablaTickets from "./components/tables/TablaTickets2";
-import TablaEquipos from "./components/tables/TablaEquipos2";
-import TablaMantenimientos from "./components/tables/TablaMantenimientos";
+import Dashboard from "./components/dashboard/DashboardPage";
+
 import PermissionsGate from "./permission/PermissionGate";
 import { SCOPES } from "./permission/PermissionMaps";
-import { useAuth0 } from "@auth0/auth0-react";
+import PageEquipo from "./pages/PageEquipo";
+import PageUsuario from "./pages/PageUsuario";
+import PageTicket from "./pages/PageTicket";
+import PageMantenimiento from "./pages/PageMantenimiento";
+import PageProfile from "./pages/PageProfile";
 
 export default function Rutas() {
   const { isAuthenticated } = useAuth0();
@@ -17,10 +20,26 @@ export default function Rutas() {
       {isAuthenticated && (
         <>
           <Route
+            path="/profile"
+            element={
+              <PermissionsGate scopes={[SCOPES.canViewPerfil]}>
+                <PageProfile />
+              </PermissionsGate>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <PermissionsGate scopes={[SCOPES.canViewDashboard]}>
+                <Dashboard />
+              </PermissionsGate>
+            }
+          />
+          <Route
             path="/equipo"
             element={
               <PermissionsGate scopes={[SCOPES.canViewEquipo]}>
-                <TablaEquipos />
+                <PageEquipo />
               </PermissionsGate>
             }
           />
@@ -28,7 +47,7 @@ export default function Rutas() {
             path="/usuario"
             element={
               <PermissionsGate scopes={[SCOPES.canViewUsuario]}>
-                <TablaUsuarios />
+                <PageUsuario />
               </PermissionsGate>
             }
           />
@@ -36,7 +55,7 @@ export default function Rutas() {
             path="/ticket"
             element={
               <PermissionsGate scopes={[SCOPES.canViewTicket]}>
-                <TablaTickets />
+                <PageTicket />
               </PermissionsGate>
             }
           />
@@ -44,7 +63,7 @@ export default function Rutas() {
             path="/mantenimiento"
             element={
               <PermissionsGate scopes={[SCOPES.canViewMantenimiento]}>
-                <TablaMantenimientos />
+                <PageMantenimiento />
               </PermissionsGate>
             }
           />

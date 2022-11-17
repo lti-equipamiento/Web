@@ -1,77 +1,71 @@
-import * as React from "react";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PeopleIcon from "@mui/icons-material/People";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import PeopleIcon from "@mui/icons-material/People";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import LayersIcon from "@mui/icons-material/Layers";
-import AssignmentIcon from "@mui/icons-material/Assignment";
+import HandymanIcon from "@mui/icons-material/Handyman";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
+import * as React from "react";
 import { NavLink } from "react-router-dom";
+import PermissionsGate from "../permission/PermissionGate";
+import { SCOPES } from "../permission/PermissionMaps";
 
 const navLinkStyle = { textDecoration: "none", color: "black" };
 
 export const mainListItems = (
   <React.Fragment>
-    <NavLink to="/usuario" style={navLinkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Usuarios" />
-      </ListItemButton>
-    </NavLink>
-    <NavLink to="/equipo" style={navLinkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <ShoppingCartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Equipos" />
-      </ListItemButton>
-    </NavLink>
-    <NavLink to="/ticket" style={navLinkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Tickets" />
-      </ListItemButton>
-    </NavLink>
-    <NavLink to="/mantenimiento" style={navLinkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Mantenimientos" />
-      </ListItemButton>
-    </NavLink>
+    <PermissionsGate scopes={[SCOPES.canViewDashboard]}>
+      <NavLink to="/dashboard" style={navLinkStyle}>
+        <ListItemButton>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItemButton>
+      </NavLink>
+    </PermissionsGate>
+    <PermissionsGate scopes={[SCOPES.canViewUsuario]}>
+      <NavLink to="/usuario" style={navLinkStyle}>
+        <ListItemButton>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Usuarios" />
+        </ListItemButton>
+      </NavLink>
+    </PermissionsGate>
+    <PermissionsGate scopes={[SCOPES.canViewEquipo]}>
+      <NavLink to="/equipo" style={navLinkStyle}>
+        <ListItemButton>
+          <ListItemIcon>
+            <MedicalInformationIcon />
+          </ListItemIcon>
+          <ListItemText primary="Equipos" />
+        </ListItemButton>
+      </NavLink>
+    </PermissionsGate>
+    <PermissionsGate scopes={[SCOPES.canViewTicket]}>
+      <NavLink to="/ticket" style={navLinkStyle}>
+        <ListItemButton>
+          <ListItemIcon>
+            <ConfirmationNumberIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tickets" />
+        </ListItemButton>
+      </NavLink>
+    </PermissionsGate>
+    <PermissionsGate scopes={[SCOPES.canViewMantenimiento]}>
+      <NavLink to="/mantenimiento" style={navLinkStyle}>
+        <ListItemButton>
+          <ListItemIcon>
+            <HandymanIcon />
+          </ListItemIcon>
+          <ListItemText primary="Mantenimientos" />
+        </ListItemButton>
+      </NavLink>
+    </PermissionsGate>
   </React.Fragment>
 );
 
-// export const secondaryListItems = (
-//   <React.Fragment>
-//     <ListSubheader component="div" inset>
-//       Saved reports
-//     </ListSubheader>
-//     <ListItemButton>
-//       <ListItemIcon>
-//         <AssignmentIcon />
-//       </ListItemIcon>
-//       <ListItemText primary="Current month" />
-//     </ListItemButton>
-//     <ListItemButton>
-//       <ListItemIcon>
-//         <AssignmentIcon />
-//       </ListItemIcon>
-//       <ListItemText primary="Last quarter" />
-//     </ListItemButton>
-//     <ListItemButton>
-//       <ListItemIcon>
-//         <AssignmentIcon />
-//       </ListItemIcon>
-//       <ListItemText primary="Year-end sale" />
-//     </ListItemButton>
-//   </React.Fragment>
-// );
+export const secondaryListItems = <React.Fragment></React.Fragment>;

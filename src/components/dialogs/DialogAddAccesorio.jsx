@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Grid, TextField, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -7,7 +7,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { HDVContextProvider } from "./../context/HDVContext";
 import { useMutation } from "@apollo/client";
 import { addComponente } from "../../grapqhql/Queries";
 
@@ -47,9 +46,9 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function DialogAddAccesorio({ dialogOpen, setDialogOpen }) {
+export default function DialogAddAccesorio(props) {
+  const { dialogOpen, setDialogOpen, HDVData, setReload } = props;
   const [accesorioData, setAccesorioData] = useState([]);
-  const { HDVData, setReload } = useContext(HDVContextProvider);
   const [AccesorioMutation] = useMutation(addComponente());
 
   useEffect(() => {
@@ -61,22 +60,26 @@ export default function DialogAddAccesorio({ dialogOpen, setDialogOpen }) {
   };
 
   const handleConfirmar = () => {
-    AccesorioMutation({
-      variables: {
-        serie_referencia: accesorioData.serie_referencia,
-        nombre: accesorioData.nombre,
-        marca: accesorioData.marca,
-        hoja_de_vida: accesorioData.hoja_de_vida,
-      },
-    });
-    setAccesorioData({
-      ...accesorioData,
-      nombre: " ",
-      marca: " ",
-      serie_referencia: " ",
-    });
-    setReload(true);
-    handleClose();
+    try {
+      AccesorioMutation({
+        variables: {
+          serie_referencia: accesorioData.serie_referencia,
+          nombre: accesorioData.nombre,
+          marca: accesorioData.marca,
+          hoja_de_vida: accesorioData.hoja_de_vida,
+        },
+      });
+      setAccesorioData({
+        ...accesorioData,
+        nombre: " ",
+        marca: " ",
+        serie_referencia: " ",
+      });
+      setReload(true);
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
