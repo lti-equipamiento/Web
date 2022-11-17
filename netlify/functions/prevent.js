@@ -4,27 +4,27 @@ import fetch from "cross-fetch";
 import moment from "moment";
 const { ApolloClient, InMemoryCache, gql, createHttpLink } = pkg;
 
+const httpLink = createHttpLink({
+  uri: "https://test-agem.hasura.app/v1/graphql",
+  fetch,
+});
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      "x-hasura-admin-secret":
+        "2VvxRojZ8hPQ6isQFb0yXVSwUnghyvC8BuQzYjLFpNhO0e8u7wJaaacKKBHBAQJp",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
 exports.handler = async function (event, context) {
-  const httpLink = createHttpLink({
-    uri: "https://test-agem.hasura.app/v1/graphql",
-    fetch,
-  });
-
-  const authLink = setContext((_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        "x-hasura-admin-secret":
-          "2VvxRojZ8hPQ6isQFb0yXVSwUnghyvC8BuQzYjLFpNhO0e8u7wJaaacKKBHBAQJp",
-      },
-    };
-  });
-
-  const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
-  });
-
   var res = [];
   const check = await client.query({
     query: gql`
