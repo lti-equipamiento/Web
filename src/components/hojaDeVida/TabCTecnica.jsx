@@ -6,13 +6,6 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import Tags from "./asd";
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 export default function TabCTecnica(props) {
   const {
@@ -26,18 +19,19 @@ export default function TabCTecnica(props) {
   } = props;
 
   const [showTipoAlimentacionData, setShowTipoAlimentacionData] = useState([]);
+
   const tipo_de_alimentacion = [
-    { label: "electricidad", value: true },
-    { label: "regulada", value: true },
-    { label: "estandar", value: true },
-    { label: "emergencia", value: true },
-    { label: "baterias", value: true },
-    { label: "servicio", value: true },
-    { label: "vapor", value: true },
-    { label: "oxigeno", value: true },
-    { label: "aire", value: true },
-    { label: "vacio", value: true },
-    { label: "agua", value: true },
+    { label: "agua", value: false },
+    { label: "aire", value: false },
+    { label: "baterias", value: false },
+    { label: "electricidad", value: false },
+    { label: "emergencia", value: false },
+    { label: "estandar", value: false },
+    { label: "oxigeno", value: false },
+    { label: "regulada", value: false },
+    { label: "servicio", value: false },
+    { label: "vacio", value: false },
+    { label: "vapor", value: false },
   ];
 
   const periodicidad = [
@@ -47,20 +41,29 @@ export default function TabCTecnica(props) {
     { label: "Anual" },
   ];
 
-  // --TODO: hay que acomodar el tipodealimentacioN
-
-  //Funciona, nos coloca en true y false a las property que necesitamos en la mutation
+  //Nos coloca en true y false a las property que necesitamos en la mutation
   const setTipoAlimentacion = (tipo) => {
     setShowTipoAlimentacionData(tipo);
 
     // si hay tipos seleccionados
     if (tipo) {
+      //creamos un array con todos los tipos
+      var newInsertTipo = tipo_de_alimentacion;
+      //Le colocamos true a los tipos que entran
+      tipo.forEach((t) => {
+        newInsertTipo.forEach((n) => {
+          if (t.label === n.label) {
+            n.value = true;
+          }
+        });
+      });
+
       // creamos un newTipos que lo asignaremos dsp
       var newTipos = tipoAlimentacionData;
       // por cada tipo hacemos lo siguiente
-      tipo.forEach((t) => {
+      newInsertTipo.forEach((t) => {
         // entramos a la property de newTipos y le asignamos la value
-        // ej: newTipos.electrecidad = true;
+        // ej: newTipos.electricidad = true;
         let property = t.label;
         newTipos[property] = t.value;
       });
@@ -82,8 +85,6 @@ export default function TabCTecnica(props) {
       setShowTipoAlimentacionData(tiposData);
     }
   }, [tipoAlimentacionData]);
-
-  console.log(showTipoAlimentacionData);
 
   return (
     <Grid container rowSpacing={0} columnSpacing={1}>
@@ -174,28 +175,20 @@ export default function TabCTecnica(props) {
       <Grid item marginTop={2} xs={12}>
         <Autocomplete
           multiple
-          fullWidth
           disabled={disabledMode}
           id="tipo_alimentacion-autocomplete"
           options={tipo_de_alimentacion}
-          disableCloseOnSelect
-          getOptionLabel={(option) => option.label}
           value={showTipoAlimentacionData}
+          isOptionEqualToValue={(option, value) => option.label === value.label}
+          filterSelectedOptions
           renderInput={(params) => (
-            <TextField {...params} label="Tipo de alimentación" />
+            <TextField
+              {...params}
+              label="Tipo de alimentación"
+              placeholder="Agregar"
+            />
           )}
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox
-                icon={icon}
-                checkedIcon={checkedIcon}
-                style={{ marginRight: 8 }}
-                checked={showTipoAlimentacionData.value}
-              />
-              {option.label}
-            </li>
-          )}
-          onChange={(e, newValue) => {
+          onChange={(event, newValue) => {
             setTipoAlimentacion(newValue);
           }}
         />
