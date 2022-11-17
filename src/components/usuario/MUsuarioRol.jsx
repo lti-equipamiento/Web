@@ -6,7 +6,13 @@ import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
 export default function MUsuarioRol({ setDialogOpen, user, setReload }) {
-  const roles = ["admin", "normal", "mantenimiento", "jefe-mantenimiento"];
+  const roles = [
+    "admin",
+    "normal",
+    "mantenimiento",
+    "jefe-mantenimiento",
+    "nulo",
+  ];
   const [rol, setRol] = useState("");
   const [editRol] = useMutation(editRolUsuario());
 
@@ -27,7 +33,7 @@ export default function MUsuarioRol({ setDialogOpen, user, setReload }) {
         <Autocomplete
           fullWidth
           id="Rol"
-          options={roles}
+          options={user.nombre != null ? roles : ["nulo"]}
           value={user.rol}
           renderInput={(params) => <TextField {...params} label="Rol" />}
           onChange={(e, newValue) => {
