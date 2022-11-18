@@ -6,21 +6,29 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { Typography, Button, Box } from "@mui/material";
+import { Typography, FormControlLabel, Button, Box } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-import { getTickets } from "../grapqhql/Queries";
+import { getTickets, getUsuarioNombreRol } from "../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
 import AMTicket from "../components/ticket/AMTicket";
 import AMantenimiento from "../components/mantenimiento/AMantenimiento";
 import CustomizedDialogs from "../components/dialogs/Dialog";
 import Popover from "@mui/material/Popover";
-
-const ticket = getTickets();
+import Switch from "@mui/material/Switch";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function PageTicket() {
+  //auth0
+  const { user } = useAuth0();
+  //queries
+  const ticket = getTickets();
+  const userTicket = getUsuarioNombreRol();
   // tabla
   const { loading, data, refetch } = useQuery(ticket);
+  const { loading: loadingUser, data: dataUser } = useQuery(userTicket, {
+    variables: { id: user.sub },
+  });
   const [pageSize, setPageSize] = useState(5);
   const [reload, setReload] = useState(false);
   const [rows, setRows] = useState([]);
@@ -40,6 +48,9 @@ export default function PageTicket() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [value, setValue] = useState("");
 
+  //Filter asignados
+  const [show, setShow] = useState(false);
+
   useEffect(() => {
     if (reload) {
       refetch();
@@ -48,14 +59,41 @@ export default function PageTicket() {
   }, [refetch, reload]);
 
   useEffect(() => {
-    if (!loading && data) {
-      setRows(data.data_ticket);
+    if (data && dataUser) {
+      let data_rol = data.data_ticket;
+      if (
+        dataUser.data_usuario_by_pk.rol === "mantenimiento" ||
+        dataUser.data_usuario_by_pk.rol === "normal"
+      ) {
+        data_rol = data_rol.filter(
+          (d) => d.usuario === user.sub || d.asignado === user.sub
+        );
+      }
+      if (!show) {
+        const filtered_data = data_rol.filter((d) => d.asignado === null);
+        setRows(filtered_data);
+      } else {
+        const filtered_data = data_rol;
+        setRows(filtered_data);
+      }
     }
-  }, [data, loading]);
+  }, [data, loading, show, loadingUser]);
 
   function CustomToolBar() {
     return (
       <GridToolbarContainer sx={{ justifyContent: "right" }}>
+        <FormControlLabel
+          control={
+            <Switch
+              onChange={(e) => {
+                setShow(!show);
+              }}
+              checked={show}
+            />
+          }
+          label="Mostrar ya asignados"
+          labelPlacement="start"
+        />
         <GridToolbarExport
           csvOptions={{ allColumns: true }}
           printOptions={{

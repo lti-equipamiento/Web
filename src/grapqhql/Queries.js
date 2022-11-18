@@ -47,6 +47,17 @@ export function getUsuario() {
   `;
 }
 
+export function getUsuarioNombreRol(id) {
+  return gql`
+    query getUsuarioNombreRol($id: String!) {
+      data_usuario_by_pk(id: $id) {
+        nombre
+        rol
+      }
+    }
+  `;
+}
+
 export function editUsuario() {
   return gql`
     mutation editUsuario(
@@ -311,8 +322,10 @@ export function getTickets() {
           nombre
         }
         tipo
+        usuario
         id
         fecha
+        asignado
         equipo
       }
     }
@@ -478,6 +491,12 @@ export function addMantenimiento() {
           equipo: $equipo
           hoja_de_vida: $hoja_de_vida
         }
+      ) {
+        id
+      }
+      update_data_ticket_by_pk(
+        pk_columns: { id: $ticket }
+        _set: { asignado: $usuario }
       ) {
         id
       }

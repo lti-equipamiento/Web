@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Edit } from "@mui/icons-material";
-import { Typography } from "@mui/material";
+import { Typography, FormControlLabel } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {
@@ -11,22 +11,33 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
-import { getMantenimientos } from "../grapqhql/Queries";
+import { getMantenimientos, getUsuarioNombreRol } from "../grapqhql/Queries";
 import CustomizedDialogs from "../components/dialogs/Dialog";
 import MMantenimiento from "../components/mantenimiento/MMantenimiento";
 import Popover from "@mui/material/Popover";
-
-const mantenimientos = getMantenimientos();
+import Switch from "@mui/material/Switch";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function PageMantenimiento() {
+  //auth0
+  const { user } = useAuth0();
+  //queries
+  const mantenimientos = getMantenimientos();
+  const userMant = getUsuarioNombreRol();
+  // tabla
   const [pageSize, setPageSize] = useState(5);
   const { loading, data, refetch } = useQuery(mantenimientos);
+  const { data: dataMant } = useQuery(userMant, {
+    variables: { id: user.sub },
+  });
   const [rows, setRows] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editMantenimiento, setEditMantenimiento] = useState([]);
   const [reload, setReload] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [value, setValue] = useState("");
+  //Filter asignados
+  const [show, setShow] = useState(false);
 
   const handleEdit = (equipo) => {
     handleClickOpenDialog();
@@ -40,6 +51,18 @@ export default function PageMantenimiento() {
   function CustomToolBar() {
     return (
       <GridToolbarContainer sx={{ justifyContent: "right" }}>
+        <FormControlLabel
+          control={
+            <Switch
+              onChange={(e) => {
+                setShow(!show);
+              }}
+              checked={show}
+            />
+          }
+          label="Mostrar realizados"
+          labelPlacement="start"
+        />
         <GridToolbarExport
           csvOptions={{ allColumns: true }}
           printOptions={{
@@ -225,10 +248,20 @@ export default function PageMantenimiento() {
   }, [reload, refetch]);
 
   useEffect(() => {
-    if (!loading && data) {
-      setRows(data.data_mantenimiento);
+    if (data && dataMant) {
+      let data_rol = data.data_mantenimiento;
+      if (dataMant.data_usuario_by_pk.rol === "mantenimiento") {
+        data_rol = data_rol.filter((d) => d.usuario === user.sub);
+      }
+      if (!show) {
+        const filtered_data = data_rol.filter((d) => d.estado !== "Cerrado");
+        setRows(filtered_data);
+      } else {
+        const filtered_data = data_rol;
+        setRows(filtered_data);
+      }
     }
-  }, [data, loading]);
+  }, [data, dataMant, show, user.sub]);
 
   //On Hover
   const handlePopoverOpen = (event) => {

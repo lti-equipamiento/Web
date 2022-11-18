@@ -28,9 +28,14 @@ export default function AMantenimiento({
   useEffect(() => {
     if (data) {
       let usu = [];
-      data.data_usuario.forEach(
-        (usuario) => usuario.nombre != null && usu.push(usuario.nombre)
-      );
+      data.data_usuario.forEach((usuario) => {
+        if (
+          usuario.rol == "mantenimiento" ||
+          usuario.rol == "jefe-mantenimiento"
+        ) {
+          usuario.nombre != null && usu.push(usuario.nombre);
+        }
+      });
       setUsuarios(usu);
     }
   }, [data]);

@@ -169,6 +169,7 @@ export default function PageUsuario() {
           Usuarios
         </Typography>
         <DataGrid
+          loading={loading}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           rows={rows}
           autoHeight
