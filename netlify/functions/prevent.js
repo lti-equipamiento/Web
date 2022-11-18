@@ -1,7 +1,12 @@
-import pkg from "@apollo/client";
-import { setContext } from "@apollo/client/link/context/context.cjs";
-import fetch from "cross-fetch";
-import moment from "moment";
+// import pkg from "@apollo/client";
+// import { setContext } from "@apollo/client/link/context/context.cjs";
+// import fetch from "cross-fetch";
+// import moment from "moment";
+
+const pkg = require("@apollo/client");
+const setContext = require("@apollo/client/link/context/context.cjs");
+const fetch = require("cross-fetch");
+const moment = require("moment");
 const { ApolloClient, InMemoryCache, gql, createHttpLink } = pkg;
 
 const httpLink = createHttpLink({
