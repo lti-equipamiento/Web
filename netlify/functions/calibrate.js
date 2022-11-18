@@ -43,7 +43,7 @@ exports.handler = async function (event, context) {
   for (let i = 0; i < check.data.data_equipo.length; i++) {
     const data = check.data.data_equipo[i];
     var now = moment();
-    var input = moment(data.hojaDeVidaByHojaDeVida.prox_mant_prev);
+    var input = moment(data.hojaDeVidaByHojaDeVida.prox_calib_prev);
     var isThisWeek = now.isoWeek() == input.isoWeek();
     var response;
     if (isThisWeek) {
@@ -70,10 +70,10 @@ exports.handler = async function (event, context) {
           }
         `,
         variables: {
-          descripcion: "Mantenimiento preventivo",
+          descripcion: "Mantenimiento preventivo calibración",
           equipo: data.id,
           fecha: moment().format("YYYY-MM-D"),
-          tipo: "Preventivo",
+          tipo: "Preventivo calibración",
           usuario: "system",
         },
       });
