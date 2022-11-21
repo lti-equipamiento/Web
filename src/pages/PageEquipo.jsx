@@ -55,7 +55,10 @@ export default function PageEquipo() {
   // useEffect Tabla
   useEffect(() => {
     if (reload) {
+      console.log(reload);
+      console.log(data);
       refetch();
+      console.log(data);
       setReload(false);
     }
   }, [reload, refetch]);

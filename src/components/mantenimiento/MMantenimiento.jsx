@@ -42,33 +42,39 @@ export default function MMantenimiento({
 
   useEffect(() => {
     if (mant) {
+      console.log(mant);
       setMantData(mant);
+      setMantData({ ...mant, fecha_egreso: new Date() });
     }
   }, [mant]);
 
   const onSubmit = () => {
-    mantMutation({
-      variables: {
-        id: mantData.id,
-        costo: mantData.costo,
-        equipo: data.data_equipo.find(
-          (equipo) =>
-            equipo.nombre + " (" + equipo.n_serie + ")" ===
-            mantData.equipoByEquipo.nombre +
-              " (" +
-              mantData.equipoByEquipo.n_serie +
-              ")"
-        ).id,
-        estado: mantData.estado,
-        fecha_egreso: mantData.fecha_egreso,
-        piezas: mantData.piezas,
-        procedimiento: mantData.procedimiento,
-        resultado: mantData.resultado,
-        tiempo_empleado: tiempo.horas + ":" + tiempo.minutos,
-      },
-    });
-    setDialogOpen(false);
-    setReload(true);
+    try {
+      mantMutation({
+        variables: {
+          id: mantData.id,
+          costo: mantData.costo,
+          equipo: data.data_equipo.find(
+            (equipo) =>
+              equipo.nombre + " (" + equipo.n_serie + ")" ===
+              mantData.equipoByEquipo.nombre +
+                " (" +
+                mantData.equipoByEquipo.n_serie +
+                ")"
+          ).id,
+          estado: mantData.estado,
+          fecha_egreso: mantData.fecha_egreso,
+          piezas: mantData.piezas,
+          procedimiento: mantData.procedimiento,
+          resultado: mantData.resultado,
+          tiempo_empleado: tiempo.horas + ":" + tiempo.minutos,
+        },
+      });
+      setDialogOpen(false);
+      setReload(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

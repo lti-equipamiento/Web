@@ -1,0 +1,9 @@
+.top-img {
+    border-radius: "50%";
+    border: "5px solid gray";
+    height: "200px";
+    width: "200px";
+    position: "absolute";
+    top: "96px";
+    opacity: "0";
+}

@@ -33,8 +33,8 @@ export function getUsuarios() {
 
 export function getUsuario() {
   return gql`
-    query getUsuario($mail: String!) {
-      data_usuario_by_pk(mail: $mail) {
+    query getUsuario($id: String!) {
+      data_usuario_by_pk(id: $id) {
         cedula
         direccion
         id
