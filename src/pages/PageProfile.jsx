@@ -7,6 +7,7 @@ import {
   TextField,
   Paper,
   Typography,
+  Input,
 } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
 import EditIcon from "@mui/icons-material/Edit";
@@ -26,17 +27,20 @@ export default function PageProfile() {
   const [editUsuarioMutation] = useMutation(editUsuario());
   const [disabledMode, setDisabledMode] = useState(true);
   const [profileData, setProfileData] = useState([]);
-  const [image, setImage] = useState([]);
 
-  const onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = {
-        preview: URL.createObjectURL(event.target.files[0]),
-        data: event.target.files[0],
-      };
-      setImage(file);
-    }
-  };
+  // Imagen
+  const [image, setImage] = useState([]);
+  const [selectedFile, setSelectedFile] = useState();
+
+  // const onImageChange = (event) => {
+  //   if (event.target.files && event.target.files[0]) {
+  //     const file = {
+  //       preview: URL.createObjectURL(event.target.files[0]),
+  //       data: event.target.files[0],
+  //     };
+  //     setImage(file);
+  //   }
+  // };
 
   useEffect(() => {
     if (data) {
@@ -48,6 +52,15 @@ export default function PageProfile() {
   const onUploadPhoto = () => {
     // TODO: agregar la funcionalidad de subir la foto
   };
+
+  // Funcion del input del upload file
+  const fileSelectedHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  console.log(selectedFile);
+
+  const fileUploadHandler = () => {};
 
   // Funcion del boton edit
   const onEdit = () => {
@@ -131,7 +144,16 @@ export default function PageProfile() {
             <Grid item xs={12} marginBottom={2}>
               <Button onClick={onUploadPhoto} variant="contained">
                 Subir Foto
+                <input
+                  // style={{ "margin-top": 20 }}
+                  type="file"
+                  onChange={fileSelectedHandler}
+                />
               </Button>
+              <Input type="file" variant="outlined">
+                {" "}
+                asdasd
+              </Input>
             </Grid>
           </Grid>
 

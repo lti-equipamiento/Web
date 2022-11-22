@@ -94,18 +94,6 @@ export default function PageMantenimiento() {
           >
             <Edit color="primary" />
           </Button>
-          <CustomizedDialogs
-            modalTitle="Edición de mantenimiento"
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-          >
-            <MMantenimiento
-              setDialogOpen={setDialogOpen}
-              setReload={setReload}
-              mant={editMantenimiento}
-              submitButtonText="Editar"
-            />
-          </CustomizedDialogs>
         </>,
       ],
     },
@@ -337,6 +325,17 @@ export default function PageMantenimiento() {
           <Typography sx={{ p: 1 }}>{`${value}`}</Typography>
         </Popover>
       </Box>
+      <CustomizedDialogs
+        modalTitle="Edición de mantenimiento"
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+      >
+        <MMantenimiento
+          setDialogOpen={setDialogOpen}
+          setReload={setReload}
+          mant={editMantenimiento}
+        />
+      </CustomizedDialogs>
     </>
   );
 }
