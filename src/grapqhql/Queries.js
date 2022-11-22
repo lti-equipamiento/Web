@@ -904,3 +904,42 @@ export function getTipoAlimentacion() {
     }
   `;
 }
+
+//-----------------------------------Dashboard----------------------------
+
+export function getCostos() {
+  return gql`
+    query getCostos($fecha_inicio: date!, $fecha_fin: date!) {
+      data_mantenimiento(
+        where: { fecha_egreso: { _gte: $fecha_inicio, _lt: $fecha_fin } }
+      ) {
+        costo
+        fecha_egreso
+      }
+    }
+  `;
+}
+
+export function getMantPrev() {
+  return gql`
+    query getMantPrev($fecha_inicio: date!, $fecha_fin: date!) {
+      data_hoja_de_vida(
+        where: { prox_mant_prev: { _gte: $fecha_inicio, _lt: $fecha_fin } }
+      ) {
+        prox_mant_prev
+      }
+    }
+  `;
+}
+
+export function getCalibPrev() {
+  return gql`
+    query getCalibPrev($fecha_inicio: date!, $fecha_fin: date!) {
+      data_hoja_de_vida(
+        where: { prox_mant_prev: { _gte: $fecha_inicio, _lt: $fecha_fin } }
+      ) {
+        prox_calib_prev
+      }
+    }
+  `;
+}

@@ -67,6 +67,7 @@ export const PERMISSIONS = {
     SCOPES.canViewPerfil,
   ],
   [ROLES.jefeMantenimiento]: [
+    SCOPES.canViewDashboard,
     SCOPES.canEditEquipo,
     SCOPES.canDeleteEquipo,
     SCOPES.canViewEquipo,

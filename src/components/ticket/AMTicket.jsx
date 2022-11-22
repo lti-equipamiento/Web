@@ -24,7 +24,6 @@ export default function AMTicket({
   const [ticketData, setTicketData] = useState([]);
   const [equipos, setEquipos] = useState([]);
   const [allEquipos, setAllEquipos] = useState([]);
-  const [nomEquipos, setNomEquipo] = useState([]);
   const [tiposTicket, setTipoTicket] = useState([]);
   const [allUbicaciones, setAllUbicaciones] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
@@ -47,16 +46,6 @@ export default function AMTicket({
     });
     setDialogOpen(false);
     setReload(true);
-  };
-
-  const setNombreEquipos = () => {
-    let eqnom = [];
-    data.data_equipo.forEach((equipo) => {
-      if (equipo.nombre === equipos.nombre) {
-        eqnom.push(equipo.nombre);
-      }
-    });
-    setNomEquipo(eqnom);
   };
 
   useEffect(() => {
@@ -122,7 +111,11 @@ export default function AMTicket({
   const getEquipos = (servicio, ubicacion) => {
     let eq = [];
     allEquipos.forEach((equipo) => {
-      if (equipo.servicio === servicio && equipo.ubicacion === ubicacion) {
+      if (
+        equipo.servicio === servicio &&
+        equipo.ubicacion === ubicacion &&
+        equipo.estado_funcional !== "Inactivo"
+      ) {
         eq.push(equipo.nombre);
       }
     });

@@ -32,9 +32,11 @@ export default function MMantenimiento({
       let est = [];
       let eq = [];
       data.data_e_estado.forEach((estado) => est.push(estado.nombre));
-      data.data_equipo.forEach((equipo) =>
-        eq.push(equipo.nombre + " (" + equipo.n_serie + ")")
-      );
+      data.data_equipo.forEach((equipo) => {
+        if (eq.estado_funcional !== "Inactivo") {
+          eq.push(equipo.nombre + " (" + equipo.n_serie + ")");
+        }
+      });
       setEstados(est);
       setEquipos(eq);
     }

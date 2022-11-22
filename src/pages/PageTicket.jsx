@@ -43,6 +43,7 @@ export default function PageTicket() {
   // mantenimiento de ticket
   const [dialogMantOpen, setDialogMantOpen] = useState(false);
   const [mant, setMant] = useState([]);
+  const [hide, setHide] = useState(false);
 
   //PopOver
   const [anchorEl, setAnchorEl] = useState(null);
@@ -61,14 +62,22 @@ export default function PageTicket() {
   useEffect(() => {
     if (data && dataUser) {
       let data_rol = data.data_ticket;
+
       if (
         dataUser.data_usuario_by_pk.rol === "mantenimiento" ||
         dataUser.data_usuario_by_pk.rol === "normal"
       ) {
-        data_rol = data_rol.filter(
-          (d) => d.usuario === user.sub || d.asignado === user.sub
-        );
+        setHide(true);
       }
+
+      // if ( //Si se muestran solo los propios, no saben si ya esta reportado o no un equipo
+      //   dataUser.data_usuario_by_pk.rol === "mantenimiento" ||
+      //   dataUser.data_usuario_by_pk.rol === "normal"
+      // ) {
+      //   data_rol = data_rol.filter(
+      //     (d) => d.usuario === user.sub || d.asignado === user.sub
+      //   );
+      // }
       if (!show) {
         const filtered_data = data_rol.filter((d) => d.asignado === null);
         setRows(filtered_data);
@@ -297,9 +306,10 @@ export default function PageTicket() {
           columns={columns}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          rowsPerPageOptions={[5, 10, 20]}
+          rowsPerPageOptions={[5, 10, 20, 50, 100]}
           pagination
           disableSelectionOnClick
+          columnVisibilityModel={{ Asignar: !hide }}
           components={{ Toolbar: CustomToolBar }}
           componentsProps={{
             cell: {
