@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Edit } from "@mui/icons-material";
-import { Typography, FormControlLabel } from "@mui/material";
+import { Typography, FormControlLabel, Snackbar, Alert } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {
@@ -31,22 +31,42 @@ export default function PageMantenimiento() {
     variables: { id: user.sub },
   });
   const [rows, setRows] = useState([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editMantenimiento, setEditMantenimiento] = useState([]);
   const [reload, setReload] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [value, setValue] = useState("");
+
+  // Edit Mantenimiento
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editMantenimiento, setEditMantenimiento] = useState([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarText, setSnackbarText] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+
   //Filter asignados
   const [show, setShow] = useState(false);
 
-  const handleEdit = (equipo) => {
-    handleClickOpenDialog();
-    setEditMantenimiento(equipo);
-  };
+  useEffect(() => {
+    if (reload) {
+      refetch();
+      setReload(false);
+    }
+  }, [reload, refetch]);
 
-  const handleClickOpenDialog = () => {
-    setDialogOpen(true);
-  };
+  useEffect(() => {
+    if (data && dataMant) {
+      let data_rol = data.data_mantenimiento;
+      if (dataMant.data_usuario_by_pk.rol === "mantenimiento") {
+        data_rol = data_rol.filter((d) => d.usuario === user.sub);
+      }
+      if (!show) {
+        const filtered_data = data_rol.filter((d) => d.estado !== "Cerrado");
+        setRows(filtered_data);
+      } else {
+        const filtered_data = data_rol;
+        setRows(filtered_data);
+      }
+    }
+  }, [data, dataMant, show, user.sub]);
 
   function CustomToolBar() {
     return (
@@ -90,7 +110,10 @@ export default function PageMantenimiento() {
         <>
           <Button
             title="Modificar mantenimiento"
-            onClick={() => handleEdit(params.row)}
+            onClick={() => {
+              setDialogOpen(true);
+              setEditMantenimiento(params.row);
+            }}
           >
             <Edit color="primary" />
           </Button>
@@ -228,29 +251,6 @@ export default function PageMantenimiento() {
     },
   ];
 
-  useEffect(() => {
-    if (reload) {
-      refetch();
-      setReload(false);
-    }
-  }, [reload, refetch]);
-
-  useEffect(() => {
-    if (data && dataMant) {
-      let data_rol = data.data_mantenimiento;
-      if (dataMant.data_usuario_by_pk.rol === "mantenimiento") {
-        data_rol = data_rol.filter((d) => d.usuario === user.sub);
-      }
-      if (!show) {
-        const filtered_data = data_rol.filter((d) => d.estado !== "Cerrado");
-        setRows(filtered_data);
-      } else {
-        const filtered_data = data_rol;
-        setRows(filtered_data);
-      }
-    }
-  }, [data, dataMant, show, user.sub]);
-
   //On Hover
   const handlePopoverOpen = (event) => {
     const dataCell = event.target.textContent;
@@ -263,6 +263,14 @@ export default function PageMantenimiento() {
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
   };
 
   const open = Boolean(anchorEl);
@@ -334,8 +342,24 @@ export default function PageMantenimiento() {
           setDialogOpen={setDialogOpen}
           setReload={setReload}
           mant={editMantenimiento}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarText}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

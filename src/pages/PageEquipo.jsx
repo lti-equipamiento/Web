@@ -26,7 +26,9 @@ const equipo = getEquipos();
 export default function PageEquipo() {
   // Tabla
   const [pageSize, setPageSize] = React.useState(5);
-  const { loading, data, refetch } = useQuery(equipo);
+  const { loading, data, refetch } = useQuery(equipo, {
+    fetchPolicy: "no-cache",
+  });
   const [reload, setReload] = useState(false);
   const [rows, setRows] = useState([]);
 
@@ -55,10 +57,7 @@ export default function PageEquipo() {
   // useEffect Tabla
   useEffect(() => {
     if (reload) {
-      console.log(reload);
-      console.log(data);
       refetch();
-      console.log(data);
       setReload(false);
     }
   }, [reload, refetch]);
@@ -335,7 +334,7 @@ export default function PageEquipo() {
           Equipos
         </Typography>
         <DataGrid
-          loading={loading}
+          loading={loading || reload}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           rows={rows}
           autoHeight

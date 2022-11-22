@@ -143,7 +143,12 @@ export default function AMTicket({
           value={ticketData.servicio}
           renderInput={(params) => <TextField {...params} label="Servicios" />}
           onChange={(e, newValue) => {
-            setTicketData({ ...ticketData, servicio: newValue });
+            setTicketData({
+              ...ticketData,
+              servicio: newValue,
+              ubicacion: "",
+              equipo: "",
+            });
             setUbicacionesDisabled(false);
             getUbicaciones(newValue);
           }}
@@ -160,7 +165,7 @@ export default function AMTicket({
             <TextField {...params} label="Ubicaciones" />
           )}
           onChange={(e, newValue) => {
-            setTicketData({ ...ticketData, ubicacion: newValue });
+            setTicketData({ ...ticketData, ubicacion: newValue, equipo: "" });
             setEquiposDisabled(false);
             getEquipos(ticketData.servicio, newValue);
           }}
@@ -191,19 +196,6 @@ export default function AMTicket({
           }}
         />
       </Grid>
-      {/* <Grid item xs={12}>
-        <TextField
-          label="Fecha"
-          value={ticketData["fecha"]}
-          onChange={(e) =>
-            setTicketData({ ...ticketData, fecha: e.target.value })
-          }
-          margin="normal"
-          variant="outlined"
-          color="secondary"
-          fullWidth
-        />
-      </Grid> */}
       <Grid item xs={12}>
         <TextField
           label="Descripcion"
@@ -218,7 +210,8 @@ export default function AMTicket({
           fullWidth
         />
       </Grid>
-      <Grid item>
+
+      <Grid container justifyContent="flex-end">
         <Button
           variant="contained"
           onClick={() => {

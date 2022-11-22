@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import {
   editMantenimiento,
   getEstadosMantenimiento,
@@ -10,12 +10,15 @@ import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useAuth0 } from "@auth0/auth0-react";
 
-export default function MMantenimiento({
-  setReload,
-  setDialogOpen,
-  mant,
-  submitButtonText,
-}) {
+export default function MMantenimiento(props) {
+  const {
+    setReload,
+    setDialogOpen,
+    mant,
+    setOpenSnackbar,
+    setSnackbarText,
+    setSnackbarSeverity,
+  } = props;
   const userMant = getUsuarioNombreRol();
   const { user } = useAuth0();
   const [mantData, setMantData] = useState([]);
@@ -26,7 +29,6 @@ export default function MMantenimiento({
   const { data: dataUser } = useQuery(userMant, {
     variables: { id: user.sub },
   });
-
   const [mensajeError, setMensajeError] = useState("");
   const [errorCosto, setErrorCosto] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(false);
@@ -59,26 +61,34 @@ export default function MMantenimiento({
   useEffect(() => {
     if (mant) {
       setMantData(mant);
-      // setMantData({ ...mant, fecha_egreso: new Date() });
+      setMantData({
+        ...mant,
+        equipo:
+          mant.equipoByEquipo.nombre + " (" + mant.equipoByEquipo.n_serie + ")",
+      });
     }
   }, [mant]);
 
+  console.log(mantData);
+
   const onSubmit = () => {
+    setOpenSnackbar(true);
     try {
+      var date = null;
+      if (mantData.estado === "Cerrado") {
+        date = new Date();
+      }
+
       mantMutation({
         variables: {
           id: mantData.id,
           costo: mantData.costo,
           equipo: data.data_equipo.find(
             (equipo) =>
-              equipo.nombre + " (" + equipo.n_serie + ")" ===
-              mantData.equipoByEquipo.nombre +
-                " (" +
-                mantData.equipoByEquipo.n_serie +
-                ")"
+              equipo.nombre + " (" + equipo.n_serie + ")" === mantData.equipo
           ).id,
           estado: mantData.estado,
-          fecha_egreso: mantData.fecha_egreso,
+          fecha_egreso: date,
           piezas: mantData.piezas,
           procedimiento: mantData.procedimiento,
           resultado: mantData.resultado,
@@ -87,8 +97,12 @@ export default function MMantenimiento({
       });
       setDialogOpen(false);
       setReload(true);
+      setSnackbarText("Edicion exitosa.");
+      setSnackbarSeverity("success");
     } catch (error) {
       console.log(error);
+      setSnackbarText("Error en edición.");
+      setSnackbarSeverity("error");
     }
   };
 
@@ -103,7 +117,8 @@ export default function MMantenimiento({
               fullWidth
               id="servicio-autocomplete"
               options={equipos}
-              value={
+              value={mantData.equipo}
+              defaultValue={
                 mant.equipoByEquipo.nombre +
                 " (" +
                 mant.equipoByEquipo.n_serie +
@@ -121,7 +136,7 @@ export default function MMantenimiento({
             <TextField
               inputProps={{ maxLength: 50 }}
               label="Costo"
-              value={mant.costo}
+              value={mantData.costo}
               onChange={(e) => {
                 if (!e.target.value.match(regexDecimalResult)) {
                   setErrorCosto(true);
@@ -149,7 +164,8 @@ export default function MMantenimiento({
               fullWidth
               id="estado"
               options={estados}
-              value={mant.estado}
+              value={mantData.estado}
+              defaultValue={mant.estado}
               onChange={(e, newValue) => {
                 setMantData({ ...mantData, estado: newValue });
               }}
@@ -162,7 +178,7 @@ export default function MMantenimiento({
             <TextField
               label="Procedimiento"
               inputProps={{ maxLength: 5000 }}
-              value={mant.procedimiento}
+              value={mantData.procedimiento}
               onChange={(e) =>
                 setMantData({ ...mantData, procedimiento: e.target.value })
               }
@@ -177,7 +193,7 @@ export default function MMantenimiento({
           <Grid item xs={12}>
             <TextField
               label="Piezas"
-              value={mant.piezas}
+              value={mantData.piezas}
               onChange={(e) =>
                 setMantData({ ...mantData, piezas: e.target.value })
               }
@@ -193,7 +209,7 @@ export default function MMantenimiento({
             <TextField
               label="Resultado"
               inputProps={{ maxLength: 50 }}
-              value={mant.resultado}
+              value={mantData.resultado}
               onChange={(e) =>
                 setMantData({ ...mantData, resultado: e.target.value })
               }
@@ -209,7 +225,7 @@ export default function MMantenimiento({
             <TextField
               label="Tiempo empleado"
               type={"time"}
-              value={mant.tiempo_empleado}
+              value={mantData.tiempo_empleado}
               onChange={(e) =>
                 setMantData({ ...mantData, tiempo_empleado: e.target.value })
               }
@@ -228,7 +244,7 @@ export default function MMantenimiento({
               }}
               color="primary"
             >
-              {submitButtonText}
+              Editar
             </Button>
           </Grid>
         </Grid>
