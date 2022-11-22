@@ -18,14 +18,14 @@ export function getAPIToken(data) {
 export function getUsuarios() {
   return gql`
     query getUsuarios {
-      data_usuario {
-        id
-        nombre
-        mail
-        telefono
-        direccion
+      data_usuario(where: { id: { _neq: "system" } }) {
         cedula
+        direccion
+        mail
+        nombre
         rol
+        telefono
+        id
       }
     }
   `;

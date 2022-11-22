@@ -3,10 +3,12 @@ import { TextField, Button, Typography } from "@mui/material";
 import {
   editMantenimiento,
   getEstadosMantenimiento,
+  getUsuarioNombreRol,
 } from "../../grapqhql/Queries";
 import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function MMantenimiento({
   setReload,
@@ -14,12 +16,16 @@ export default function MMantenimiento({
   mant,
   submitButtonText,
 }) {
+  const userMant = getUsuarioNombreRol();
+  const { user } = useAuth0();
   const [mantData, setMantData] = useState([]);
   const { loading, data } = useQuery(getEstadosMantenimiento());
   const [mantMutation] = useMutation(editMantenimiento());
   const [estados, setEstados] = useState([]);
   const [equipos, setEquipos] = useState([]);
-  const [tiempo, setTiempo] = useState([{ horas: 0, minutos: 0 }]);
+  const { data: dataUser } = useQuery(userMant, {
+    variables: { id: user.sub },
+  });
 
   const [mensajeError, setMensajeError] = useState("");
   const [errorCosto, setErrorCosto] = useState(false);
@@ -28,10 +34,18 @@ export default function MMantenimiento({
   const regexDecimalResult = /(^[0-9]*\.[0-9]{2}$)|(^[0-9]*$)/;
 
   useEffect(() => {
-    if (data) {
+    if (data && dataUser) {
       let est = [];
       let eq = [];
-      data.data_e_estado.forEach((estado) => est.push(estado.nombre));
+      data.data_e_estado.forEach((estado) => {
+        if (dataUser.data_usuario_by_pk.rol === "mantenimiento") {
+          if (estado.nombre !== "Cerrado") {
+            est.push(estado.nombre);
+          }
+        } else {
+          est.push(estado.nombre);
+        }
+      });
       data.data_equipo.forEach((equipo) => {
         if (eq.estado_funcional !== "Inactivo") {
           eq.push(equipo.nombre + " (" + equipo.n_serie + ")");
@@ -40,13 +54,12 @@ export default function MMantenimiento({
       setEstados(est);
       setEquipos(eq);
     }
-  }, [data]);
+  }, [data, dataUser]);
 
   useEffect(() => {
     if (mant) {
-      console.log(mant);
       setMantData(mant);
-      setMantData({ ...mant, fecha_egreso: new Date() });
+      // setMantData({ ...mant, fecha_egreso: new Date() });
     }
   }, [mant]);
 
@@ -69,7 +82,7 @@ export default function MMantenimiento({
           piezas: mantData.piezas,
           procedimiento: mantData.procedimiento,
           resultado: mantData.resultado,
-          tiempo_empleado: tiempo.horas + ":" + tiempo.minutos,
+          tiempo_empleado: mantData.tiempo_empleado,
         },
       });
       setDialogOpen(false);
@@ -193,26 +206,12 @@ export default function MMantenimiento({
             />
           </Grid>
           <Grid item xs={12}>
-            <Typography>Tiempo empleado</Typography>
-          </Grid>
-
-          <Grid item xs={6}>
             <TextField
-              label="horas"
-              value={mant.tiempo_empleado?.split(":")[0]}
-              onChange={(e) => setTiempo({ ...tiempo, horas: e.target.value })}
-              margin="normal"
-              variant="outlined"
-              color="secondary"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="minutos"
-              value={mant.tiempo_empleado?.split(":")[1]}
+              label="Tiempo empleado"
+              type={"time"}
+              value={mant.tiempo_empleado}
               onChange={(e) =>
-                setTiempo({ ...tiempo, minutos: e.target.value })
+                setMantData({ ...mantData, tiempo_empleado: e.target.value })
               }
               margin="normal"
               variant="outlined"
