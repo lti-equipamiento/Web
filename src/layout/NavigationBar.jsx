@@ -23,24 +23,6 @@ import { mainListItems } from "./NavigationItems";
 import { Avatar } from "@mui/material";
 import { Button } from "@mui/material";
 
-// function Copyright(props) {
-//   return (
-//     <Typography
-//       variant="body2"
-//       color="text.secondary"
-//       align="center"
-//       {...props}
-//     >
-//       {"Copyright © "}
-//       <Link color="inherit" href="https://mui.com/">
-//         CowBit
-//       </Link>{" "}
-//       {new Date().getFullYear()}
-//       {"."}
-//     </Typography>
-//   );
-// }
-
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
