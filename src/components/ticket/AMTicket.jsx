@@ -8,12 +8,16 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Autocomplete from "@mui/material/Autocomplete";
 import moment from "moment";
 
-export default function AMTicket({
-  setDialogOpen,
-  ticket,
-  submitButtonText,
-  setReload,
-}) {
+export default function AMTicket(props) {
+  const {
+    setDialogOpen,
+    ticket,
+    submitButtonText,
+    setReload,
+    setSnackbarSeverity,
+    setSnackbarText,
+    setOpenSnackbar,
+  } = props;
   const { user } = useAuth0();
   const { loading, data } = useQuery(getDDTickets(), {
     fetchPolicy: "no-cache",
@@ -32,20 +36,29 @@ export default function AMTicket({
   const [equiposDisabled, setEquiposDisabled] = useState(true);
 
   const onSubmit = async () => {
-    await add({
-      variables: {
-        id: ticketData.id,
-        descripcion: ticketData.descripcion,
-        equipo: data.data_equipo.find(
-          (equipo) => equipo.nombre === ticketData.equipo
-        ).id,
-        fecha: moment().format("YYYY-MM-D"),
-        tipo: ticketData.tipo,
-        usuario: user.sub,
-      },
-    });
-    setDialogOpen(false);
-    setReload(true);
+    try {
+      await add({
+        variables: {
+          id: ticketData.id,
+          descripcion: ticketData.descripcion,
+          equipo: data.data_equipo.find(
+            (equipo) => equipo.nombre === ticketData.equipo
+          ).id,
+          fecha: moment().format("YYYY-MM-D"),
+          tipo: ticketData.tipo,
+          usuario: user.sub,
+        },
+      });
+      setDialogOpen(false);
+      setReload(true);
+      setSnackbarSeverity("success");
+      setSnackbarText("Edicion exitosa.");
+      setOpenSnackbar(true);
+    } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarText("Error en edición");
+      setOpenSnackbar(true);
+    }
   };
 
   useEffect(() => {

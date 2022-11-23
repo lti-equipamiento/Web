@@ -1,8 +1,16 @@
 import { useQuery } from "@apollo/client";
 import { Edit } from "@mui/icons-material";
-import { Typography, FormControlLabel, Snackbar, Alert } from "@mui/material";
+import {
+  Typography,
+  FormControlLabel,
+  Snackbar,
+  Alert,
+  Popover,
+  Switch,
+  Grid,
+  IconButton,
+} from "@mui/material";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import {
   DataGrid,
   esES,
@@ -10,12 +18,11 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import React, { useState, useEffect } from "react";
 import { getMantenimientos, getUsuarioNombreRol } from "../grapqhql/Queries";
 import CustomizedDialogs from "../components/dialogs/Dialog";
 import MMantenimiento from "../components/mantenimiento/MMantenimiento";
-import Popover from "@mui/material/Popover";
-import Switch from "@mui/material/Switch";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function PageMantenimiento() {
@@ -26,7 +33,9 @@ export default function PageMantenimiento() {
   const userMant = getUsuarioNombreRol();
   // tabla
   const [pageSize, setPageSize] = useState(5);
-  const { loading, data, refetch } = useQuery(mantenimientos);
+  const { loading, data, refetch } = useQuery(mantenimientos, {
+    fetchPolicy: "no-cache",
+  });
   const { data: dataMant } = useQuery(userMant, {
     variables: { id: user.sub },
   });
@@ -38,12 +47,28 @@ export default function PageMantenimiento() {
   // Edit Mantenimiento
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editMantenimiento, setEditMantenimiento] = useState([]);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarText, setSnackbarText] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("");
 
   //Filter asignados
   const [show, setShow] = useState(false);
+
+  // SnackBar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarText, setSnackbarText] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  // Boton Refresh
+  const onRefresh = () => {
+    refetch();
+    setOpenSnackbar(true);
+    setSnackbarSeverity("success");
+    setSnackbarText("Datos Actualizados");
+  };
 
   useEffect(() => {
     if (reload) {
@@ -70,29 +95,70 @@ export default function PageMantenimiento() {
 
   function CustomToolBar() {
     return (
-      <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <FormControlLabel
-          control={
-            <Switch
-              onChange={(e) => {
-                setShow(!show);
-              }}
-              checked={show}
-            />
-          }
-          label="Mostrar realizados"
-          labelPlacement="start"
-        />
-        <GridToolbarExport
-          csvOptions={{ allColumns: true }}
-          printOptions={{
-            allColumns: true,
-            hideFooter: true,
-            hideToolbar: true,
-            disableToolbarButton: true,
-          }}
-        />
-        <GridToolbarQuickFilter />
+      <GridToolbarContainer>
+        <Grid container marginTop={1} marginBottom={-1}>
+          <Grid item xs={4}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Grid item marginLeft={2} marginTop={0.5}>
+                <Typography
+                  sx={{ flex: "1 1 100%" }}
+                  variant="h5"
+                  id="tableTitle"
+                  component="div"
+                >
+                  Mantenimientos
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={8}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+              <Grid item xs={5}>
+                <GridToolbarQuickFilter fullWidth />
+              </Grid>
+              <Grid item xs={4}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      onChange={(e) => {
+                        setShow(!show);
+                      }}
+                      checked={show}
+                    />
+                  }
+                  label="Mostrar realizados"
+                  labelPlacement="start"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <GridToolbarExport
+                  csvOptions={{ allColumns: true }}
+                  printOptions={{
+                    allColumns: true,
+                    hideFooter: true,
+                    hideToolbar: true,
+                    disableToolbarButton: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton onClick={onRefresh}>
+                  <RefreshIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </GridToolbarContainer>
     );
   }
@@ -108,7 +174,7 @@ export default function PageMantenimiento() {
       align: "left",
       getActions: (params) => [
         <>
-          <Button
+          <IconButton
             title="Modificar mantenimiento"
             onClick={() => {
               setDialogOpen(true);
@@ -116,7 +182,7 @@ export default function PageMantenimiento() {
             }}
           >
             <Edit color="primary" />
-          </Button>
+          </IconButton>
         </>,
       ],
     },
@@ -265,27 +331,11 @@ export default function PageMantenimiento() {
     setAnchorEl(null);
   };
 
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenSnackbar(false);
-  };
-
   const open = Boolean(anchorEl);
 
   return (
     <>
       <Box sx={{ height: 400, width: "100%" }}>
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h5"
-          id="tableTitle"
-          component="div"
-        >
-          Mantenimientos
-        </Typography>
         <DataGrid
           loading={loading}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}

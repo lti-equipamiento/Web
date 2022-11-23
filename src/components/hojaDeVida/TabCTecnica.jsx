@@ -6,6 +6,9 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import "moment/locale/es";
 
 export default function TabCTecnica(props) {
   const {
@@ -19,6 +22,15 @@ export default function TabCTecnica(props) {
   } = props;
 
   const [showTipoAlimentacionData, setShowTipoAlimentacionData] = useState([]);
+  const [fechaMantPrev, setFechaMantPrev] = useState(new Date(2000));
+  const [fechaCalibPrev, setFechaCalibPrev] = useState(new Date(2000));
+
+  useEffect(() => {
+    if (HDVData) {
+      setFechaMantPrev(new Date(HDVData.prox_mant_prev));
+      setFechaCalibPrev(new Date(HDVData.prox_calib_prev));
+    }
+  }, [HDVData]);
 
   const tipo_de_alimentacion = [
     { label: "agua", value: false },
@@ -363,6 +375,40 @@ export default function TabCTecnica(props) {
             setHDVData({ ...HDVData, period_calibracion: newValue })
           }
         />
+      </Grid>
+      <Grid item xs={6} marginTop={2}>
+        <LocalizationProvider adapterLocale={"es"} dateAdapter={AdapterMoment}>
+          <DatePicker
+            disabled={disabledMode}
+            label="Fecha de mantenimiento preventivo"
+            value={fechaMantPrev}
+            onChange={(newValue) => {
+              setFechaMantPrev(newValue);
+              setHDVData({ ...HDVData, prox_mant_prev: newValue.toJSON() });
+            }}
+            renderInput={(params) => <TextField {...params} fullWidth />}
+            margin="normal"
+            variant="outlined"
+            color="secondary"
+          />
+        </LocalizationProvider>
+      </Grid>
+      <Grid item xs={6} marginTop={2} marginRight={-2}>
+        <LocalizationProvider adapterLocale={"es"} dateAdapter={AdapterMoment}>
+          <DatePicker
+            disabled={disabledMode}
+            label="Fecha de calibración preventiva"
+            value={fechaCalibPrev}
+            onChange={(newValue) => {
+              setFechaCalibPrev(newValue);
+              setHDVData({ ...HDVData, prox_calib_prev: newValue.toJSON() });
+            }}
+            renderInput={(params) => <TextField {...params} fullWidth />}
+            margin="normal"
+            variant="outlined"
+            color="secondary"
+          />
+        </LocalizationProvider>
       </Grid>
     </Grid>
   );

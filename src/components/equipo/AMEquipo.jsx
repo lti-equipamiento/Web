@@ -14,12 +14,16 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "moment/locale/es";
 
-export default function AMEquipo({
-  setReload,
-  setDialogOpen,
-  equipo,
-  submitButtonText,
-}) {
+export default function AMEquipo(props) {
+  const {
+    setReload,
+    setDialogOpen,
+    equipo,
+    submitButtonText,
+    setSnackbarSeverity,
+    setSnackbarText,
+    setOpenSnackbar,
+  } = props;
   const [equipoData, setEquipoData] = useState([]);
   const { loading, data: allEquipoDetails } = useQuery(getAllEquipoDetails(), {
     fetchPolicy: "no-cache",
@@ -111,8 +115,14 @@ export default function AMEquipo({
       });
       setDialogOpen(false);
       setReload(true);
+      setSnackbarSeverity("success");
+      setSnackbarText("Edicion exitosa.");
+      setOpenSnackbar(true);
     } catch (error) {
       console.log(error);
+      setSnackbarSeverity("error");
+      setSnackbarText("Error en edición");
+      setOpenSnackbar(true);
     }
   };
 

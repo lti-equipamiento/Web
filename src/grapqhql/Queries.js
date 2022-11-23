@@ -628,6 +628,8 @@ export function getHojaDeVida(id) {
         }
         period_calibracion
         period_mantenimiento
+        prox_calib_prev
+        prox_mant_prev
         recom_fabricante
         rut
         tecnologia_predominante
@@ -695,6 +697,8 @@ export function editHojaDeVida() {
       $guia_limpieza: String!
       $period_calibracion: String!
       $period_mantenimiento: String!
+      $prox_calib_prev: date!
+      $prox_mant_prev: date!
       $recom_fabricante: String!
       $rut: String!
       $tecnologia_predominante: String!
@@ -765,6 +769,8 @@ export function editHojaDeVida() {
           guia_limpieza: $guia_limpieza
           period_calibracion: $period_calibracion
           period_mantenimiento: $period_mantenimiento
+          prox_calib_prev: $prox_calib_prev
+          prox_mant_prev: $prox_mant_prev
           recom_fabricante: $recom_fabricante
           rut: $rut
           tecnologia_predominante: $tecnologia_predominante

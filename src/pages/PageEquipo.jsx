@@ -2,9 +2,16 @@ import { useQuery } from "@apollo/client";
 import { Edit } from "@mui/icons-material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import { FormControlLabel, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import {
+  FormControlLabel,
+  Typography,
+  Snackbar,
+  Alert,
+  Box,
+  Button,
+  IconButton,
+  Grid,
+} from "@mui/material";
 import {
   DataGrid,
   esES,
@@ -12,6 +19,7 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import React, { useEffect, useState } from "react";
 import { getEquipos } from "../grapqhql/Queries";
 import AMEquipo from "../components/equipo/AMEquipo";
@@ -54,6 +62,26 @@ export default function PageEquipo() {
   //Filter rotos
   const [show, setShow] = useState(false);
 
+  //Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarText, setSnackbarText] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  // Boton Refresh
+  const onRefresh = () => {
+    refetch();
+    setOpenSnackbar(true);
+    setSnackbarSeverity("success");
+    setSnackbarText("Datos Actualizados");
+  };
+
   // useEffect Tabla
   useEffect(() => {
     if (reload) {
@@ -78,38 +106,79 @@ export default function PageEquipo() {
 
   function CustomToolBar() {
     return (
-      <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <FormControlLabel
-          control={
-            <Switch
-              onChange={(e) => {
-                setShow(!show);
-              }}
-              checked={show}
-            />
-          }
-          label="Mostrar inactivos"
-          labelPlacement="start"
-        />
-        <GridToolbarExport
-          csvOptions={{ allColumns: true }}
-          printOptions={{
-            allColumns: true,
-            hideFooter: true,
-            hideToolbar: true,
-            disableToolbarButton: true,
-          }}
-        />
-        <GridToolbarQuickFilter />
-        <div style={{ display: "flex", justifyContent: "right" }}>
-          <Button
-            onClick={() => {
-              setAddDialogOpen(true);
-            }}
-          >
-            <AddBoxIcon />
-          </Button>
-        </div>
+      <GridToolbarContainer>
+        <Grid container marginTop={1} marginBottom={-1}>
+          <Grid item xs={4}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Grid item marginLeft={2} marginTop={0.5}>
+                <Typography
+                  sx={{ flex: "1 1 100%" }}
+                  variant="h5"
+                  id="tableTitle"
+                  component="div"
+                >
+                  Equipos
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={8}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+              <Grid item xs={4}>
+                <GridToolbarQuickFilter fullWidth />
+              </Grid>
+              <Grid item xs={4}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      onChange={(e) => {
+                        setShow(!show);
+                      }}
+                      checked={show}
+                    />
+                  }
+                  label="Mostrar inactivos"
+                  labelPlacement="start"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <GridToolbarExport
+                  csvOptions={{ allColumns: true }}
+                  printOptions={{
+                    allColumns: true,
+                    hideFooter: true,
+                    hideToolbar: true,
+                    disableToolbarButton: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={1} paddingLeft={2}>
+                <IconButton
+                  onClick={() => {
+                    setAddDialogOpen(true);
+                  }}
+                >
+                  <AddBoxIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton onClick={onRefresh}>
+                  <RefreshIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </GridToolbarContainer>
     );
   }
@@ -325,14 +394,6 @@ export default function PageEquipo() {
     <>
       {/* Tabla */}
       <Box sx={{ height: 400, width: "100%" }}>
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h5"
-          id="tableTitle"
-          component="div"
-        >
-          Equipos
-        </Typography>
         <DataGrid
           loading={loading || reload}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -404,6 +465,9 @@ export default function PageEquipo() {
           setDialogOpen={setAddDialogOpen}
           submitButtonText="Registrar"
           setReload={setReload}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
       <CustomizedDialogs
@@ -417,6 +481,9 @@ export default function PageEquipo() {
         id={HDVid}
         dialogOpen={dialogHDV}
         setDialogOpen={setDialogHDVOpen}
+        setSnackbarSeverity={setSnackbarSeverity}
+        setSnackbarText={setSnackbarText}
+        setOpenSnackbar={setOpenSnackbar}
       ></DialogHDV>
       <CustomizedDialogs
         modalTitle="Edición de Equipo"
@@ -428,8 +495,24 @@ export default function PageEquipo() {
           setReload={setReload}
           equipo={editEquipo}
           submitButtonText="Editar"
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarText}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

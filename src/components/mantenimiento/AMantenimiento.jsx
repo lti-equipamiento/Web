@@ -6,12 +6,16 @@ import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";
 
-export default function AMantenimiento({
-  setReload,
-  setDialogMantOpen,
-  ticket,
-  submitButtonText,
-}) {
+export default function AMantenimiento(props) {
+  const {
+    setReload,
+    setDialogMantOpen,
+    ticket,
+    submitButtonText,
+    setSnackbarSeverity,
+    setSnackbarText,
+    setOpenSnackbar,
+  } = props;
   const { loading, data } = useQuery(getUsuarios());
   const [mantenimientoMutation] = useMutation(addMantenimiento());
 
@@ -41,18 +45,27 @@ export default function AMantenimiento({
   }, [data]);
 
   const onSubmit = () => {
-    mantenimientoMutation({
-      variables: {
-        ticket: ticket.id,
-        usuario: data.data_usuario.find(
-          (usuario) => usuario.nombre === mantData.usuario
-        ).id,
-        equipo: ticket.equipo,
-        hoja_de_vida: ticket.equipoByEquipo.hoja_de_vida,
-      },
-    });
-    setDialogMantOpen(false);
-    setReload(true);
+    try {
+      mantenimientoMutation({
+        variables: {
+          ticket: ticket.id,
+          usuario: data.data_usuario.find(
+            (usuario) => usuario.nombre === mantData.usuario
+          ).id,
+          equipo: ticket.equipo,
+          hoja_de_vida: ticket.equipoByEquipo.hoja_de_vida,
+        },
+      });
+      setSnackbarSeverity("success");
+      setSnackbarText("Edicion exitosa.");
+      setOpenSnackbar(true);
+      setDialogMantOpen(false);
+      setReload(true);
+    } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarText("Error en edición");
+      setOpenSnackbar(true);
+    }
   };
 
   if (cargando) {

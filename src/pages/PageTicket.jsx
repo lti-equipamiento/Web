@@ -6,7 +6,17 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { Typography, FormControlLabel, Button, Box } from "@mui/material";
+import {
+  Typography,
+  FormControlLabel,
+  Button,
+  Box,
+  Snackbar,
+  Alert,
+  IconButton,
+  Grid,
+} from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { Edit } from "@mui/icons-material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { getTickets, getUsuarioNombreRol } from "../grapqhql/Queries";
@@ -52,6 +62,25 @@ export default function PageTicket() {
   //Filter asignados
   const [show, setShow] = useState(false);
 
+  //Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarText, setSnackbarText] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  // Boton Refresh
+  const onRefresh = () => {
+    refetch();
+    setOpenSnackbar(true);
+    setSnackbarSeverity("success");
+    setSnackbarText("Datos Actualizados");
+  };
+
   useEffect(() => {
     if (reload) {
       refetch();
@@ -90,34 +119,75 @@ export default function PageTicket() {
 
   function CustomToolBar() {
     return (
-      <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <FormControlLabel
-          control={
-            <Switch
-              onChange={(e) => {
-                setShow(!show);
-              }}
-              checked={show}
-            />
-          }
-          label="Mostrar ya asignados"
-          labelPlacement="start"
-        />
-        <GridToolbarExport
-          csvOptions={{ allColumns: true }}
-          printOptions={{
-            allColumns: true,
-            hideFooter: true,
-            hideToolbar: true,
-            disableToolbarButton: true,
-          }}
-        />
-        <GridToolbarQuickFilter />
-        <div>
-          <Button onClick={() => setDialogAddOpen(true)}>
-            <PostAddIcon />
-          </Button>
-        </div>
+      <GridToolbarContainer>
+        <Grid container marginTop={1} marginBottom={-1}>
+          <Grid item xs={4}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Grid item marginLeft={2} marginTop={0.5}>
+                <Typography
+                  sx={{ flex: "1 1 100%" }}
+                  variant="h5"
+                  id="tableTitle"
+                  component="div"
+                >
+                  Tickets
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={8}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+              <Grid item xs={4}>
+                <GridToolbarQuickFilter fullWidth />
+              </Grid>
+              <Grid item xs={4}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      onChange={(e) => {
+                        setShow(!show);
+                      }}
+                      checked={show}
+                    />
+                  }
+                  label="Mostrar asignados"
+                  labelPlacement="start"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <GridToolbarExport
+                  csvOptions={{ allColumns: true }}
+                  printOptions={{
+                    allColumns: true,
+                    hideFooter: true,
+                    hideToolbar: true,
+                    disableToolbarButton: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={1} paddingLeft={2}>
+                <IconButton onClick={() => setDialogAddOpen(true)}>
+                  <PostAddIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton onClick={onRefresh}>
+                  <RefreshIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </GridToolbarContainer>
     );
   }
@@ -133,7 +203,7 @@ export default function PageTicket() {
       align: "left",
       getActions: (params) => [
         <>
-          <Button
+          <IconButton
             title="Modificar ticket"
             onClick={() => {
               setDialogOpen(true);
@@ -141,7 +211,7 @@ export default function PageTicket() {
             }}
           >
             <Edit color="primary" />
-          </Button>
+          </IconButton>
         </>,
       ],
     },
@@ -289,14 +359,6 @@ export default function PageTicket() {
   return (
     <>
       <Box sx={{ height: 400, width: "100%" }}>
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h5"
-          id="tableTitle"
-          component="div"
-        >
-          Tickets
-        </Typography>
         <DataGrid
           loading={loading}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -355,6 +417,9 @@ export default function PageTicket() {
           setReload={setReload}
           ticket={mant}
           submitButtonText="Asignar"
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
       <CustomizedDialogs
@@ -367,6 +432,9 @@ export default function PageTicket() {
           setReload={setReload}
           ticket={modTicket}
           submitButtonText="Editar"
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
       <CustomizedDialogs
@@ -378,8 +446,24 @@ export default function PageTicket() {
           setDialogOpen={setDialogAddOpen}
           submitButtonText="Registrar"
           setReload={setReload}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarText}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
