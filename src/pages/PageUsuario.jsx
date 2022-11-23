@@ -134,6 +134,28 @@ export default function PageUsuario() {
 
   const columns = [
     {
+      field: "actions",
+      type: "actions",
+      headerName: "Modificar",
+      minWidth: 40,
+      flex: 1,
+      headerAlign: "center",
+      align: "center",
+      getActions: (params) => [
+        <>
+          <IconButton
+            title="Modificar Rol"
+            onClick={() => {
+              setDialogOpen(true);
+              setUser(params.row);
+            }}
+          >
+            <Edit color="primary" />
+          </IconButton>
+        </>,
+      ],
+    },
+    {
       field: "nombre",
       headerName: "Nombre",
       minWidth: 100,
@@ -188,28 +210,6 @@ export default function PageUsuario() {
       editable: false,
       headerAlign: "left",
       align: "left",
-    },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Modificar",
-      minWidth: 40,
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      getActions: (params) => [
-        <>
-          <IconButton
-            title="Modificar Rol"
-            onClick={() => {
-              setDialogOpen(true);
-              setUser(params.row);
-            }}
-          >
-            <Edit color="primary" />
-          </IconButton>
-        </>,
-      ],
     },
   ];
 

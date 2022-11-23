@@ -167,11 +167,11 @@ export default function PageMantenimiento() {
     {
       field: "editar",
       type: "actions",
-      headerName: "Modificar",
+      headerName: "Acciones",
       minWidth: 70,
       flex: 1,
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "center",
+      align: "center",
       getActions: (params) => [
         <>
           <IconButton

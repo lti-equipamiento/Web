@@ -17,6 +17,7 @@ import {
   Grid,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import CallMadeIcon from "@mui/icons-material/CallMade";
 import { Edit } from "@mui/icons-material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { getTickets, getUsuarioNombreRol } from "../grapqhql/Queries";
@@ -196,11 +197,11 @@ export default function PageTicket() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Modificar",
-      minWidth: 70,
+      headerName: "Acciones",
+      minWidth: 100,
       flex: 1,
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "center",
+      align: "center",
       getActions: (params) => [
         <>
           <IconButton
@@ -211,6 +212,15 @@ export default function PageTicket() {
             }}
           >
             <Edit color="primary" />
+          </IconButton>
+          <IconButton
+            title="Asignar ticket"
+            onClick={() => {
+              setDialogMantOpen(true);
+              setMant(params.row);
+            }}
+          >
+            <CallMadeIcon color="primary"></CallMadeIcon>
           </IconButton>
         </>,
       ],
@@ -316,28 +326,6 @@ export default function PageTicket() {
       editable: false,
       headerAlign: "left",
       align: "left",
-    },
-    {
-      field: "Asignar",
-      type: "actions",
-      headerName: "Asignar",
-      minWidth: 70,
-      flex: 1,
-      headerAlign: "left",
-      align: "left",
-      getActions: (params) => [
-        <>
-          <Button
-            title="Asignar ticket"
-            onClick={() => {
-              setDialogMantOpen(true);
-              setMant(params.row);
-            }}
-          >
-            Asignar
-          </Button>
-        </>,
-      ],
     },
   ];
 

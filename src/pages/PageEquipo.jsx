@@ -20,6 +20,7 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import React, { useEffect, useState } from "react";
 import { getEquipos } from "../grapqhql/Queries";
 import AMEquipo from "../components/equipo/AMEquipo";
@@ -199,14 +200,14 @@ export default function PageEquipo() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Modificar",
-      minWidth: 70,
+      headerName: "Acciones",
+      minWidth: 150,
       flex: 1,
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "center",
+      align: "center",
       getActions: (params) => [
         <>
-          <Button
+          <IconButton
             title="Modificar equipo"
             onClick={() => {
               setEditDialogOpen(true);
@@ -214,7 +215,25 @@ export default function PageEquipo() {
             }}
           >
             <Edit color="primary" />
-          </Button>
+          </IconButton>
+          <IconButton
+            title="Mostrar detalles"
+            onClick={() => {
+              setDetailsDialogOpen(true);
+              setDetailsData(params.row);
+            }}
+          >
+            <ZoomInIcon color="primary" />
+          </IconButton>
+          <IconButton
+            title="Hoja de Vida"
+            onClick={() => {
+              setHDVid(params.row.hoja_de_vida);
+              setDialogHDVOpen(true);
+            }}
+          >
+            <AutoStoriesIcon color="primary" />
+          </IconButton>
         </>,
       ],
     },
@@ -330,49 +349,49 @@ export default function PageEquipo() {
         return calculatePrioridad(params.row);
       },
     },
-    {
-      field: "action1",
-      type: "actions",
-      headerName: "Detalles",
-      minWidth: 70,
-      flex: 1,
-      headerAlign: "left",
-      align: "left",
-      getActions: (params) => [
-        <>
-          <Button
-            title="Mostrar detalles"
-            onClick={() => {
-              setDetailsDialogOpen(true);
-              setDetailsData(params.row);
-            }}
-          >
-            ...
-          </Button>
-        </>,
-      ],
-    },
-    {
-      field: "action",
-      type: "actions",
-      headerName: "Hoja de vida",
-      minWidth: 70,
-      flex: 1,
-      headerAlign: "left",
-      align: "left",
-      getActions: (params) => [
-        <>
-          <Button
-            onClick={() => {
-              setHDVid(params.row.hoja_de_vida);
-              setDialogHDVOpen(true);
-            }}
-          >
-            <AutoStoriesIcon />
-          </Button>
-        </>,
-      ],
-    },
+    // {
+    //   field: "action1",
+    //   type: "actions",
+    //   headerName: "Detalles",
+    //   minWidth: 70,
+    //   flex: 1,
+    //   headerAlign: "left",
+    //   align: "left",
+    //   getActions: (params) => [
+    //     <>
+    //       <IconButton
+    //         title="Mostrar detalles"
+    //         onClick={() => {
+    //           setDetailsDialogOpen(true);
+    //           setDetailsData(params.row);
+    //         }}
+    //       >
+    //         <ZoomInIcon />
+    //       </IconButton>
+    //     </>,
+    //   ],
+    // },
+    // {
+    //   field: "action",
+    //   type: "actions",
+    //   headerName: "Hoja de vida",
+    //   minWidth: 70,
+    //   flex: 1,
+    //   headerAlign: "left",
+    //   align: "left",
+    //   getActions: (params) => [
+    //     <>
+    //       <Button
+    //         onClick={() => {
+    //           setHDVid(params.row.hoja_de_vida);
+    //           setDialogHDVOpen(true);
+    //         }}
+    //       >
+    //         <AutoStoriesIcon />
+    //       </Button>
+    //     </>,
+    //   ],
+    // },
   ];
 
   const handlePopoverOpen = (event) => {

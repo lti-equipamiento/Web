@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import Rutas from "./rutas";
 import { Auth0Provider } from "@auth0/auth0-react";
 import ApolloWrapper from "./grapqhql/ApolloWrapper";
-import NavigationBar from "./layout/NavigationBar";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -21,9 +20,7 @@ root.render(
   >
     <ApolloWrapper>
       <BrowserRouter>
-        <NavigationBar>
-          <Rutas />
-        </NavigationBar>
+        <Rutas />
       </BrowserRouter>
     </ApolloWrapper>
   </Auth0Provider>

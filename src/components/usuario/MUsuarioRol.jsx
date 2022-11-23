@@ -45,8 +45,13 @@ export default function MUsuarioRol(props) {
   };
 
   return (
-    <Grid container>
-      <Grid item xs={12} marginBottom={1}>
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="flex-end"
+    >
+      <Grid minWidth={300} item xs={12} marginBottom={2} marginTop={1}>
         <Autocomplete
           fullWidth
           id="Rol"
