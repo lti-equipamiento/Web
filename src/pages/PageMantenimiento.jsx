@@ -10,6 +10,7 @@ import {
   Grid,
   IconButton,
 } from "@mui/material";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import Box from "@mui/material/Box";
 import {
   DataGrid,
@@ -23,6 +24,7 @@ import React, { useState, useEffect } from "react";
 import { getMantenimientos, getUsuarioNombreRol } from "../grapqhql/Queries";
 import CustomizedDialogs from "../components/dialogs/Dialog";
 import MMantenimiento from "../components/mantenimiento/MMantenimiento";
+import MantenimientoDetails from "../components/mantenimiento/MantenimientoDetails";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function PageMantenimiento() {
@@ -47,6 +49,10 @@ export default function PageMantenimiento() {
   // Edit Mantenimiento
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editMantenimiento, setEditMantenimiento] = useState([]);
+
+  // Detalles de mantenimiento
+  const [detailsData, setDetailsData] = useState([]);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
 
   //Filter asignados
   const [show, setShow] = useState(false);
@@ -182,6 +188,15 @@ export default function PageMantenimiento() {
             }}
           >
             <Edit color="primary" />
+          </IconButton>
+          <IconButton
+            title="Mostrar detalles"
+            onClick={() => {
+              setDetailsDialogOpen(true);
+              setDetailsData(params.row);
+            }}
+          >
+            <ZoomInIcon color="primary" />
           </IconButton>
         </>,
       ],
@@ -396,6 +411,13 @@ export default function PageMantenimiento() {
           setSnackbarText={setSnackbarText}
           setOpenSnackbar={setOpenSnackbar}
         />
+      </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Detalles"
+        dialogOpen={detailsDialogOpen}
+        setDialogOpen={setDetailsDialogOpen}
+      >
+        <MantenimientoDetails data={detailsData} />
       </CustomizedDialogs>
       <Snackbar
         open={openSnackbar}

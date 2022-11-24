@@ -1017,3 +1017,26 @@ export function getCalibPrev() {
     }
   `;
 }
+
+export function getLast5MantsDashB() {
+  return gql`
+    query getLast5MantsDashB {
+      data_mantenimiento(
+        limit: 5
+        order_by: { fecha_egreso: desc }
+        where: { estado: { _eq: "Cerrado" } }
+      ) {
+        id
+        fecha_egreso
+        equipoByEquipo {
+          nombre
+        }
+        usuarioByUsuario {
+          nombre
+        }
+        costo
+        ticket
+      }
+    }
+  `;
+}

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import ChartCosto from "./ChartCosto";
-import ChartAnual from "./ChartAnual";
-import Deposits from "./Deposits";
-import Orders from "./Orders";
+import ChartPreventivos from "./ChartPreventivos";
+import TotalPeriodo from "./TotalPeriodo";
+import MantRecientes from "./MantRecientes";
 
 export default function Dashboard() {
   const [year, setYear] = useState(2022);
@@ -34,7 +34,7 @@ export default function Dashboard() {
             height: 240,
           }}
         >
-          <Deposits setYear={setYear} year={year} />
+          <TotalPeriodo setYear={setYear} year={year} />
         </Paper>
       </Grid>
       <Grid item xs={12} md={12} lg={12}>
@@ -46,12 +46,12 @@ export default function Dashboard() {
             height: 240,
           }}
         >
-          <ChartAnual />
+          <ChartPreventivos />
         </Paper>
       </Grid>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Orders />
+          <MantRecientes />
         </Paper>
       </Grid>
     </Grid>
