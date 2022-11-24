@@ -1,11 +1,14 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Chart from "./Chart";
+import ChartCosto from "./ChartCosto";
+import ChartAnual from "./ChartAnual";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
 
 export default function Dashboard() {
+  const [year, setYear] = useState(2022);
+
   return (
     <Grid container spacing={3}>
       {/* Chart */}
@@ -18,7 +21,7 @@ export default function Dashboard() {
             height: 240,
           }}
         >
-          <Chart />
+          <ChartCosto year={year} />
         </Paper>
       </Grid>
       {/* Recent Deposits */}
@@ -31,10 +34,21 @@ export default function Dashboard() {
             height: 240,
           }}
         >
-          <Deposits />
+          <Deposits setYear={setYear} year={year} />
         </Paper>
       </Grid>
-      {/* Recent Orders */}
+      <Grid item xs={12} md={12} lg={12}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            height: 240,
+          }}
+        >
+          <ChartAnual />
+        </Paper>
+      </Grid>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
           <Orders />

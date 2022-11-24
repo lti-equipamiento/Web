@@ -134,15 +134,13 @@ export default function MMantenimiento(props) {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              inputProps={{ maxLength: 50 }}
+              inputProps={{ maxLength: 5000 }}
               label="Costo"
               value={mantData.costo}
               onChange={(e) => {
                 if (!e.target.value.match(regexDecimalResult)) {
                   setErrorCosto(true);
-                  setMensajeError(
-                    "El costo debe de ser un número. Ej: 1342 o 1342.42"
-                  );
+                  setMensajeError("El costo debe de ser un número. Ej: 1342");
                   setBtnDisabled(true);
                 } else {
                   setMantData({ ...mantData, costo: e.target.value });

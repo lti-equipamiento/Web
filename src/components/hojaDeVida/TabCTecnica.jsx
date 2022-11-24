@@ -356,7 +356,7 @@ export default function TabCTecnica(props) {
             <TextField {...params} label="Periodicidad mantenimiento" />
           )}
           onChange={(e, newValue) =>
-            setHDVData({ ...HDVData, period_mantenimiento: newValue })
+            setHDVData({ ...HDVData, period_mantenimiento: newValue.label })
           }
         />
       </Grid>
@@ -372,7 +372,7 @@ export default function TabCTecnica(props) {
             <TextField {...params} label="Periodicidad calibración" />
           )}
           onChange={(e, newValue) =>
-            setHDVData({ ...HDVData, period_calibracion: newValue })
+            setHDVData({ ...HDVData, period_calibracion: newValue.label })
           }
         />
       </Grid>
