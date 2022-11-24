@@ -8,7 +8,6 @@ import {
   Snackbar,
   Alert,
   Box,
-  Button,
   IconButton,
   Grid,
 } from "@mui/material";
@@ -20,6 +19,7 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import React, { useEffect, useState } from "react";
 import { getEquipos } from "../grapqhql/Queries";
@@ -29,6 +29,7 @@ import DialogHDV from "../components/dialogs/DialogHDV";
 import EquipoDetails from "../components/equipo/EquipoDetails";
 import Popover from "@mui/material/Popover";
 import Switch from "@mui/material/Switch";
+import BEquipo from "../components/equipo/BEquipo";
 
 const equipo = getEquipos();
 
@@ -47,6 +48,10 @@ export default function PageEquipo() {
   // Edit equipo
   const [editEquipo, setEditEquipo] = useState([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  // Eliminacion de equipo
+  const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+  const [deleteEquipo, setDeleteEquipo] = useState([]);
 
   // Hoja de vida
   const [dialogHDV, setDialogHDVOpen] = useState(false);
@@ -201,39 +206,50 @@ export default function PageEquipo() {
       field: "actions",
       type: "actions",
       headerName: "Acciones",
-      minWidth: 150,
+      minWidth: 200,
       flex: 1,
       headerAlign: "center",
       align: "center",
       getActions: (params) => [
         <>
-          <IconButton
-            title="Modificar equipo"
-            onClick={() => {
-              setEditDialogOpen(true);
-              setEditEquipo(params.row);
-            }}
-          >
-            <Edit color="primary" />
-          </IconButton>
-          <IconButton
-            title="Mostrar detalles"
-            onClick={() => {
-              setDetailsDialogOpen(true);
-              setDetailsData(params.row);
-            }}
-          >
-            <ZoomInIcon color="primary" />
-          </IconButton>
-          <IconButton
-            title="Hoja de Vida"
-            onClick={() => {
-              setHDVid(params.row.hoja_de_vida);
-              setDialogHDVOpen(true);
-            }}
-          >
-            <AutoStoriesIcon color="primary" />
-          </IconButton>
+          <Grid container>
+            <IconButton
+              title="Modificar equipo"
+              onClick={() => {
+                setEditDialogOpen(true);
+                setEditEquipo(params.row);
+              }}
+            >
+              <Edit color="primary" />
+            </IconButton>
+            <IconButton
+              title="Mostrar detalles"
+              onClick={() => {
+                setDetailsDialogOpen(true);
+                setDetailsData(params.row);
+              }}
+            >
+              <ZoomInIcon color="primary" />
+            </IconButton>
+            <IconButton
+              title="Hoja de Vida"
+              onClick={() => {
+                setHDVid(params.row.hoja_de_vida);
+                setDialogHDVOpen(true);
+              }}
+            >
+              <AutoStoriesIcon color="primary" />
+            </IconButton>
+            <IconButton
+              title="Eliminar Equipo"
+              onClick={() => {
+                setDeleteEquipo(params.row);
+                setDialogDeleteOpen(true);
+              }}
+            >
+              <DeleteIcon color="primary" />
+            </IconButton>
+          </Grid>
         </>,
       ],
     },
@@ -473,7 +489,6 @@ export default function PageEquipo() {
           <Typography sx={{ p: 1 }}>{`${value}`}</Typography>
         </Popover>
       </Box>
-
       {/* Dialogs */}
       <CustomizedDialogs
         modalTitle="Registro de Equipo"
@@ -517,6 +532,19 @@ export default function PageEquipo() {
           setSnackbarSeverity={setSnackbarSeverity}
           setSnackbarText={setSnackbarText}
           setOpenSnackbar={setOpenSnackbar}
+        />
+      </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Eliminación de equipo"
+        dialogOpen={dialogDeleteOpen}
+        setDialogOpen={setDialogDeleteOpen}
+      >
+        <BEquipo
+          deleteEquipo={deleteEquipo}
+          setDialogOpen={setDialogDeleteOpen}
+          setOpenSnackbar={setOpenSnackbar}
+          setSnackbarText={setSnackbarText}
+          setSnackbarSeverity={setSnackbarSeverity}
         />
       </CustomizedDialogs>
       <Snackbar

@@ -51,6 +51,7 @@ export default function PageProfile() {
   // Funcion del boton subir foto
   const onUploadPhoto = () => {
     // TODO: agregar la funcionalidad de subir la foto
+    // Estaria bueno que abra un dialog y ahi este para subir
   };
 
   // Funcion del input del upload file
@@ -144,16 +145,7 @@ export default function PageProfile() {
             <Grid item xs={12} marginBottom={2}>
               <Button onClick={onUploadPhoto} variant="contained">
                 Subir Foto
-                <input
-                  // style={{ "margin-top": 20 }}
-                  type="file"
-                  onChange={fileSelectedHandler}
-                />
               </Button>
-              <Input type="file" variant="outlined">
-                {" "}
-                asdasd
-              </Input>
             </Grid>
           </Grid>
 

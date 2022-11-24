@@ -17,6 +17,7 @@ import {
   Grid,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CallMadeIcon from "@mui/icons-material/CallMade";
 import { Edit } from "@mui/icons-material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
@@ -28,6 +29,7 @@ import CustomizedDialogs from "../components/dialogs/Dialog";
 import Popover from "@mui/material/Popover";
 import Switch from "@mui/material/Switch";
 import { useAuth0 } from "@auth0/auth0-react";
+import BTicket from "../components/ticket/BTicket";
 
 export default function PageTicket() {
   //auth0
@@ -47,6 +49,10 @@ export default function PageTicket() {
   // modificacion de ticket
   const [dialogOpen, setDialogOpen] = useState(false);
   const [modTicket, setModTicket] = useState([]);
+
+  // Eliminacion de ticket
+  const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+  const [deleteTicket, setDeleteTicket] = useState([]);
 
   // registro de ticket
   const [dialogAddOpen, setDialogAddOpen] = useState(false);
@@ -198,30 +204,41 @@ export default function PageTicket() {
       field: "actions",
       type: "actions",
       headerName: "Acciones",
-      minWidth: 100,
+      minWidth: 150,
       flex: 1,
       headerAlign: "center",
       align: "center",
       getActions: (params) => [
         <>
-          <IconButton
-            title="Modificar ticket"
-            onClick={() => {
-              setDialogOpen(true);
-              setModTicket(params.row);
-            }}
-          >
-            <Edit color="primary" />
-          </IconButton>
-          <IconButton
-            title="Asignar ticket"
-            onClick={() => {
-              setDialogMantOpen(true);
-              setMant(params.row);
-            }}
-          >
-            <CallMadeIcon color="primary"></CallMadeIcon>
-          </IconButton>
+          <Grid>
+            <IconButton
+              title="Modificar ticket"
+              onClick={() => {
+                setDialogOpen(true);
+                setModTicket(params.row);
+              }}
+            >
+              <Edit color="primary" />
+            </IconButton>
+            <IconButton
+              title="Asignar ticket"
+              onClick={() => {
+                setDialogMantOpen(true);
+                setMant(params.row);
+              }}
+            >
+              <CallMadeIcon color="primary"></CallMadeIcon>
+            </IconButton>
+            <IconButton
+              title="Eliminar Ticket"
+              onClick={() => {
+                setDeleteTicket(params.row);
+                setDialogDeleteOpen(true);
+              }}
+            >
+              <DeleteIcon color="primary" />
+            </IconButton>
+          </Grid>
         </>,
       ],
     },
@@ -437,6 +454,19 @@ export default function PageTicket() {
           setSnackbarSeverity={setSnackbarSeverity}
           setSnackbarText={setSnackbarText}
           setOpenSnackbar={setOpenSnackbar}
+        />
+      </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Eliminación de ticket"
+        dialogOpen={dialogDeleteOpen}
+        setDialogOpen={setDialogDeleteOpen}
+      >
+        <BTicket
+          deleteTicket={deleteTicket}
+          setDialogOpen={setDialogDeleteOpen}
+          setOpenSnackbar={setOpenSnackbar}
+          setSnackbarText={setSnackbarText}
+          setSnackbarSeverity={setSnackbarSeverity}
         />
       </CustomizedDialogs>
       <Snackbar

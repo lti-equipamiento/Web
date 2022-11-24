@@ -15,12 +15,14 @@ import {
   Grid,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Edit } from "@mui/icons-material";
 import { getUsuarios } from "../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
 import CustomizedDialogs from "../components/dialogs/Dialog";
 import MUsuarioRol from "../components/usuario/MUsuarioRol";
 import Popover from "@mui/material/Popover";
+import BUsuario from "../components/usuario/BUsuario";
 
 const usuario = getUsuarios();
 
@@ -36,6 +38,10 @@ export default function PageUsuario() {
   // edicion rol
   const [user, setUser] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Eliminacion de usuario
+  const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+  const [deleteUser, setDeleteUser] = useState([]);
 
   //PopOver
   const [anchorEl, setAnchorEl] = useState(null);
@@ -136,22 +142,33 @@ export default function PageUsuario() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Modificar",
+      headerName: "Acciones",
       minWidth: 40,
       flex: 1,
       headerAlign: "center",
       align: "center",
       getActions: (params) => [
         <>
-          <IconButton
-            title="Modificar Rol"
-            onClick={() => {
-              setDialogOpen(true);
-              setUser(params.row);
-            }}
-          >
-            <Edit color="primary" />
-          </IconButton>
+          <Grid>
+            <IconButton
+              title="Modificar Rol"
+              onClick={() => {
+                setDialogOpen(true);
+                setUser(params.row);
+              }}
+            >
+              <Edit color="primary" />
+            </IconButton>
+            <IconButton
+              title="Eliminar Usuario"
+              onClick={() => {
+                setDialogDeleteOpen(true);
+                setDeleteUser(params.row);
+              }}
+            >
+              <DeleteIcon color="primary" />
+            </IconButton>
+          </Grid>
         </>,
       ],
     },
@@ -291,6 +308,16 @@ export default function PageUsuario() {
           setSnackbarText={setSnackbarText}
           setOpenSnackbar={setOpenSnackbar}
         />
+      </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Eliminación de usuario"
+        dialogOpen={dialogDeleteOpen}
+        setDialogOpen={setDialogDeleteOpen}
+        setOpenSnackbar={setOpenSnackbar}
+        setSnackbarText={setSnackbarText}
+        setSnackbarSeverity={setSnackbarSeverity}
+      >
+        <BUsuario deleteUser={deleteUser} setDialogOpen={setDialogDeleteOpen} />
       </CustomizedDialogs>
       <Snackbar
         open={openSnackbar}

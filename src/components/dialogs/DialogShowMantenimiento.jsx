@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Divider,
@@ -41,12 +41,15 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function DialogShowMantenimiento({
-  dialogOpen,
-  setDialogOpen,
-  datos,
-}) {
-  const mantenimiento = datos;
+export default function DialogShowMantenimiento(props) {
+  const { dialogOpen, setDialogOpen, datos, nombre } = props;
+  const [mantenimiento, setMantenimiento] = useState([]);
+
+  useEffect(() => {
+    if (datos) {
+      setMantenimiento({ ...datos, usuario: nombre });
+    }
+  }, [datos, nombre]);
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -83,7 +86,7 @@ export default function DialogShowMantenimiento({
               <ListItem>
                 <ListItemText
                   primary="Usuario"
-                  secondary={showData(mantenimiento.usuarioByUsuario.nombre)}
+                  secondary={showData(mantenimiento.usuario)}
                 />
               </ListItem>
               <Divider sx={{ my: 0 }} />
