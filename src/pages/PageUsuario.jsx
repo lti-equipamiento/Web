@@ -50,7 +50,7 @@ export default function PageUsuario() {
   //Snackbar
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarText, setSnackbarText] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -317,7 +317,14 @@ export default function PageUsuario() {
         setSnackbarText={setSnackbarText}
         setSnackbarSeverity={setSnackbarSeverity}
       >
-        <BUsuario deleteUser={deleteUser} setDialogOpen={setDialogDeleteOpen} />
+        <BUsuario
+          deleteUser={deleteUser}
+          setDialogOpen={setDialogDeleteOpen}
+          setOpenSnackbar={setOpenSnackbar}
+          setSnackbarText={setSnackbarText}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setReload={setReload}
+        />
       </CustomizedDialogs>
       <Snackbar
         open={openSnackbar}

@@ -72,7 +72,7 @@ export default function PageTicket() {
   //Snackbar
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarText, setSnackbarText] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -462,7 +462,8 @@ export default function PageTicket() {
         setDialogOpen={setDialogDeleteOpen}
       >
         <BTicket
-          deleteTicket={deleteTicket}
+          deleteTicketData={deleteTicket}
+          setReload={setReload}
           setDialogOpen={setDialogDeleteOpen}
           setOpenSnackbar={setOpenSnackbar}
           setSnackbarText={setSnackbarText}

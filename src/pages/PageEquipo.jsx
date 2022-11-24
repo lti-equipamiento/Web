@@ -71,7 +71,7 @@ export default function PageEquipo() {
   //Snackbar
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarText, setSnackbarText] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -540,11 +540,12 @@ export default function PageEquipo() {
         setDialogOpen={setDialogDeleteOpen}
       >
         <BEquipo
-          deleteEquipo={deleteEquipo}
+          deleteEquipoData={deleteEquipo}
           setDialogOpen={setDialogDeleteOpen}
           setOpenSnackbar={setOpenSnackbar}
           setSnackbarText={setSnackbarText}
           setSnackbarSeverity={setSnackbarSeverity}
+          setReload={setReload}
         />
       </CustomizedDialogs>
       <Snackbar

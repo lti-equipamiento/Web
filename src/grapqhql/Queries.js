@@ -276,7 +276,7 @@ export function getNotDeleteEquipos() {
 
 export function deleteEquipo() {
   return gql`
-    mutation deleteEquipo($id: String!) {
+    mutation deleteEquipo($id: Int!) {
       delete_data_equipo_by_pk(id: $id) {
         nombre
       }
@@ -463,14 +463,14 @@ export function getDelTickets() {
   `;
 }
 
-export function deleteTicket(id) {
+export function deleteTicket() {
   return gql`
-mutation deleteTicket {
-delete_data_ticket_by_pk(id: ${id}) {
-  id
-}
-}
-`;
+    mutation deleteTicket($id: Int!) {
+      delete_data_ticket_by_pk(id: $id) {
+        id
+      }
+    }
+  `;
 }
 
 //--------------------------------------------------Tipo ticket---------------------------------------------------

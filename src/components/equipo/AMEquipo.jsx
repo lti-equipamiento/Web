@@ -116,7 +116,12 @@ export default function AMEquipo(props) {
       setDialogOpen(false);
       setReload(true);
       setSnackbarSeverity("success");
-      setSnackbarText("Edicion exitosa.");
+      if (equipo) {
+        setSnackbarText("Edicion exitosa.");
+      } else {
+        setSnackbarText("Creacion exitosa.");
+      }
+
       setOpenSnackbar(true);
     } catch (error) {
       console.log(error);

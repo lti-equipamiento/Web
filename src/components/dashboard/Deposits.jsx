@@ -12,19 +12,28 @@ export default function Deposits(props) {
 
   const [costoData, setCostoData] = useState(0);
   const [textFieldYear, setTextFieldYear] = useState(2022);
-  const { data } = useQuery(chart, {
-    variables: { fecha_inicio: "2022/01/01", fecha_fin: "2023/01/01" },
+  const { data, refetch } = useQuery(chart, {
+    fetchPolicy: "no-cache",
+    variables: {
+      fecha_inicio: `${year}/01/01`,
+      fecha_fin: `${year + 1}/01/01`,
+    },
   });
 
   useEffect(() => {
-    if (data) {
+    if (year) {
+      refetch();
       let cost = 0;
-      for (let d = 0; d < data.data_mantenimiento.length; d++) {
-        cost += data.data_mantenimiento[d].costo;
+      if (data) {
+        for (let d = 0; d < data.data_mantenimiento.length; d++) {
+          cost += data.data_mantenimiento[d].costo;
+        }
       }
+      console.log(cost);
       setCostoData(cost);
     }
-  }, [data]);
+  }, [data, year, refetch]);
+
   return (
     <React.Fragment>
       <Grid
