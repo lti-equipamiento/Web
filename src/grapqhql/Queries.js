@@ -96,6 +96,33 @@ export function editRolUsuario() {
   `;
 }
 
+export function getDelUsuarios() {
+  return gql`
+    query getDelUsuarios {
+      data_usuario(
+        where: {
+          _or: {
+            mantenimientos_aggregate: { count: { predicate: { _eq: 0 } } }
+            tickets_aggregate: { count: { predicate: { _eq: 0 } } }
+          }
+        }
+      ) {
+        id
+      }
+    }
+  `;
+}
+
+export function deleteUsuario() {
+  return gql`
+    mutation deleteUsuario($id: String!) {
+      delete_data_usuario_by_pk(id: $id) {
+        mail
+      }
+    }
+  `;
+}
+
 //---------------------------------------------------Equipos-------------------------------------
 
 export function getAllEquipoDetails() {
@@ -231,6 +258,27 @@ export function editEquipo() {
         }
       ) {
         id
+      }
+    }
+  `;
+}
+
+//Son los equipos que no se pueden borrar
+export function getNotDeleteEquipos() {
+  return gql`
+    query getNotDeleteEquipos {
+      data_ticket(distinct_on: equipo) {
+        equipo
+      }
+    }
+  `;
+}
+
+export function deleteEquipo() {
+  return gql`
+    mutation deleteEquipo($id: String!) {
+      delete_data_equipo_by_pk(id: $id) {
+        nombre
       }
     }
   `;
@@ -399,6 +447,16 @@ export function editTicket() {
           usuario: $usuario
         }
       ) {
+        id
+      }
+    }
+  `;
+}
+
+export function getDelTickets() {
+  return gql`
+    query MyQuery {
+      data_ticket(where: { _or: { tipo: { _nlike: "Preventivo%" } } }) {
         id
       }
     }
@@ -845,6 +903,10 @@ export function editComponente() {
   `;
 }
 
+export function deleteComponente() {
+  return gql``;
+}
+
 //----------------------------------Documentacion tecnica-------------------------------------------------
 
 export function getDocumentacion() {
@@ -917,7 +979,9 @@ export function getCostos() {
   return gql`
     query getCostos($fecha_inicio: date!, $fecha_fin: date!) {
       data_mantenimiento(
-        where: { fecha_egreso: { _gte: $fecha_inicio, _lt: $fecha_fin } }
+        where: {
+          _and: { fecha_egreso: { _lt: $fecha_fin, _gte: $fecha_inicio } }
+        }
       ) {
         costo
         fecha_egreso
@@ -930,7 +994,9 @@ export function getMantPrev() {
   return gql`
     query getMantPrev($fecha_inicio: date!, $fecha_fin: date!) {
       data_hoja_de_vida(
-        where: { prox_mant_prev: { _gte: $fecha_inicio, _lt: $fecha_fin } }
+        where: {
+          _and: { prox_calib_prev: { _lt: $fecha_fin, _gte: $fecha_inicio } }
+        }
       ) {
         prox_mant_prev
       }
@@ -942,7 +1008,9 @@ export function getCalibPrev() {
   return gql`
     query getCalibPrev($fecha_inicio: date!, $fecha_fin: date!) {
       data_hoja_de_vida(
-        where: { prox_mant_prev: { _gte: $fecha_inicio, _lt: $fecha_fin } }
+        where: {
+          _and: { prox_calib_prev: { _lt: $fecha_fin, _gte: $fecha_inicio } }
+        }
       ) {
         prox_calib_prev
       }

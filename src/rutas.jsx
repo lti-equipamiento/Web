@@ -22,58 +22,56 @@ export default function Rutas() {
         <NavigationBar>
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            {isAuthenticated && (
-              <>
-                <Route
-                  path="/profile"
-                  element={
-                    <PermissionsGate scopes={[SCOPES.canViewPerfil]}>
-                      <PageProfile />
-                    </PermissionsGate>
-                  }
-                />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <PermissionsGate scopes={[SCOPES.canViewDashboard]}>
-                      <Dashboard />
-                    </PermissionsGate>
-                  }
-                />
-                <Route
-                  path="/equipo"
-                  element={
-                    <PermissionsGate scopes={[SCOPES.canViewEquipo]}>
-                      <PageEquipo />
-                    </PermissionsGate>
-                  }
-                />
-                <Route
-                  path="/usuario"
-                  element={
-                    <PermissionsGate scopes={[SCOPES.canViewUsuario]}>
-                      <PageUsuario />
-                    </PermissionsGate>
-                  }
-                />
-                <Route
-                  path="/ticket"
-                  element={
-                    <PermissionsGate scopes={[SCOPES.canViewTicket]}>
-                      <PageTicket />
-                    </PermissionsGate>
-                  }
-                />
-                <Route
-                  path="/mantenimiento"
-                  element={
-                    <PermissionsGate scopes={[SCOPES.canViewMantenimiento]}>
-                      <PageMantenimiento />
-                    </PermissionsGate>
-                  }
-                />
-              </>
-            )}
+            <>
+              <Route
+                path="/profile"
+                element={
+                  <PermissionsGate scopes={[SCOPES.canViewPerfil]}>
+                    <PageProfile />
+                  </PermissionsGate>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <PermissionsGate scopes={[SCOPES.canViewDashboard]}>
+                    <Dashboard />
+                  </PermissionsGate>
+                }
+              />
+              <Route
+                path="/equipo"
+                element={
+                  <PermissionsGate scopes={[SCOPES.canViewEquipo]}>
+                    <PageEquipo />
+                  </PermissionsGate>
+                }
+              />
+              <Route
+                path="/usuario"
+                element={
+                  <PermissionsGate scopes={[SCOPES.canViewUsuario]}>
+                    <PageUsuario />
+                  </PermissionsGate>
+                }
+              />
+              <Route
+                path="/ticket"
+                element={
+                  <PermissionsGate scopes={[SCOPES.canViewTicket]}>
+                    <PageTicket />
+                  </PermissionsGate>
+                }
+              />
+              <Route
+                path="/mantenimiento"
+                element={
+                  <PermissionsGate scopes={[SCOPES.canViewMantenimiento]}>
+                    <PageMantenimiento />
+                  </PermissionsGate>
+                }
+              />
+            </>
           </Routes>
         </NavigationBar>
       )}
