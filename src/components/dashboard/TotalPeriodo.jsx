@@ -6,25 +6,33 @@ import { useQuery } from "@apollo/client";
 import { Grid, IconButton, TextField } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 
-export default function Deposits(props) {
+export default function TotalPeriodo(props) {
   const { setYear, year } = props;
   const chart = getCostos();
 
   const [costoData, setCostoData] = useState(0);
   const [textFieldYear, setTextFieldYear] = useState(2022);
-  const { data } = useQuery(chart, {
-    variables: { fecha_inicio: "2022/01/01", fecha_fin: "2023/01/01" },
+  const anioFin = parseInt(year) + 1;
+  const { data, refetch } = useQuery(chart, {
+    fetchPolicy: "no-cache",
+    variables: {
+      fecha_inicio: `${year}/01/01`,
+      fecha_fin: `${anioFin}/01/01`,
+    },
   });
 
   useEffect(() => {
     if (data) {
+      refetch();
       let cost = 0;
-      for (let d = 0; d < data.data_mantenimiento.length; d++) {
-        cost += data.data_mantenimiento[d].costo;
+      if (data) {
+        for (let d = 0; d < data.data_mantenimiento.length; d++) {
+          cost += data.data_mantenimiento[d].costo;
+        }
       }
       setCostoData(cost);
     }
-  }, [data]);
+  }, [data, year, refetch]);
   return (
     <React.Fragment>
       <Grid
@@ -40,7 +48,7 @@ export default function Deposits(props) {
             justifyContent="center"
             alignItems="center"
           >
-            <Grid item xs={10}>
+            <Grid item xs={10} marginTop={2}>
               <TextField
                 fullWidth
                 type="number"
@@ -62,9 +70,9 @@ export default function Deposits(props) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} marginTop={2}>
           <Title>Costos totales de {year}</Title>
-          <Typography component="p" variant="h4">
+          <Typography component="p" variant="h4" marginTop={2}>
             {"$ " + costoData}
           </Typography>
         </Grid>

@@ -24,7 +24,10 @@ export default function AMEquipo(props) {
     setSnackbarText,
     setOpenSnackbar,
   } = props;
-  const [equipoData, setEquipoData] = useState([]);
+  const [equipoData, setEquipoData] = useState({
+    prioridad: 1,
+    garantia: new Date(),
+  });
   const { loading, data: allEquipoDetails } = useQuery(getAllEquipoDetails(), {
     fetchPolicy: "no-cache",
   });

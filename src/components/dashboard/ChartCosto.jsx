@@ -19,10 +19,11 @@ const chart = getCostos();
 export default function ChartCosto(props) {
   const { year } = props;
   const [costoData, setCostoData] = useState([]);
-  const { data } = useQuery(chart, {
+  const anioFin = parseInt(year) + 1;
+  const { data, refetch } = useQuery(chart, {
     variables: {
       fecha_inicio: `${year}/01/01`,
-      fecha_fin: `${year + 1}/01/01`,
+      fecha_fin: `${anioFin}/01/01`,
     },
   });
 
@@ -43,7 +44,7 @@ export default function ChartCosto(props) {
 
   useEffect(() => {
     if (data) {
-      let cost = 0;
+      refetch();
       for (let d = 0; d < data.data_mantenimiento.length; d++) {
         meses[
           data.data_mantenimiento[d]["fecha_egreso"].split("-")[1] - 1
@@ -51,7 +52,7 @@ export default function ChartCosto(props) {
       }
       setCostoData(meses);
     }
-  }, [data]);
+  }, [year, refetch, data]);
 
   return (
     <React.Fragment>

@@ -46,7 +46,7 @@ export default function Dashboard() {
             height: 240,
           }}
         >
-          <ChartPreventivos />
+          <ChartPreventivos year={year} />
         </Paper>
       </Grid>
       <Grid item xs={12}>

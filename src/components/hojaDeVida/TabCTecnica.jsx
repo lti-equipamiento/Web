@@ -22,8 +22,8 @@ export default function TabCTecnica(props) {
   } = props;
 
   const [showTipoAlimentacionData, setShowTipoAlimentacionData] = useState([]);
-  const [fechaMantPrev, setFechaMantPrev] = useState(new Date(2000));
-  const [fechaCalibPrev, setFechaCalibPrev] = useState(new Date(2000));
+  const [fechaMantPrev, setFechaMantPrev] = useState(new Date());
+  const [fechaCalibPrev, setFechaCalibPrev] = useState(new Date());
 
   useEffect(() => {
     if (HDVData) {

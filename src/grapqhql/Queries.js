@@ -990,28 +990,15 @@ export function getCostos() {
   `;
 }
 
-export function getMantPrev() {
+export function getMantCalibPrev() {
   return gql`
-    query getMantPrev($fecha_inicio: date!, $fecha_fin: date!) {
+    query getMantCalibPrev($fecha_inicio: date!, $fecha_fin: date!) {
       data_hoja_de_vida(
         where: {
-          _and: { prox_calib_prev: { _lt: $fecha_fin, _gte: $fecha_inicio } }
+          _and: { prox_calib_prev: { _gte: $fecha_inicio, _lt: $fecha_fin } }
         }
       ) {
         prox_mant_prev
-      }
-    }
-  `;
-}
-
-export function getCalibPrev() {
-  return gql`
-    query getCalibPrev($fecha_inicio: date!, $fecha_fin: date!) {
-      data_hoja_de_vida(
-        where: {
-          _and: { prox_calib_prev: { _lt: $fecha_fin, _gte: $fecha_inicio } }
-        }
-      ) {
         prox_calib_prev
       }
     }
