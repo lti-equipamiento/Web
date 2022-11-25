@@ -6,21 +6,42 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { Typography, Button, Box } from "@mui/material";
+import {
+  Typography,
+  FormControlLabel,
+  Button,
+  Box,
+  Snackbar,
+  Alert,
+  IconButton,
+  Grid,
+} from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CallMadeIcon from "@mui/icons-material/CallMade";
 import { Edit } from "@mui/icons-material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-import { getTickets } from "../grapqhql/Queries";
+import { getTickets, getUsuarioNombreRol } from "../grapqhql/Queries";
 import { useQuery } from "@apollo/client";
 import AMTicket from "../components/ticket/AMTicket";
 import AMantenimiento from "../components/mantenimiento/AMantenimiento";
 import CustomizedDialogs from "../components/dialogs/Dialog";
 import Popover from "@mui/material/Popover";
-
-const ticket = getTickets();
+import Switch from "@mui/material/Switch";
+import { useAuth0 } from "@auth0/auth0-react";
+import BTicket from "../components/ticket/BTicket";
 
 export default function PageTicket() {
+  //auth0
+  const { user } = useAuth0();
+  //queries
+  const ticket = getTickets();
+  const userTicket = getUsuarioNombreRol();
   // tabla
   const { loading, data, refetch } = useQuery(ticket);
+  const { loading: loadingUser, data: dataUser } = useQuery(userTicket, {
+    variables: { id: user.sub },
+  });
   const [pageSize, setPageSize] = useState(5);
   const [reload, setReload] = useState(false);
   const [rows, setRows] = useState([]);
@@ -29,16 +50,43 @@ export default function PageTicket() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [modTicket, setModTicket] = useState([]);
 
+  // Eliminacion de ticket
+  const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+  const [deleteTicket, setDeleteTicket] = useState([]);
+
   // registro de ticket
   const [dialogAddOpen, setDialogAddOpen] = useState(false);
 
   // mantenimiento de ticket
   const [dialogMantOpen, setDialogMantOpen] = useState(false);
   const [mant, setMant] = useState([]);
+  const [hide, setHide] = useState(false);
 
   //PopOver
   const [anchorEl, setAnchorEl] = useState(null);
   const [value, setValue] = useState("");
+
+  //Filter asignados
+  const [show, setShow] = useState(false);
+
+  //Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarText, setSnackbarText] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  // Boton Refresh
+  const onRefresh = () => {
+    refetch();
+    setOpenSnackbar(true);
+    setSnackbarSeverity("success");
+    setSnackbarText("Datos Actualizados");
+  };
 
   useEffect(() => {
     if (reload) {
@@ -48,29 +96,105 @@ export default function PageTicket() {
   }, [refetch, reload]);
 
   useEffect(() => {
-    if (!loading && data) {
-      setRows(data.data_ticket);
+    if (data && dataUser) {
+      let data_rol = data.data_ticket;
+
+      if (
+        dataUser.data_usuario_by_pk.rol === "mantenimiento" ||
+        dataUser.data_usuario_by_pk.rol === "normal"
+      ) {
+        setHide(true);
+      }
+
+      // if ( //Si se muestran solo los propios, no saben si ya esta reportado o no un equipo
+      //   dataUser.data_usuario_by_pk.rol === "mantenimiento" ||
+      //   dataUser.data_usuario_by_pk.rol === "normal"
+      // ) {
+      //   data_rol = data_rol.filter(
+      //     (d) => d.usuario === user.sub || d.asignado === user.sub
+      //   );
+      // }
+      if (!show) {
+        const filtered_data = data_rol.filter((d) => d.asignado === null);
+        setRows(filtered_data);
+      } else {
+        const filtered_data = data_rol;
+        setRows(filtered_data);
+      }
     }
-  }, [data, loading]);
+  }, [data, loading, show, loadingUser]);
 
   function CustomToolBar() {
     return (
-      <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <GridToolbarExport
-          csvOptions={{ allColumns: true }}
-          printOptions={{
-            allColumns: true,
-            hideFooter: true,
-            hideToolbar: true,
-            disableToolbarButton: true,
-          }}
-        />
-        <GridToolbarQuickFilter />
-        <div>
-          <Button onClick={() => setDialogAddOpen(true)}>
-            <PostAddIcon />
-          </Button>
-        </div>
+      <GridToolbarContainer>
+        <Grid container marginTop={1} marginBottom={-1}>
+          <Grid item xs={4}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Grid item marginLeft={2} marginTop={0.5}>
+                <Typography
+                  sx={{ flex: "1 1 100%" }}
+                  variant="h5"
+                  id="tableTitle"
+                  component="div"
+                >
+                  Tickets
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={8}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+              <Grid item xs={4}>
+                <GridToolbarQuickFilter fullWidth />
+              </Grid>
+              <Grid item xs={4}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      onChange={(e) => {
+                        setShow(!show);
+                      }}
+                      checked={show}
+                    />
+                  }
+                  label="Mostrar asignados"
+                  labelPlacement="start"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <GridToolbarExport
+                  csvOptions={{ allColumns: true }}
+                  printOptions={{
+                    allColumns: true,
+                    hideFooter: true,
+                    hideToolbar: true,
+                    disableToolbarButton: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={1} paddingLeft={2}>
+                <IconButton onClick={() => setDialogAddOpen(true)}>
+                  <PostAddIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton onClick={onRefresh}>
+                  <RefreshIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </GridToolbarContainer>
     );
   }
@@ -79,22 +203,42 @@ export default function PageTicket() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Modificar",
-      minWidth: 70,
+      headerName: "Acciones",
+      minWidth: 150,
       flex: 1,
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "center",
+      align: "center",
       getActions: (params) => [
         <>
-          <Button
-            title="Modificar ticket"
-            onClick={() => {
-              setDialogOpen(true);
-              setModTicket(params.row);
-            }}
-          >
-            <Edit color="primary" />
-          </Button>
+          <Grid>
+            <IconButton
+              title="Modificar ticket"
+              onClick={() => {
+                setDialogOpen(true);
+                setModTicket(params.row);
+              }}
+            >
+              <Edit color="primary" />
+            </IconButton>
+            <IconButton
+              title="Asignar ticket"
+              onClick={() => {
+                setDialogMantOpen(true);
+                setMant(params.row);
+              }}
+            >
+              <CallMadeIcon color="primary"></CallMadeIcon>
+            </IconButton>
+            <IconButton
+              title="Eliminar Ticket"
+              onClick={() => {
+                setDeleteTicket(params.row);
+                setDialogDeleteOpen(true);
+              }}
+            >
+              <DeleteIcon color="primary" />
+            </IconButton>
+          </Grid>
         </>,
       ],
     },
@@ -200,28 +344,6 @@ export default function PageTicket() {
       headerAlign: "left",
       align: "left",
     },
-    {
-      field: "Asignar",
-      type: "actions",
-      headerName: "Asignar",
-      minWidth: 70,
-      flex: 1,
-      headerAlign: "left",
-      align: "left",
-      getActions: (params) => [
-        <>
-          <Button
-            title="Asignar ticket"
-            onClick={() => {
-              setDialogMantOpen(true);
-              setMant(params.row);
-            }}
-          >
-            Asignar
-          </Button>
-        </>,
-      ],
-    },
   ];
 
   const handlePopoverOpen = (event) => {
@@ -242,14 +364,6 @@ export default function PageTicket() {
   return (
     <>
       <Box sx={{ height: 400, width: "100%" }}>
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h5"
-          id="tableTitle"
-          component="div"
-        >
-          Tickets
-        </Typography>
         <DataGrid
           loading={loading}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -259,9 +373,10 @@ export default function PageTicket() {
           columns={columns}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          rowsPerPageOptions={[5, 10, 20]}
+          rowsPerPageOptions={[5, 10, 20, 50, 100]}
           pagination
           disableSelectionOnClick
+          columnVisibilityModel={{ Asignar: !hide }}
           components={{ Toolbar: CustomToolBar }}
           componentsProps={{
             cell: {
@@ -307,6 +422,9 @@ export default function PageTicket() {
           setReload={setReload}
           ticket={mant}
           submitButtonText="Asignar"
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
       <CustomizedDialogs
@@ -319,6 +437,9 @@ export default function PageTicket() {
           setReload={setReload}
           ticket={modTicket}
           submitButtonText="Editar"
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
       <CustomizedDialogs
@@ -330,8 +451,38 @@ export default function PageTicket() {
           setDialogOpen={setDialogAddOpen}
           submitButtonText="Registrar"
           setReload={setReload}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Eliminación de ticket"
+        dialogOpen={dialogDeleteOpen}
+        setDialogOpen={setDialogDeleteOpen}
+      >
+        <BTicket
+          deleteTicketData={deleteTicket}
+          setReload={setReload}
+          setDialogOpen={setDialogDeleteOpen}
+          setOpenSnackbar={setOpenSnackbar}
+          setSnackbarText={setSnackbarText}
+          setSnackbarSeverity={setSnackbarSeverity}
+        />
+      </CustomizedDialogs>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarText}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

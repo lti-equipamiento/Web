@@ -18,14 +18,14 @@ export function getAPIToken(data) {
 export function getUsuarios() {
   return gql`
     query getUsuarios {
-      data_usuario {
-        id
-        nombre
-        mail
-        telefono
-        direccion
+      data_usuario(where: { id: { _neq: "system" } }) {
         cedula
+        direccion
+        mail
+        nombre
         rol
+        telefono
+        id
       }
     }
   `;
@@ -33,8 +33,8 @@ export function getUsuarios() {
 
 export function getUsuario() {
   return gql`
-    query getUsuario($mail: String!) {
-      data_usuario_by_pk(mail: $mail) {
+    query getUsuario($id: String!) {
+      data_usuario_by_pk(id: $id) {
         cedula
         direccion
         id
@@ -42,6 +42,17 @@ export function getUsuario() {
         nombre
         rol
         telefono
+      }
+    }
+  `;
+}
+
+export function getUsuarioNombreRol(id) {
+  return gql`
+    query getUsuarioNombreRol($id: String!) {
+      data_usuario_by_pk(id: $id) {
+        nombre
+        rol
       }
     }
   `;
@@ -80,6 +91,33 @@ export function editRolUsuario() {
     mutation editRolUsuario($id: String!, $rol: String!) {
       update_data_usuario_by_pk(pk_columns: { id: $id }, _set: { rol: $rol }) {
         id
+      }
+    }
+  `;
+}
+
+export function getDelUsuarios() {
+  return gql`
+    query getDelUsuarios {
+      data_usuario(
+        where: {
+          _or: {
+            mantenimientos_aggregate: { count: { predicate: { _eq: 0 } } }
+            tickets_aggregate: { count: { predicate: { _eq: 0 } } }
+          }
+        }
+      ) {
+        id
+      }
+    }
+  `;
+}
+
+export function deleteUsuario() {
+  return gql`
+    mutation deleteUsuario($id: String!) {
+      delete_data_usuario_by_pk(id: $id) {
+        mail
       }
     }
   `;
@@ -225,6 +263,27 @@ export function editEquipo() {
   `;
 }
 
+//Son los equipos que no se pueden borrar
+export function getNotDeleteEquipos() {
+  return gql`
+    query getNotDeleteEquipos {
+      data_ticket(distinct_on: equipo) {
+        equipo
+      }
+    }
+  `;
+}
+
+export function deleteEquipo() {
+  return gql`
+    mutation deleteEquipo($id: Int!) {
+      delete_data_equipo_by_pk(id: $id) {
+        nombre
+      }
+    }
+  `;
+}
+
 //-------------------------------------------------Servicio------------------------------------------------------
 
 export function getServicio() {
@@ -311,8 +370,10 @@ export function getTickets() {
           nombre
         }
         tipo
+        usuario
         id
         fecha
+        asignado
         equipo
       }
     }
@@ -392,14 +453,24 @@ export function editTicket() {
   `;
 }
 
-export function deleteTicket(id) {
+export function getDelTickets() {
   return gql`
-mutation deleteTicket {
-delete_data_ticket_by_pk(id: ${id}) {
-  id
+    query MyQuery {
+      data_ticket(where: { _or: { tipo: { _nlike: "Preventivo%" } } }) {
+        id
+      }
+    }
+  `;
 }
-}
-`;
+
+export function deleteTicket() {
+  return gql`
+    mutation deleteTicket($id: Int!) {
+      delete_data_ticket_by_pk(id: $id) {
+        id
+      }
+    }
+  `;
 }
 
 //--------------------------------------------------Tipo ticket---------------------------------------------------
@@ -478,6 +549,12 @@ export function addMantenimiento() {
           equipo: $equipo
           hoja_de_vida: $hoja_de_vida
         }
+      ) {
+        id
+      }
+      update_data_ticket_by_pk(
+        pk_columns: { id: $ticket }
+        _set: { asignado: $usuario }
       ) {
         id
       }
@@ -609,6 +686,8 @@ export function getHojaDeVida(id) {
         }
         period_calibracion
         period_mantenimiento
+        prox_calib_prev
+        prox_mant_prev
         recom_fabricante
         rut
         tecnologia_predominante
@@ -676,6 +755,8 @@ export function editHojaDeVida() {
       $guia_limpieza: String!
       $period_calibracion: String!
       $period_mantenimiento: String!
+      $prox_calib_prev: date!
+      $prox_mant_prev: date!
       $recom_fabricante: String!
       $rut: String!
       $tecnologia_predominante: String!
@@ -746,6 +827,8 @@ export function editHojaDeVida() {
           guia_limpieza: $guia_limpieza
           period_calibracion: $period_calibracion
           period_mantenimiento: $period_mantenimiento
+          prox_calib_prev: $prox_calib_prev
+          prox_mant_prev: $prox_mant_prev
           recom_fabricante: $recom_fabricante
           rut: $rut
           tecnologia_predominante: $tecnologia_predominante
@@ -820,6 +903,10 @@ export function editComponente() {
   `;
 }
 
+export function deleteComponente() {
+  return gql``;
+}
+
 //----------------------------------Documentacion tecnica-------------------------------------------------
 
 export function getDocumentacion() {
@@ -881,6 +968,61 @@ export function getTipoAlimentacion() {
         servicio
         vacio
         vapor
+      }
+    }
+  `;
+}
+
+//-----------------------------------Dashboard----------------------------
+
+export function getCostos() {
+  return gql`
+    query getCostos($fecha_inicio: date!, $fecha_fin: date!) {
+      data_mantenimiento(
+        where: {
+          _and: { fecha_egreso: { _lt: $fecha_fin, _gte: $fecha_inicio } }
+        }
+      ) {
+        costo
+        fecha_egreso
+      }
+    }
+  `;
+}
+
+export function getMantCalibPrev() {
+  return gql`
+    query getMantCalibPrev($fecha_inicio: date!, $fecha_fin: date!) {
+      data_hoja_de_vida(
+        where: {
+          _and: { prox_calib_prev: { _gte: $fecha_inicio, _lt: $fecha_fin } }
+        }
+      ) {
+        prox_mant_prev
+        prox_calib_prev
+      }
+    }
+  `;
+}
+
+export function getLast5MantsDashB() {
+  return gql`
+    query getLast5MantsDashB {
+      data_mantenimiento(
+        limit: 5
+        order_by: { fecha_egreso: desc }
+        where: { estado: { _eq: "Cerrado" } }
+      ) {
+        id
+        fecha_egreso
+        equipoByEquipo {
+          nombre
+        }
+        usuarioByUsuario {
+          nombre
+        }
+        costo
+        ticket
       }
     }
   `;

@@ -1,8 +1,17 @@
 import { useQuery } from "@apollo/client";
 import { Edit } from "@mui/icons-material";
-import { Typography } from "@mui/material";
+import {
+  Typography,
+  FormControlLabel,
+  Snackbar,
+  Alert,
+  Popover,
+  Switch,
+  Grid,
+  IconButton,
+} from "@mui/material";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import {
   DataGrid,
   esES,
@@ -10,46 +19,152 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import React, { useState, useEffect } from "react";
-import { getMantenimientos } from "../grapqhql/Queries";
+import { getMantenimientos, getUsuarioNombreRol } from "../grapqhql/Queries";
 import CustomizedDialogs from "../components/dialogs/Dialog";
 import MMantenimiento from "../components/mantenimiento/MMantenimiento";
-import Popover from "@mui/material/Popover";
-
-const mantenimientos = getMantenimientos();
+import MantenimientoDetails from "../components/mantenimiento/MantenimientoDetails";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function PageMantenimiento() {
+  //auth0
+  const { user } = useAuth0();
+  //queries
+  const mantenimientos = getMantenimientos();
+  const userMant = getUsuarioNombreRol();
+  // tabla
   const [pageSize, setPageSize] = useState(5);
-  const { loading, data, refetch } = useQuery(mantenimientos);
+  const { loading, data, refetch } = useQuery(mantenimientos, {
+    fetchPolicy: "no-cache",
+  });
+  const { data: dataMant } = useQuery(userMant, {
+    variables: { id: user.sub },
+  });
   const [rows, setRows] = useState([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editMantenimiento, setEditMantenimiento] = useState([]);
   const [reload, setReload] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [value, setValue] = useState("");
 
-  const handleEdit = (equipo) => {
-    handleClickOpenDialog();
-    setEditMantenimiento(equipo);
+  // Edit Mantenimiento
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editMantenimiento, setEditMantenimiento] = useState([]);
+
+  // Detalles de mantenimiento
+  const [detailsData, setDetailsData] = useState([]);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+
+  //Filter asignados
+  const [show, setShow] = useState(false);
+
+  // SnackBar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarText, setSnackbarText] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
-  const handleClickOpenDialog = () => {
-    setDialogOpen(true);
+  // Boton Refresh
+  const onRefresh = () => {
+    refetch();
+    setOpenSnackbar(true);
+    setSnackbarSeverity("success");
+    setSnackbarText("Datos Actualizados");
   };
+
+  useEffect(() => {
+    if (reload) {
+      refetch();
+      setReload(false);
+    }
+  }, [reload, refetch]);
+
+  useEffect(() => {
+    if (data && dataMant) {
+      let data_rol = data.data_mantenimiento;
+      if (dataMant.data_usuario_by_pk.rol === "mantenimiento") {
+        data_rol = data_rol.filter((d) => d.usuario === user.sub);
+      }
+      if (!show) {
+        const filtered_data = data_rol.filter((d) => d.estado !== "Cerrado");
+        setRows(filtered_data);
+      } else {
+        const filtered_data = data_rol;
+        setRows(filtered_data);
+      }
+    }
+  }, [data, dataMant, show, user.sub]);
 
   function CustomToolBar() {
     return (
-      <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <GridToolbarExport
-          csvOptions={{ allColumns: true }}
-          printOptions={{
-            allColumns: true,
-            hideFooter: true,
-            hideToolbar: true,
-            disableToolbarButton: true,
-          }}
-        />
-        <GridToolbarQuickFilter />
+      <GridToolbarContainer>
+        <Grid container marginTop={1} marginBottom={-1}>
+          <Grid item xs={4}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Grid item marginLeft={2} marginTop={0.5}>
+                <Typography
+                  sx={{ flex: "1 1 100%" }}
+                  variant="h5"
+                  id="tableTitle"
+                  component="div"
+                >
+                  Mantenimientos
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={8}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+              <Grid item xs={5}>
+                <GridToolbarQuickFilter fullWidth />
+              </Grid>
+              <Grid item xs={4}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      onChange={(e) => {
+                        setShow(!show);
+                      }}
+                      checked={show}
+                    />
+                  }
+                  label="Mostrar realizados"
+                  labelPlacement="start"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <GridToolbarExport
+                  csvOptions={{ allColumns: true }}
+                  printOptions={{
+                    allColumns: true,
+                    hideFooter: true,
+                    hideToolbar: true,
+                    disableToolbarButton: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton onClick={onRefresh}>
+                  <RefreshIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </GridToolbarContainer>
     );
   }
@@ -58,31 +173,31 @@ export default function PageMantenimiento() {
     {
       field: "editar",
       type: "actions",
-      headerName: "Modificar",
+      headerName: "Acciones",
       minWidth: 70,
       flex: 1,
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "center",
+      align: "center",
       getActions: (params) => [
         <>
-          <Button
+          <IconButton
             title="Modificar mantenimiento"
-            onClick={() => handleEdit(params.row)}
+            onClick={() => {
+              setDialogOpen(true);
+              setEditMantenimiento(params.row);
+            }}
           >
             <Edit color="primary" />
-          </Button>
-          <CustomizedDialogs
-            modalTitle="Edición de mantenimiento"
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
+          </IconButton>
+          <IconButton
+            title="Mostrar detalles"
+            onClick={() => {
+              setDetailsDialogOpen(true);
+              setDetailsData(params.row);
+            }}
           >
-            <MMantenimiento
-              setDialogOpen={setDialogOpen}
-              setReload={setReload}
-              mant={editMantenimiento}
-              submitButtonText="Editar"
-            />
-          </CustomizedDialogs>
+            <ZoomInIcon color="primary" />
+          </IconButton>
         </>,
       ],
     },
@@ -217,19 +332,6 @@ export default function PageMantenimiento() {
     },
   ];
 
-  useEffect(() => {
-    if (reload) {
-      refetch();
-      setReload(false);
-    }
-  }, [reload, refetch]);
-
-  useEffect(() => {
-    if (!loading && data) {
-      setRows(data.data_mantenimiento);
-    }
-  }, [data, loading]);
-
   //On Hover
   const handlePopoverOpen = (event) => {
     const dataCell = event.target.textContent;
@@ -249,14 +351,6 @@ export default function PageMantenimiento() {
   return (
     <>
       <Box sx={{ height: 400, width: "100%" }}>
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h5"
-          id="tableTitle"
-          component="div"
-        >
-          Mantenimientos
-        </Typography>
         <DataGrid
           loading={loading}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -304,6 +398,40 @@ export default function PageMantenimiento() {
           <Typography sx={{ p: 1 }}>{`${value}`}</Typography>
         </Popover>
       </Box>
+      <CustomizedDialogs
+        modalTitle="Edición de mantenimiento"
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+      >
+        <MMantenimiento
+          setDialogOpen={setDialogOpen}
+          setReload={setReload}
+          mant={editMantenimiento}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
+        />
+      </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Detalles"
+        dialogOpen={detailsDialogOpen}
+        setDialogOpen={setDetailsDialogOpen}
+      >
+        <MantenimientoDetails data={detailsData} />
+      </CustomizedDialogs>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarText}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

@@ -2,9 +2,15 @@ import { useQuery } from "@apollo/client";
 import { Edit } from "@mui/icons-material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import { FormControlLabel, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import {
+  FormControlLabel,
+  Typography,
+  Snackbar,
+  Alert,
+  Box,
+  IconButton,
+  Grid,
+} from "@mui/material";
 import {
   DataGrid,
   esES,
@@ -12,6 +18,9 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import React, { useEffect, useState } from "react";
 import { getEquipos } from "../grapqhql/Queries";
 import AMEquipo from "../components/equipo/AMEquipo";
@@ -20,13 +29,16 @@ import DialogHDV from "../components/dialogs/DialogHDV";
 import EquipoDetails from "../components/equipo/EquipoDetails";
 import Popover from "@mui/material/Popover";
 import Switch from "@mui/material/Switch";
+import BEquipo from "../components/equipo/BEquipo";
 
 const equipo = getEquipos();
 
 export default function PageEquipo() {
   // Tabla
   const [pageSize, setPageSize] = React.useState(5);
-  const { loading, data, refetch } = useQuery(equipo);
+  const { loading, data, refetch } = useQuery(equipo, {
+    fetchPolicy: "no-cache",
+  });
   const [reload, setReload] = useState(false);
   const [rows, setRows] = useState([]);
 
@@ -36,6 +48,10 @@ export default function PageEquipo() {
   // Edit equipo
   const [editEquipo, setEditEquipo] = useState([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  // Eliminacion de equipo
+  const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
+  const [deleteEquipo, setDeleteEquipo] = useState([]);
 
   // Hoja de vida
   const [dialogHDV, setDialogHDVOpen] = useState(false);
@@ -51,6 +67,26 @@ export default function PageEquipo() {
 
   //Filter rotos
   const [show, setShow] = useState(false);
+
+  //Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarText, setSnackbarText] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  // Boton Refresh
+  const onRefresh = () => {
+    refetch();
+    setOpenSnackbar(true);
+    setSnackbarSeverity("success");
+    setSnackbarText("Datos Actualizados");
+  };
 
   // useEffect Tabla
   useEffect(() => {
@@ -76,38 +112,79 @@ export default function PageEquipo() {
 
   function CustomToolBar() {
     return (
-      <GridToolbarContainer sx={{ justifyContent: "right" }}>
-        <FormControlLabel
-          control={
-            <Switch
-              onChange={(e) => {
-                setShow(!show);
-              }}
-              checked={show}
-            />
-          }
-          label="Mostrar inactivos"
-          labelPlacement="start"
-        />
-        <GridToolbarExport
-          csvOptions={{ allColumns: true }}
-          printOptions={{
-            allColumns: true,
-            hideFooter: true,
-            hideToolbar: true,
-            disableToolbarButton: true,
-          }}
-        />
-        <GridToolbarQuickFilter />
-        <div style={{ display: "flex", justifyContent: "right" }}>
-          <Button
-            onClick={() => {
-              setAddDialogOpen(true);
-            }}
-          >
-            <AddBoxIcon />
-          </Button>
-        </div>
+      <GridToolbarContainer>
+        <Grid container marginTop={1} marginBottom={-1}>
+          <Grid item xs={4}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Grid item marginLeft={2} marginTop={0.5}>
+                <Typography
+                  sx={{ flex: "1 1 100%" }}
+                  variant="h5"
+                  id="tableTitle"
+                  component="div"
+                >
+                  Equipos
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={8}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+              <Grid item xs={4}>
+                <GridToolbarQuickFilter fullWidth />
+              </Grid>
+              <Grid item xs={4}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      onChange={(e) => {
+                        setShow(!show);
+                      }}
+                      checked={show}
+                    />
+                  }
+                  label="Mostrar inactivos"
+                  labelPlacement="start"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <GridToolbarExport
+                  csvOptions={{ allColumns: true }}
+                  printOptions={{
+                    allColumns: true,
+                    hideFooter: true,
+                    hideToolbar: true,
+                    disableToolbarButton: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={1} paddingLeft={2}>
+                <IconButton
+                  onClick={() => {
+                    setAddDialogOpen(true);
+                  }}
+                >
+                  <AddBoxIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton onClick={onRefresh}>
+                  <RefreshIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </GridToolbarContainer>
     );
   }
@@ -128,22 +205,51 @@ export default function PageEquipo() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Modificar",
-      minWidth: 70,
+      headerName: "Acciones",
+      minWidth: 200,
       flex: 1,
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "center",
+      align: "center",
       getActions: (params) => [
         <>
-          <Button
-            title="Modificar equipo"
-            onClick={() => {
-              setEditDialogOpen(true);
-              setEditEquipo(params.row);
-            }}
-          >
-            <Edit color="primary" />
-          </Button>
+          <Grid container>
+            <IconButton
+              title="Modificar equipo"
+              onClick={() => {
+                setEditDialogOpen(true);
+                setEditEquipo(params.row);
+              }}
+            >
+              <Edit color="primary" />
+            </IconButton>
+            <IconButton
+              title="Mostrar detalles"
+              onClick={() => {
+                setDetailsDialogOpen(true);
+                setDetailsData(params.row);
+              }}
+            >
+              <ZoomInIcon color="primary" />
+            </IconButton>
+            <IconButton
+              title="Hoja de Vida"
+              onClick={() => {
+                setHDVid(params.row.hoja_de_vida);
+                setDialogHDVOpen(true);
+              }}
+            >
+              <AutoStoriesIcon color="primary" />
+            </IconButton>
+            <IconButton
+              title="Eliminar Equipo"
+              onClick={() => {
+                setDeleteEquipo(params.row);
+                setDialogDeleteOpen(true);
+              }}
+            >
+              <DeleteIcon color="primary" />
+            </IconButton>
+          </Grid>
         </>,
       ],
     },
@@ -259,49 +365,49 @@ export default function PageEquipo() {
         return calculatePrioridad(params.row);
       },
     },
-    {
-      field: "action1",
-      type: "actions",
-      headerName: "Detalles",
-      minWidth: 70,
-      flex: 1,
-      headerAlign: "left",
-      align: "left",
-      getActions: (params) => [
-        <>
-          <Button
-            title="Mostrar detalles"
-            onClick={() => {
-              setDetailsDialogOpen(true);
-              setDetailsData(params.row);
-            }}
-          >
-            ...
-          </Button>
-        </>,
-      ],
-    },
-    {
-      field: "action",
-      type: "actions",
-      headerName: "Hoja de vida",
-      minWidth: 70,
-      flex: 1,
-      headerAlign: "left",
-      align: "left",
-      getActions: (params) => [
-        <>
-          <Button
-            onClick={() => {
-              setHDVid(params.row.hoja_de_vida);
-              setDialogHDVOpen(true);
-            }}
-          >
-            <AutoStoriesIcon />
-          </Button>
-        </>,
-      ],
-    },
+    // {
+    //   field: "action1",
+    //   type: "actions",
+    //   headerName: "Detalles",
+    //   minWidth: 70,
+    //   flex: 1,
+    //   headerAlign: "left",
+    //   align: "left",
+    //   getActions: (params) => [
+    //     <>
+    //       <IconButton
+    //         title="Mostrar detalles"
+    //         onClick={() => {
+    //           setDetailsDialogOpen(true);
+    //           setDetailsData(params.row);
+    //         }}
+    //       >
+    //         <ZoomInIcon />
+    //       </IconButton>
+    //     </>,
+    //   ],
+    // },
+    // {
+    //   field: "action",
+    //   type: "actions",
+    //   headerName: "Hoja de vida",
+    //   minWidth: 70,
+    //   flex: 1,
+    //   headerAlign: "left",
+    //   align: "left",
+    //   getActions: (params) => [
+    //     <>
+    //       <Button
+    //         onClick={() => {
+    //           setHDVid(params.row.hoja_de_vida);
+    //           setDialogHDVOpen(true);
+    //         }}
+    //       >
+    //         <AutoStoriesIcon />
+    //       </Button>
+    //     </>,
+    //   ],
+    // },
   ];
 
   const handlePopoverOpen = (event) => {
@@ -323,16 +429,8 @@ export default function PageEquipo() {
     <>
       {/* Tabla */}
       <Box sx={{ height: 400, width: "100%" }}>
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h5"
-          id="tableTitle"
-          component="div"
-        >
-          Equipos
-        </Typography>
         <DataGrid
-          loading={loading}
+          loading={loading || reload}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           rows={rows}
           autoHeight
@@ -391,7 +489,6 @@ export default function PageEquipo() {
           <Typography sx={{ p: 1 }}>{`${value}`}</Typography>
         </Popover>
       </Box>
-
       {/* Dialogs */}
       <CustomizedDialogs
         modalTitle="Registro de Equipo"
@@ -402,6 +499,9 @@ export default function PageEquipo() {
           setDialogOpen={setAddDialogOpen}
           submitButtonText="Registrar"
           setReload={setReload}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
       <CustomizedDialogs
@@ -415,6 +515,9 @@ export default function PageEquipo() {
         id={HDVid}
         dialogOpen={dialogHDV}
         setDialogOpen={setDialogHDVOpen}
+        setSnackbarSeverity={setSnackbarSeverity}
+        setSnackbarText={setSnackbarText}
+        setOpenSnackbar={setOpenSnackbar}
       ></DialogHDV>
       <CustomizedDialogs
         modalTitle="Edición de Equipo"
@@ -426,8 +529,38 @@ export default function PageEquipo() {
           setReload={setReload}
           equipo={editEquipo}
           submitButtonText="Editar"
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarText={setSnackbarText}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </CustomizedDialogs>
+      <CustomizedDialogs
+        modalTitle="Eliminación de equipo"
+        dialogOpen={dialogDeleteOpen}
+        setDialogOpen={setDialogDeleteOpen}
+      >
+        <BEquipo
+          deleteEquipoData={deleteEquipo}
+          setDialogOpen={setDialogDeleteOpen}
+          setOpenSnackbar={setOpenSnackbar}
+          setSnackbarText={setSnackbarText}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setReload={setReload}
+        />
+      </CustomizedDialogs>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarText}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

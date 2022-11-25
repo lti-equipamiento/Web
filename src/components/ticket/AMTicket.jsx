@@ -8,12 +8,16 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Autocomplete from "@mui/material/Autocomplete";
 import moment from "moment";
 
-export default function AMTicket({
-  setDialogOpen,
-  ticket,
-  submitButtonText,
-  setReload,
-}) {
+export default function AMTicket(props) {
+  const {
+    setDialogOpen,
+    ticket,
+    submitButtonText,
+    setReload,
+    setSnackbarSeverity,
+    setSnackbarText,
+    setOpenSnackbar,
+  } = props;
   const { user } = useAuth0();
   const { loading, data } = useQuery(getDDTickets(), {
     fetchPolicy: "no-cache",
@@ -24,7 +28,6 @@ export default function AMTicket({
   const [ticketData, setTicketData] = useState([]);
   const [equipos, setEquipos] = useState([]);
   const [allEquipos, setAllEquipos] = useState([]);
-  const [nomEquipos, setNomEquipo] = useState([]);
   const [tiposTicket, setTipoTicket] = useState([]);
   const [allUbicaciones, setAllUbicaciones] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
@@ -33,30 +36,29 @@ export default function AMTicket({
   const [equiposDisabled, setEquiposDisabled] = useState(true);
 
   const onSubmit = async () => {
-    await add({
-      variables: {
-        id: ticketData.id,
-        descripcion: ticketData.descripcion,
-        equipo: data.data_equipo.find(
-          (equipo) => equipo.nombre === ticketData.equipo
-        ).id,
-        fecha: moment().format("YYYY-MM-D"),
-        tipo: ticketData.tipo,
-        usuario: user.sub,
-      },
-    });
-    setDialogOpen(false);
-    setReload(true);
-  };
-
-  const setNombreEquipos = () => {
-    let eqnom = [];
-    data.data_equipo.forEach((equipo) => {
-      if (equipo.nombre === equipos.nombre) {
-        eqnom.push(equipo.nombre);
-      }
-    });
-    setNomEquipo(eqnom);
+    try {
+      await add({
+        variables: {
+          id: ticketData.id,
+          descripcion: ticketData.descripcion,
+          equipo: data.data_equipo.find(
+            (equipo) => equipo.nombre === ticketData.equipo
+          ).id,
+          fecha: moment().format("YYYY-MM-D"),
+          tipo: ticketData.tipo,
+          usuario: user.sub,
+        },
+      });
+      setDialogOpen(false);
+      setReload(true);
+      setSnackbarSeverity("success");
+      setSnackbarText("Edicion exitosa.");
+      setOpenSnackbar(true);
+    } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarText("Error en edición");
+      setOpenSnackbar(true);
+    }
   };
 
   useEffect(() => {
@@ -122,7 +124,11 @@ export default function AMTicket({
   const getEquipos = (servicio, ubicacion) => {
     let eq = [];
     allEquipos.forEach((equipo) => {
-      if (equipo.servicio === servicio && equipo.ubicacion === ubicacion) {
+      if (
+        equipo.servicio === servicio &&
+        equipo.ubicacion === ubicacion &&
+        equipo.estado_funcional !== "Inactivo"
+      ) {
         eq.push(equipo.nombre);
       }
     });
@@ -150,7 +156,12 @@ export default function AMTicket({
           value={ticketData.servicio}
           renderInput={(params) => <TextField {...params} label="Servicios" />}
           onChange={(e, newValue) => {
-            setTicketData({ ...ticketData, servicio: newValue });
+            setTicketData({
+              ...ticketData,
+              servicio: newValue,
+              ubicacion: "",
+              equipo: "",
+            });
             setUbicacionesDisabled(false);
             getUbicaciones(newValue);
           }}
@@ -167,7 +178,7 @@ export default function AMTicket({
             <TextField {...params} label="Ubicaciones" />
           )}
           onChange={(e, newValue) => {
-            setTicketData({ ...ticketData, ubicacion: newValue });
+            setTicketData({ ...ticketData, ubicacion: newValue, equipo: "" });
             setEquiposDisabled(false);
             getEquipos(ticketData.servicio, newValue);
           }}
@@ -198,19 +209,6 @@ export default function AMTicket({
           }}
         />
       </Grid>
-      {/* <Grid item xs={12}>
-        <TextField
-          label="Fecha"
-          value={ticketData["fecha"]}
-          onChange={(e) =>
-            setTicketData({ ...ticketData, fecha: e.target.value })
-          }
-          margin="normal"
-          variant="outlined"
-          color="secondary"
-          fullWidth
-        />
-      </Grid> */}
       <Grid item xs={12}>
         <TextField
           label="Descripcion"
@@ -225,7 +223,8 @@ export default function AMTicket({
           fullWidth
         />
       </Grid>
-      <Grid item>
+
+      <Grid container justifyContent="flex-end">
         <Button
           variant="contained"
           onClick={() => {

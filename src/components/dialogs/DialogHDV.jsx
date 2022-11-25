@@ -43,7 +43,14 @@ BootstrapDialogTitle.propTypes = {
 };
 
 export default function DialogHDV(props) {
-  const { dialogOpen, setDialogOpen, id } = props;
+  const {
+    dialogOpen,
+    setDialogOpen,
+    id,
+    setSnackbarSeverity,
+    setSnackbarText,
+    setOpenSnackbar,
+  } = props;
 
   //Boton edit
   const [editButtonText, setEditButtonText] = useState("");
@@ -141,6 +148,8 @@ export default function DialogHDV(props) {
             guia_limpieza: HDVData.guia_limpieza,
             period_calibracion: HDVData.period_calibracion,
             period_mantenimiento: HDVData.period_mantenimiento,
+            prox_calib_prev: HDVData.prox_calib_prev,
+            prox_mant_prev: HDVData.prox_mant_prev,
             recom_fabricante: HDVData.recom_fabricante,
             rut: HDVData.rut,
             tecnologia_predominante: HDVData.tecnologia_predominante,
@@ -151,8 +160,14 @@ export default function DialogHDV(props) {
         setEditButtonText("Editar");
         setDisabledMode(true);
         setReload(true);
+        setSnackbarSeverity("success");
+        setSnackbarText("Edicion exitosa.");
+        setOpenSnackbar(true);
       } catch (error) {
         console.log(error);
+        setSnackbarSeverity("error");
+        setSnackbarText("Error en edición");
+        setOpenSnackbar(true);
       }
     }
   };

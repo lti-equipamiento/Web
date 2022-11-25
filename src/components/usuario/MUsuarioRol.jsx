@@ -5,7 +5,15 @@ import { useMutation } from "@apollo/client";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
-export default function MUsuarioRol({ setDialogOpen, user, setReload }) {
+export default function MUsuarioRol(props) {
+  const {
+    setDialogOpen,
+    user,
+    setReload,
+    setSnackbarSeverity,
+    setSnackbarText,
+    setOpenSnackbar,
+  } = props;
   const roles = [
     "admin",
     "normal",
@@ -17,19 +25,33 @@ export default function MUsuarioRol({ setDialogOpen, user, setReload }) {
   const [editRol] = useMutation(editRolUsuario());
 
   const onSubmit = () => {
-    editRol({
-      variables: {
-        id: user.id,
-        rol: rol,
-      },
-    });
-    setDialogOpen(false);
-    setReload(true);
+    try {
+      editRol({
+        variables: {
+          id: user.id,
+          rol: rol,
+        },
+      });
+      setSnackbarSeverity("success");
+      setSnackbarText("Edicion exitosa.");
+      setOpenSnackbar(true);
+      setDialogOpen(false);
+      setReload(true);
+    } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarText("Error en edición");
+      setOpenSnackbar(true);
+    }
   };
 
   return (
-    <Grid container>
-      <Grid item xs={12} marginBottom={1}>
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="flex-end"
+    >
+      <Grid minWidth={300} item xs={12} marginBottom={2} marginTop={1}>
         <Autocomplete
           fullWidth
           id="Rol"

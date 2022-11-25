@@ -1,30 +1,30 @@
-const pkg = require("@apollo/client");
-const { setContext } = require("@apollo/client/link/context/context.cjs");
-const fetch = require("cross-fetch");
-const moment = require("moment");
+import pkg from "@apollo/client";
+import { setContext } from "@apollo/client/link/context/context.cjs";
+import fetch from "cross-fetch";
+import moment from "moment";
 const { ApolloClient, InMemoryCache, gql, createHttpLink } = pkg;
 
-const httpLink = createHttpLink({
-  uri: "https://test-agem.hasura.app/v1/graphql",
-  fetch,
-});
-
-const authLink = setContext((_, { headers }) => {
-  return {
-    headers: {
-      ...headers,
-      "x-hasura-admin-secret":
-        "2VvxRojZ8hPQ6isQFb0yXVSwUnghyvC8BuQzYjLFpNhO0e8u7wJaaacKKBHBAQJp",
-    },
-  };
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-});
-
 exports.handler = async function (event, context) {
+  const httpLink = createHttpLink({
+    uri: "https://test-agem.hasura.app/v1/graphql",
+    fetch,
+  });
+
+  const authLink = setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        "x-hasura-admin-secret":
+          "2VvxRojZ8hPQ6isQFb0yXVSwUnghyvC8BuQzYjLFpNhO0e8u7wJaaacKKBHBAQJp",
+      },
+    };
+  });
+
+  const client = new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
+  });
+
   var res = [];
   const check = await client.query({
     query: gql`
@@ -70,7 +70,7 @@ exports.handler = async function (event, context) {
           }
         `,
         variables: {
-          descripcion: "Mantenimiento preventivo",
+          descripcion: "mantenimiento preventivo",
           equipo: data.id,
           fecha: moment().format("YYYY-MM-D"),
           tipo: "Preventivo",
