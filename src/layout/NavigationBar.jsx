@@ -21,7 +21,9 @@ import React from "react";
 import LoginButton from "../components/LoginButton";
 import { mainListItems } from "./NavigationItems";
 import { Avatar } from "@mui/material";
-import { Button } from "@mui/material";
+import { Button, SvgIcon, CardMedia } from "@mui/material";
+import agemlogo from "../assets/logo512.png";
+import AcUnitIcon from "@mui/icons-material/AcUnit";
 
 const drawerWidth = 240;
 
@@ -82,7 +84,7 @@ export default function NavigationBar({ children }) {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
+        <AppBar color="secondary" position="absolute" open={open}>
           <Toolbar
             sx={{
               pr: "24px", // keep right padding when drawer closed
@@ -108,12 +110,9 @@ export default function NavigationBar({ children }) {
               sx={{ flexGrow: 1 }}
             >
               AGEM
+              <SvgIcon></SvgIcon>
             </Typography>
-            {/* <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
+
             {!isAuthenticated ? (
               <Grid container justifyContent="flex-end">
                 <LoginButton justifyContent="flex-end" />

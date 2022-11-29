@@ -210,35 +210,39 @@ export default function PageTicket() {
       align: "center",
       getActions: (params) => [
         <>
-          <Grid>
-            <IconButton
-              title="Modificar ticket"
-              onClick={() => {
-                setDialogOpen(true);
-                setModTicket(params.row);
-              }}
-            >
-              <Edit color="primary" />
-            </IconButton>
-            <IconButton
-              title="Asignar ticket"
-              onClick={() => {
-                setDialogMantOpen(true);
-                setMant(params.row);
-              }}
-            >
-              <CallMadeIcon color="primary"></CallMadeIcon>
-            </IconButton>
-            <IconButton
-              title="Eliminar Ticket"
-              onClick={() => {
-                setDeleteTicket(params.row);
-                setDialogDeleteOpen(true);
-              }}
-            >
-              <DeleteIcon color="primary" />
-            </IconButton>
-          </Grid>
+          {params.row.asignado ? (
+            <></>
+          ) : (
+            <Grid>
+              <IconButton
+                title="Modificar ticket"
+                onClick={() => {
+                  setDialogOpen(true);
+                  setModTicket(params.row);
+                }}
+              >
+                <Edit color="primary" />
+              </IconButton>
+              <IconButton
+                title="Asignar ticket"
+                onClick={() => {
+                  setDialogMantOpen(true);
+                  setMant(params.row);
+                }}
+              >
+                <CallMadeIcon color="primary"></CallMadeIcon>
+              </IconButton>
+              <IconButton
+                title="Eliminar Ticket"
+                onClick={() => {
+                  setDeleteTicket(params.row);
+                  setDialogDeleteOpen(true);
+                }}
+              >
+                <DeleteIcon color="primary" />
+              </IconButton>
+            </Grid>
+          )}
         </>,
       ],
     },

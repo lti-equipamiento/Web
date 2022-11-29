@@ -180,15 +180,20 @@ export default function PageMantenimiento() {
       align: "center",
       getActions: (params) => [
         <>
-          <IconButton
-            title="Modificar mantenimiento"
-            onClick={() => {
-              setDialogOpen(true);
-              setEditMantenimiento(params.row);
-            }}
-          >
-            <Edit color="primary" />
-          </IconButton>
+          {params.row.estado === "Cerrado" ? (
+            <></>
+          ) : (
+            <IconButton
+              title="Modificar mantenimiento"
+              onClick={() => {
+                setDialogOpen(true);
+                setEditMantenimiento(params.row);
+              }}
+            >
+              <Edit color="primary" />
+            </IconButton>
+          )}
+
           <IconButton
             title="Mostrar detalles"
             onClick={() => {

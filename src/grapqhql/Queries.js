@@ -520,6 +520,7 @@ export function getMantenimientos() {
           n_serie
         }
         ticketByTicket {
+          tipo
           equipoByEquipo {
             nombre
             ubicacionByUbicacionServicio {

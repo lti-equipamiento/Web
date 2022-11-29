@@ -4,6 +4,8 @@ import {
   editMantenimiento,
   getEstadosMantenimiento,
   getUsuarioNombreRol,
+  editHojaDeVidaProx,
+  getHojaDeVida,
 } from "../../grapqhql/Queries";
 import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "@apollo/client";
@@ -23,7 +25,9 @@ export default function MMantenimiento(props) {
   const { user } = useAuth0();
   const [mantData, setMantData] = useState([]);
   const { loading, data } = useQuery(getEstadosMantenimiento());
+  const { data: dataHDV } = useQuery(getHojaDeVida(mant.hoja_de_vida));
   const [mantMutation] = useMutation(editMantenimiento());
+  const [proxHDVedit] = useMutation(editHojaDeVidaProx());
   const [estados, setEstados] = useState([]);
   const [equipos, setEquipos] = useState([]);
   const { data: dataUser } = useQuery(userMant, {
@@ -69,8 +73,6 @@ export default function MMantenimiento(props) {
     }
   }, [mant]);
 
-  console.log(mantData);
-
   const onSubmit = () => {
     setOpenSnackbar(true);
     try {
@@ -78,15 +80,16 @@ export default function MMantenimiento(props) {
       if (mantData.estado === "Cerrado") {
         date = new Date();
       }
+      var equipo = data.data_equipo.find(
+        (equipo) =>
+          equipo.nombre + " (" + equipo.n_serie + ")" === mantData.equipo
+      );
 
       mantMutation({
         variables: {
           id: mantData.id,
           costo: mantData.costo,
-          equipo: data.data_equipo.find(
-            (equipo) =>
-              equipo.nombre + " (" + equipo.n_serie + ")" === mantData.equipo
-          ).id,
+          equipo: equipo.id,
           estado: mantData.estado,
           fecha_egreso: date,
           piezas: mantData.piezas,
@@ -95,6 +98,42 @@ export default function MMantenimiento(props) {
           tiempo_empleado: mantData.tiempo_empleado,
         },
       });
+
+      var caliDate = new Date();
+      caliDate = new Date(
+        caliDate.setMonth(
+          caliDate.getMonth() +
+            dataHDV.data_hoja_de_vida_by_pk.periodo.valor_numerico
+        )
+      );
+      if (
+        mantData.ticketByTicket.tipo === "Calibracion" ||
+        mantData.ticketByTicket.tipo === "Preventivo calibración"
+      ) {
+        proxHDVedit({
+          variables: {
+            id: equipo.hoja_de_vida,
+            prox_calib_prev: caliDate,
+          },
+        });
+      } else {
+        var mantDate = new Date();
+        mantDate = new Date(
+          mantDate.setMonth(
+            mantDate.getMonth() +
+              dataHDV.data_hoja_de_vida_by_pk.periodoByPeriodMantenimiento
+                .valor_numerico
+          )
+        );
+        proxHDVedit({
+          variables: {
+            id: equipo.hoja_de_vida,
+            prox_calib_prev: caliDate,
+            prox_mant_prev: mantDate,
+          },
+        });
+      }
+
       setDialogOpen(false);
       setReload(true);
       setSnackbarText("Edicion exitosa.");
