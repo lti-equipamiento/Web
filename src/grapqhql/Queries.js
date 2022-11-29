@@ -603,6 +603,7 @@ export function getEstadosMantenimiento() {
         id
         nombre
         n_serie
+        hoja_de_vida
       }
       data_e_estado {
         nombre
