@@ -842,6 +842,26 @@ export function editHojaDeVida() {
   `;
 }
 
+export function editHojaDeVidaProx() {
+  return gql`
+    mutation editHojaDeVidaProx(
+      $id: Int!
+      $prox_mant_prev: date!
+      $prox_calib_prev: date!
+    ) {
+      update_data_hoja_de_vida_by_pk(
+        pk_columns: { id: $id }
+        _set: {
+          prox_mant_prev: $prox_mant_prev
+          prox_calib_prev: $prox_calib_prev
+        }
+      ) {
+        id
+      }
+    }
+  `;
+}
+
 //-------------------------------------Componentes-------------------------------------
 
 export function getComponentes() {
@@ -911,9 +931,21 @@ export function deleteComponente() {
 
 export function getDocumentacion() {
   return gql`
-query getDocumentacion {
-  data_doc_tecnica {
-    diagrama_partes
+query getDocumentacion {field: "prioridad",
+headerName: "Prioridad",
+minWidth: 70,
+flex: 1,
+editable: false,
+headerAlign: "left",
+align: "left",
+valueGetter: (params) => {
+  let result = ~~(
+    (params.row.equipoByEquipo.prioridad +
+      params.row.equipoByEquipo.ubicacionByUbicacionServicio
+        .servicioByServicio.prioridad) /
+    2
+  );
+  return result;
     id
     manual_operacion
     manual_servicio
