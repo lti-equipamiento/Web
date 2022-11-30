@@ -5,6 +5,7 @@ import {
   GridToolbarQuickFilter,
   GridToolbarContainer,
   GridToolbarExport,
+  gridNumberComparator,
 } from "@mui/x-data-grid";
 import {
   Typography,
@@ -30,6 +31,7 @@ import Popover from "@mui/material/Popover";
 import Switch from "@mui/material/Switch";
 import { useAuth0 } from "@auth0/auth0-react";
 import BTicket from "../components/ticket/BTicket";
+import clsx from "clsx";
 
 export default function PageTicket() {
   //auth0
@@ -42,7 +44,7 @@ export default function PageTicket() {
   const { loading: loadingUser, data: dataUser } = useQuery(userTicket, {
     variables: { id: user.sub },
   });
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [reload, setReload] = useState(false);
   const [rows, setRows] = useState([]);
 
@@ -199,6 +201,11 @@ export default function PageTicket() {
     );
   }
 
+  const prioridadComparator = (v1, v2) => {
+    const comparatorResult = gridNumberComparator(v1.result, v2.result);
+    return comparatorResult;
+  };
+
   const columns = [
     {
       field: "actions",
@@ -319,15 +326,33 @@ export default function PageTicket() {
       flex: 1,
       editable: false,
       headerAlign: "left",
-      align: "left",
-      valueGetter: (params) => {
-        let result = ~~(
+      align: "center",
+      sortComparator: prioridadComparator,
+      valueGetter: (params) => ({
+        result: ~~(
           (params.row.equipoByEquipo.prioridad +
             params.row.equipoByEquipo.ubicacionByUbicacionServicio
               .servicioByServicio.prioridad) /
           2
-        );
-        return result;
+        ),
+      }),
+      valueFormatter: (params) => {
+        if (params.value.result === 3) {
+          return "Alta";
+        }
+        if (params.value.result === 2) {
+          return "Media";
+        }
+        if (params.value.result === 1) {
+          return "Baja";
+        }
+      },
+      cellClassName: (params) => {
+        return clsx("prioridad", {
+          alta: params.value.result === 3,
+          media: params.value.result === 2,
+          baja: params.value.result === 1,
+        });
       },
     },
     {
@@ -367,7 +392,28 @@ export default function PageTicket() {
 
   return (
     <>
-      <Box sx={{ height: 400, width: "100%" }}>
+      <Box
+        sx={{
+          height: 400,
+          width: "100%",
+
+          "& .prioridad.baja": {
+            backgroundColor: "rgba(157, 255, 118, 0.49)",
+            color: "#252525",
+            fontWeight: "600",
+          },
+          "& .prioridad.media": {
+            backgroundColor: "#e6d928",
+            color: "#252525",
+            fontWeight: "600",
+          },
+          "& .prioridad.alta": {
+            backgroundColor: "#d47483",
+            color: "#252525",
+            fontWeight: "600",
+          },
+        }}
+      >
         <DataGrid
           loading={loading}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -377,9 +423,14 @@ export default function PageTicket() {
           columns={columns}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]}
+          rowsPerPageOptions={[10, 20, 50, 100]}
           pagination
           disableSelectionOnClick
+          initialState={{
+            sorting: {
+              sortModel: [{ field: "prioridad", sort: "desc" }],
+            },
+          }}
           columnVisibilityModel={{ Asignar: !hide }}
           components={{ Toolbar: CustomToolBar }}
           componentsProps={{

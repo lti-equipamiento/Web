@@ -35,7 +35,7 @@ const equipo = getEquipos();
 
 export default function PageEquipo() {
   // Tabla
-  const [pageSize, setPageSize] = React.useState(5);
+  const [pageSize, setPageSize] = React.useState(10);
   const { loading, data, refetch } = useQuery(equipo, {
     fetchPolicy: "no-cache",
   });
@@ -365,49 +365,6 @@ export default function PageEquipo() {
         return calculatePrioridad(params.row);
       },
     },
-    // {
-    //   field: "action1",
-    //   type: "actions",
-    //   headerName: "Detalles",
-    //   minWidth: 70,
-    //   flex: 1,
-    //   headerAlign: "left",
-    //   align: "left",
-    //   getActions: (params) => [
-    //     <>
-    //       <IconButton
-    //         title="Mostrar detalles"
-    //         onClick={() => {
-    //           setDetailsDialogOpen(true);
-    //           setDetailsData(params.row);
-    //         }}
-    //       >
-    //         <ZoomInIcon />
-    //       </IconButton>
-    //     </>,
-    //   ],
-    // },
-    // {
-    //   field: "action",
-    //   type: "actions",
-    //   headerName: "Hoja de vida",
-    //   minWidth: 70,
-    //   flex: 1,
-    //   headerAlign: "left",
-    //   align: "left",
-    //   getActions: (params) => [
-    //     <>
-    //       <Button
-    //         onClick={() => {
-    //           setHDVid(params.row.hoja_de_vida);
-    //           setDialogHDVOpen(true);
-    //         }}
-    //       >
-    //         <AutoStoriesIcon />
-    //       </Button>
-    //     </>,
-    //   ],
-    // },
   ];
 
   const handlePopoverOpen = (event) => {
@@ -451,7 +408,7 @@ export default function PageEquipo() {
           columns={columns}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]}
+          rowsPerPageOptions={[10, 20, 50, 100]}
           pagination
           disableSelectionOnClick
           components={{ Toolbar: CustomToolBar }}

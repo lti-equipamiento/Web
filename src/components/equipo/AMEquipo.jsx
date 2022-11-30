@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { TextField, Button } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { TextField, Button, IconButton } from "@mui/material";
 import {
   addEquipo,
   editEquipo,
@@ -10,6 +10,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
+import ClearIcon from "@mui/icons-material/Clear";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "moment/locale/es";
@@ -40,6 +41,9 @@ export default function AMEquipo(props) {
   const [ubicaciones, setUbicaciones] = useState([]);
   const [ubicacionesDisabled, setUbicacionesDisabled] = useState(true);
   const [fechaGarantia, setFechaGarantia] = useState(new Date());
+  const handleClearClick = () => {
+    setEquipoData({ ...equipoData, url: "" });
+  };
 
   const marks = [
     {
@@ -114,6 +118,7 @@ export default function AMEquipo(props) {
           prioridad: equipoData.prioridad,
           servicio: equipoData.servicio,
           ubicacion: equipoData.ubicacion,
+          url: equipoData.url,
         },
       });
       setDialogOpen(false);
@@ -201,6 +206,33 @@ export default function AMEquipo(props) {
               onChange={(e) =>
                 setEquipoData({ ...equipoData, n_serie: e.target.value })
               }
+              margin="normal"
+              variant="outlined"
+              color="secondary"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <img src={equipoData.url} alt="" width="200"></img>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Imagen"
+              value={equipoData["url"]}
+              helperText="Ingresar url de la imagen"
+              onChange={(e) =>
+                setEquipoData({ ...equipoData, url: e.target.value })
+              }
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    sx={{ visibility: equipoData.url ? "visible" : "hidden" }}
+                    onClick={handleClearClick}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                ),
+              }}
               margin="normal"
               variant="outlined"
               color="secondary"

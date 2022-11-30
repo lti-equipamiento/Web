@@ -382,6 +382,7 @@ export default function TabCTecnica(props) {
             disabled={disabledMode}
             label="Fecha de mantenimiento preventivo"
             value={fechaMantPrev}
+            disablePast={true}
             onChange={(newValue) => {
               setFechaMantPrev(newValue);
               setHDVData({ ...HDVData, prox_mant_prev: newValue.toJSON() });
@@ -399,6 +400,7 @@ export default function TabCTecnica(props) {
             disabled={disabledMode}
             label="Fecha de calibración preventiva"
             value={fechaCalibPrev}
+            disablePast={true}
             onChange={(newValue) => {
               setFechaCalibPrev(newValue);
               setHDVData({ ...HDVData, prox_calib_prev: newValue.toJSON() });

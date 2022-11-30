@@ -18,6 +18,7 @@ import {
   GridToolbarQuickFilter,
   GridToolbarContainer,
   GridToolbarExport,
+  gridNumberComparator,
 } from "@mui/x-data-grid";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import React, { useState, useEffect } from "react";
@@ -26,6 +27,7 @@ import CustomizedDialogs from "../components/dialogs/Dialog";
 import MMantenimiento from "../components/mantenimiento/MMantenimiento";
 import MantenimientoDetails from "../components/mantenimiento/MantenimientoDetails";
 import { useAuth0 } from "@auth0/auth0-react";
+import clsx from "clsx";
 
 export default function PageMantenimiento() {
   //auth0
@@ -34,7 +36,7 @@ export default function PageMantenimiento() {
   const mantenimientos = getMantenimientos();
   const userMant = getUsuarioNombreRol();
   // tabla
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const { loading, data, refetch } = useQuery(mantenimientos, {
     fetchPolicy: "no-cache",
   });
@@ -169,6 +171,11 @@ export default function PageMantenimiento() {
     );
   }
 
+  const prioridadComparator = (v1, v2) => {
+    const comparatorResult = gridNumberComparator(v1.result, v2.result);
+    return comparatorResult;
+  };
+
   const columns = [
     {
       field: "editar",
@@ -230,15 +237,33 @@ export default function PageMantenimiento() {
       flex: 1,
       editable: false,
       headerAlign: "left",
-      align: "left",
-      valueGetter: (params) => {
-        let result = ~~(
+      align: "center",
+      sortComparator: prioridadComparator,
+      valueGetter: (params) => ({
+        result: ~~(
           (params.row.equipoByEquipo.prioridad +
             params.row.equipoByEquipo.ubicacionByUbicacionServicio
               .servicioByServicio.prioridad) /
           2
-        );
-        return result;
+        ),
+      }),
+      valueFormatter: (params) => {
+        if (params.value.result === 3) {
+          return "Alta";
+        }
+        if (params.value.result === 2) {
+          return "Media";
+        }
+        if (params.value.result === 1) {
+          return "Baja";
+        }
+      },
+      cellClassName: (params) => {
+        return clsx("prioridad", {
+          alta: params.value.result === 3,
+          media: params.value.result === 2,
+          baja: params.value.result === 1,
+        });
       },
     },
     {
@@ -261,6 +286,16 @@ export default function PageMantenimiento() {
       editable: false,
       headerAlign: "left",
       align: "left",
+      valueGetter: (params) => {
+        const date = params.row.fecha_ingreso;
+        const fecha_ingreso =
+          date.split("-")[2] +
+          "/" +
+          date.split("-")[1] +
+          "/" +
+          date.split("-")[0];
+        return fecha_ingreso;
+      },
     },
     {
       field: "fecha_egreso",
@@ -270,6 +305,20 @@ export default function PageMantenimiento() {
       editable: false,
       headerAlign: "left",
       align: "left",
+      valueGetter: (params) => {
+        const date = params.row.fecha_egreso;
+        if (date !== null) {
+          const fecha_egreso =
+            date.split("-")[2] +
+            "/" +
+            date.split("-")[1] +
+            "/" +
+            date.split("-")[0];
+          return fecha_egreso;
+        } else {
+          return date;
+        }
+      },
     },
     {
       field: "costo",
@@ -355,7 +404,27 @@ export default function PageMantenimiento() {
 
   return (
     <>
-      <Box sx={{ height: 400, width: "100%" }}>
+      <Box
+        sx={{
+          height: 400,
+          width: "100%",
+          "& .prioridad.baja": {
+            backgroundColor: "rgba(157, 255, 118, 0.49)",
+            color: "#252525",
+            fontWeight: "600",
+          },
+          "& .prioridad.media": {
+            backgroundColor: "#e6d928",
+            color: "#252525",
+            fontWeight: "600",
+          },
+          "& .prioridad.alta": {
+            backgroundColor: "#d47483",
+            color: "#252525",
+            fontWeight: "600",
+          },
+        }}
+      >
         <DataGrid
           loading={loading}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -365,9 +434,22 @@ export default function PageMantenimiento() {
           columns={columns}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]}
+          rowsPerPageOptions={[10, 20, 50, 100]}
           pagination
           disableSelectionOnClick
+          initialState={{
+            sorting: {
+              sortModel: [{ field: "prioridad", sort: "desc" }],
+            },
+            columns: {
+              columnVisibilityModel: {
+                // Hide columns
+                procedimiento: false,
+                piezas: false,
+                resultado: false,
+              },
+            },
+          }}
           components={{ Toolbar: CustomToolBar }}
           componentsProps={{
             cell: {

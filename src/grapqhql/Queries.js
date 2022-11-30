@@ -167,6 +167,7 @@ export function getEquipos() {
         prioridad
         ubicacion
         servicio
+        url
       }
     }
   `;
@@ -188,6 +189,7 @@ export function addEquipo() {
       $prioridad: Int!
       $servicio: String!
       $ubicacion: String!
+      $url: String!
     ) {
       insert_data_equipo_one(
         object: {
@@ -204,6 +206,7 @@ export function addEquipo() {
           prioridad: $prioridad
           servicio: $servicio
           ubicacion: $ubicacion
+          url: $url
           hojaDeVidaByHojaDeVida: {
             data: {
               docTecnicaByDocTecnica: { data: {} }
@@ -237,6 +240,7 @@ export function editEquipo() {
       $prioridad: Int!
       $servicio: String!
       $ubicacion: String!
+      $url: String!
     ) {
       update_data_equipo_by_pk(
         pk_columns: { id: $id }
@@ -255,6 +259,7 @@ export function editEquipo() {
           prioridad: $prioridad
           servicio: $servicio
           ubicacion: $ubicacion
+          url: $url
         }
       ) {
         id
@@ -933,26 +938,17 @@ export function deleteComponente() {
 
 export function getDocumentacion() {
   return gql`
-query getDocumentacion {field: "prioridad",
-headerName: "Prioridad",
-minWidth: 70,
-flex: 1,
-editable: false,
-headerAlign: "left",
-align: "left",
-valueGetter: (params) => {
-  let result = ~~(
-    (params.row.equipoByEquipo.prioridad +
-      params.row.equipoByEquipo.ubicacionByUbicacionServicio
-        .servicioByServicio.prioridad) /
-    2
-  );
-  return result;
-    id
-    manual_operacion
-    manual_servicio
-    planos
-  }`;
+    query getDocumentacion {
+      data_doc_tecnica {
+        diagrama_partes
+        id
+        manual_operacion
+        manual_servicio
+        otros
+        planos
+      }
+    }
+  `;
 }
 //---------------------------------------------------Fuente alimentacion-------------------------------------------
 

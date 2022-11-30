@@ -27,6 +27,26 @@ import AcUnitIcon from "@mui/icons-material/AcUnit";
 
 const drawerWidth = 240;
 
+function AgemIcon(props) {
+  return (
+    <SvgIcon {...props}>
+      <path
+        d="M3857 3036 c-12 -13 -28 -50 -35 -82 -8 -33 -65 -278 -128 -547 -63
+-268 -114 -489 -114 -492 0 -3 -124 -5 -275 -5 l-275 0 0 -88 0 -89 137 -6
+c75 -4 216 -7 313 -7 170 0 177 1 197 23 15 15 33 72 58 182 63 269 74 317 95
+405 11 47 28 120 37 163 10 42 20 77 23 77 4 0 21 -84 39 -187 32 -184 141
+-794 161 -903 5 -30 19 -104 30 -165 16 -92 24 -114 45 -133 15 -12 32 -22 40
+-22 35 0 65 45 81 120 8 41 38 183 65 315 28 132 55 266 61 298 5 31 13 57 17
+57 3 0 29 -44 56 -97 28 -53 58 -105 68 -115 15 -16 39 -18 272 -18 l255 0 17
+27 c10 16 18 46 18 71 0 36 -5 48 -28 68 -28 24 -30 24 -240 24 l-212 0 -44
+83 c-155 293 -151 287 -190 287 -58 0 -65 -18 -122 -291 -28 -134 -53 -261
+-56 -281 -7 -49 -19 -40 -27 19 -4 27 -11 71 -17 98 -5 28 -39 219 -75 425
+-95 551 -132 748 -144 770 -23 44 -71 51 -103 16z"
+      />
+    </SvgIcon>
+  );
+}
+
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -71,7 +91,13 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#198caf",
+    },
+  },
+});
 
 export default function NavigationBar({ children }) {
   const [open, setOpen] = React.useState(true);
@@ -84,7 +110,12 @@ export default function NavigationBar({ children }) {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar color="secondary" position="absolute" open={open}>
+        <AppBar
+          //style={{ background: "#7dcdd5" }}
+          color="primary"
+          position="absolute"
+          open={open}
+        >
           <Toolbar
             sx={{
               pr: "24px", // keep right padding when drawer closed
@@ -109,8 +140,8 @@ export default function NavigationBar({ children }) {
               noWrap
               sx={{ flexGrow: 1 }}
             >
+              <AgemIcon />
               AGEM
-              <SvgIcon></SvgIcon>
             </Typography>
 
             {!isAuthenticated ? (

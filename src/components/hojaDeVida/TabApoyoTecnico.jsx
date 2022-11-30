@@ -174,10 +174,10 @@ export default function TabApoyoTecnico(props) {
           label="Guia de limpieza"
           multiline
           rows={3}
-          value={docTecnicaData.guia_limpieza}
+          value={HDVData.guia_limpieza}
           onChange={(e) =>
-            setDocTecnicaData({
-              ...docTecnicaData,
+            setHDVData({
+              ...HDVData,
               guia_limpieza: e.target.value,
             })
           }

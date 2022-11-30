@@ -28,7 +28,7 @@ const usuario = getUsuarios();
 
 export default function PageUsuario() {
   // tabla
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const { loading, data, refetch } = useQuery(usuario, {
     fetchPolicy: "no-cache",
   });
@@ -257,7 +257,7 @@ export default function PageUsuario() {
           columns={columns}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]}
+          rowsPerPageOptions={[10, 20, 50, 100]}
           pagination
           disableSelectionOnClick
           components={{ Toolbar: CustomToolBar }}
