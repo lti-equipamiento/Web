@@ -8,6 +8,8 @@ import {
   Paper,
   Typography,
   Input,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,7 +18,9 @@ import { useQuery, useMutation } from "@apollo/client";
 import { getUsuario, editUsuario } from "../grapqhql/Queries";
 import agemlogo from "../assets/logo512.png";
 import "../css/PageProfile.css";
+import CustomizedDialogs from "../components/dialogs/Dialog";
 //import AddPhoto from "../gcp/AddPhoto"; //esto rompe todo
+import PhotoUpload from "../components/profile/PhotoUpload";
 
 export default function PageProfile() {
   const { user } = useAuth0();
@@ -31,6 +35,21 @@ export default function PageProfile() {
   // Imagen
   const [image, setImage] = useState([]);
   const [selectedFile, setSelectedFile] = useState();
+
+  // Subir Foto
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  //Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarText, setSnackbarText] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
 
   // const onImageChange = (event) => {
   //   if (event.target.files && event.target.files[0]) {
@@ -52,6 +71,7 @@ export default function PageProfile() {
   const onUploadPhoto = () => {
     // TODO: agregar la funcionalidad de subir la foto
     // Estaria bueno que abra un dialog y ahi este para subir
+    setDialogOpen(true);
   };
 
   // Funcion del input del upload file
@@ -139,7 +159,7 @@ export default function PageProfile() {
                 component="img"
                 // TODO: aca cambiamos la imagen nomas y ya queda lindo
                 image={agemlogo}
-                alt="gato"
+                alt="imagen de perfil"
               />
             </Grid>
             <Grid item xs={12} marginBottom={2}>
@@ -282,6 +302,33 @@ export default function PageProfile() {
           </Grid>
         </>
       )}
+      <CustomizedDialogs
+        modalTitle={"Subir Foto"}
+        setDialogOpen={setDialogOpen}
+        dialogOpen={dialogOpen}
+      >
+        <PhotoUpload
+          setDialogOpen={setDialogOpen}
+          userID={user.sub}
+          profileData={profileData}
+          setOpenSnackbar={setOpenSnackbar}
+          setSnackbarText={setSnackbarText}
+          setSnackbarSeverity={setSnackbarSeverity}
+        />
+      </CustomizedDialogs>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarText}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
