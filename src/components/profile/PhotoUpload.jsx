@@ -23,7 +23,6 @@ export default function PhotoUpload(props) {
 
   const onSubmit = () => {
     try {
-      console.log(photoLink);
       editUsuarioMutation({
         variables: {
           id: userID,

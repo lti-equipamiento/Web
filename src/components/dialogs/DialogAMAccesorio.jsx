@@ -8,7 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useMutation } from "@apollo/client";
-import { addComponente } from "../../grapqhql/Queries";
+import { addComponente, editComponente } from "../../grapqhql/Queries";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -46,14 +46,22 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function DialogAddAccesorio(props) {
-  const { dialogOpen, setDialogOpen, HDVData, setReload } = props;
+export default function DialogAMAccesorio(props) {
+  const { dialogOpen, setDialogOpen, HDVData, setReload, data, title } = props;
   const [accesorioData, setAccesorioData] = useState([]);
-  const [AccesorioMutation] = useMutation(addComponente());
+  const [AccesorioMutation] = useMutation(
+    data ? editComponente() : addComponente()
+  );
 
   useEffect(() => {
     setAccesorioData({ hoja_de_vida: HDVData.id });
   }, [HDVData.id]);
+
+  useEffect(() => {
+    if (data) {
+      setAccesorioData(data);
+    }
+  }, [data]);
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -63,18 +71,16 @@ export default function DialogAddAccesorio(props) {
     try {
       AccesorioMutation({
         variables: {
+          id: accesorioData.id,
           serie_referencia: accesorioData.serie_referencia,
           nombre: accesorioData.nombre,
           marca: accesorioData.marca,
           hoja_de_vida: accesorioData.hoja_de_vida,
         },
       });
-      setAccesorioData({
-        ...accesorioData,
-        nombre: " ",
-        marca: " ",
-        serie_referencia: " ",
-      });
+      if (!data) {
+        setAccesorioData([]);
+      }
       setReload(true);
       handleClose();
     } catch (error) {
@@ -86,10 +92,10 @@ export default function DialogAddAccesorio(props) {
     <div>
       <BootstrapDialog aria-labelledby="dialog-hdv" open={dialogOpen}>
         <BootstrapDialogTitle id="dialog-hdv" onClose={handleClose}>
-          <label>Agregar Accesorio</label>
+          <label>{title}</label>
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <Grid container rowSpacing={0} columnSpacing={1}>
+          <Grid container marginTop={-1} rowSpacing={0} columnSpacing={1}>
             <Grid item xs={12}>
               <TextField
                 label="Nombre"
@@ -132,8 +138,16 @@ export default function DialogAddAccesorio(props) {
                 fullWidth
               />
             </Grid>
-            <Grid item>
-              <Button onClick={() => handleConfirmar()}>Confirmar</Button>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+              marginTop={1}
+            >
+              <Button variant="contained" onClick={() => handleConfirmar()}>
+                Confirmar
+              </Button>
             </Grid>
           </Grid>
         </DialogContent>

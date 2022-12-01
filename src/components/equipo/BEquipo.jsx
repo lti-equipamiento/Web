@@ -32,8 +32,6 @@ export default function BEquipo(props) {
       }
     });
 
-    console.log(deletable);
-
     // si es posible, snackbar ok, sino snackbar fail
     if (deletable) {
       try {

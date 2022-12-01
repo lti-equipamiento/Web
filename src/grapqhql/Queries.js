@@ -874,6 +874,21 @@ export function editHojaDeVidaProx() {
 
 //-------------------------------------Componentes-------------------------------------
 
+export function getComponenteHDV() {
+  return gql`
+    query getComponenteHDV($id: Int!) {
+      data_hoja_de_vida_by_pk(id: $id) {
+        accesorios_componentes {
+          id
+          marca
+          nombre
+          serie_referencia
+        }
+      }
+    }
+  `;
+}
+
 export function getComponentes() {
   return gql`
     query getComponente {
@@ -913,7 +928,6 @@ export function editComponente() {
   return gql`
     mutation editComponente(
       $id: Int!
-      $hoja_de_vida: Int!
       $marca: String!
       $nombre: String!
       $serie_referencia: String!
@@ -921,7 +935,6 @@ export function editComponente() {
       update_data_accesorios_componentes_by_pk(
         pk_columns: { id: $id }
         _set: {
-          hoja_de_vida: $hoja_de_vida
           marca: $marca
           nombre: $nombre
           serie_referencia: $serie_referencia

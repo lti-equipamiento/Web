@@ -14,7 +14,6 @@ export default function TabAdquisicion(props) {
     if (HDVData) {
       setFechaInstalacion(new Date(HDVData.fecha_instalacion));
       setFechaAdquisicion(new Date(HDVData.fecha_adquisicion));
-      console.log(HDVData);
     }
   }, [HDVData]);
 
