@@ -39,7 +39,13 @@ export default function Orders() {
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.fecha_egreso}</TableCell>
+              <TableCell>
+                {row.fecha_egreso.split("-")[2] +
+                  "/" +
+                  row.fecha_egreso.split("-")[1] +
+                  "/" +
+                  row.fecha_egreso.split("-")[0]}
+              </TableCell>
               <TableCell>{row.equipoByEquipo.nombre}</TableCell>
               <TableCell>{row.usuarioByUsuario.nombre}</TableCell>
               <TableCell>{row.ticket}</TableCell>
