@@ -7,7 +7,6 @@ import {
   TextField,
   Paper,
   Typography,
-  Input,
   Snackbar,
   Alert,
 } from "@mui/material";
@@ -19,7 +18,6 @@ import { getUsuario, editUsuario } from "../grapqhql/Queries";
 import agemlogo from "../assets/logo512.png";
 import "../css/PageProfile.css";
 import CustomizedDialogs from "../components/dialogs/Dialog";
-//import AddPhoto from "../gcp/AddPhoto"; //esto rompe todo
 import PhotoUpload from "../components/profile/PhotoUpload";
 
 export default function PageProfile() {
@@ -51,16 +49,6 @@ export default function PageProfile() {
     setOpenSnackbar(false);
   };
 
-  // const onImageChange = (event) => {
-  //   if (event.target.files && event.target.files[0]) {
-  //     const file = {
-  //       preview: URL.createObjectURL(event.target.files[0]),
-  //       data: event.target.files[0],
-  //     };
-  //     setImage(file);
-  //   }
-  // };
-
   useEffect(() => {
     if (data) {
       setProfileData(data.data_usuario_by_pk);
@@ -69,19 +57,8 @@ export default function PageProfile() {
 
   // Funcion del boton subir foto
   const onUploadPhoto = () => {
-    // TODO: agregar la funcionalidad de subir la foto
-    // Estaria bueno que abra un dialog y ahi este para subir
     setDialogOpen(true);
   };
-
-  // Funcion del input del upload file
-  const fileSelectedHandler = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  console.log(selectedFile);
-
-  const fileUploadHandler = () => {};
 
   // Funcion del boton edit
   const onEdit = () => {
@@ -126,21 +103,6 @@ export default function PageProfile() {
         </Grid>
       ) : (
         <>
-          {/* <Button variant="contained" component="label">
-        Upload
-        <input
-          hidden
-          accept="image/*"
-          type="file"
-          onChange={async (e) => {
-            onImageChange(e);
-            // const auth = await authorize();
-            // addPhoto(auth, image);
-          }}
-        />
-      </Button>
-      {console.log(image)}
-      <img src={image.preview} /> */}
           <Grid
             container
             direction="column"
@@ -157,8 +119,7 @@ export default function PageProfile() {
                   position: "relative",
                 }}
                 component="img"
-                // TODO: aca cambiamos la imagen nomas y ya queda lindo
-                image={agemlogo}
+                image={profileData.image ? profileData.image : agemlogo}
                 alt="imagen de perfil"
               />
             </Grid>

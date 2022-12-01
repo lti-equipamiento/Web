@@ -42,6 +42,7 @@ export function getUsuario() {
         nombre
         rol
         telefono
+        image
       }
     }
   `;
@@ -68,6 +69,7 @@ export function editUsuario() {
       $rol: String!
       $telefono: String!
       $id: String!
+      $image: String
     ) {
       update_data_usuario_by_pk(
         pk_columns: { id: $id }
@@ -78,6 +80,7 @@ export function editUsuario() {
           nombre: $nombre
           rol: $rol
           telefono: $telefono
+          image: $image
         }
       ) {
         id

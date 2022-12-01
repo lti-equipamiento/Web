@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -17,13 +18,12 @@ import ListItemText from "@mui/material/ListItemText";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import LoginButton from "../components/LoginButton";
 import { mainListItems } from "./NavigationItems";
 import { Avatar } from "@mui/material";
-import { Button, SvgIcon, CardMedia } from "@mui/material";
-import agemlogo from "../assets/logo512.png";
-import AcUnitIcon from "@mui/icons-material/AcUnit";
+import { Button, SvgIcon } from "@mui/material";
+import { useQuery } from "@apollo/client";
+import { getUsuario } from "../grapqhql/Queries";
 
 const drawerWidth = 240;
 
@@ -100,8 +100,21 @@ const mdTheme = createTheme({
 });
 
 export default function NavigationBar({ children }) {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
   const { user, logout, isAuthenticated } = useAuth0();
+
+  // imagen de perfil, esto se deberia sacar del auth0 no de aca pero bueno.
+  const { data } = useQuery(getUsuario(), {
+    variables: { id: user.sub },
+    fetchPolicy: "no-cache",
+  });
+  const [image, setImage] = useState();
+  useEffect(() => {
+    if (data) {
+      setImage(data.data_usuario_by_pk.image);
+    }
+  }, [data]);
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -153,7 +166,7 @@ export default function NavigationBar({ children }) {
                 title={user.email}
                 onClick={(event) => (window.location.href = "/profile")}
               >
-                <Avatar alt={user.email} src={user.picture} />
+                <Avatar alt={user.email} src={image ? image : user.picture} />
               </Button>
             )}
           </Toolbar>

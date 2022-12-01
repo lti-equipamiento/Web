@@ -17,16 +17,23 @@ export default function PhotoUpload(props) {
 
   useEffect(() => {
     if (profileData) {
-      setPhotoLink(profileData.photoLink);
+      setPhotoLink(profileData.image);
     }
   }, [profileData]);
 
   const onSubmit = () => {
     try {
+      console.log(photoLink);
       editUsuarioMutation({
         variables: {
           id: userID,
-          photoLink: photoLink,
+          nombre: profileData.nombre,
+          telefono: profileData.telefono,
+          direccion: profileData.direccion,
+          cedula: profileData.cedula,
+          mail: profileData.mail,
+          rol: profileData.rol,
+          image: photoLink,
         },
       });
       setDialogOpen(false);
