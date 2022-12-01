@@ -363,6 +363,20 @@ export default function PageTicket() {
       editable: false,
       headerAlign: "left",
       align: "left",
+      valueGetter: (params) => {
+        const date = params.row.fecha;
+        if (date !== null) {
+          const fecha =
+            date.split("-")[2] +
+            "/" +
+            date.split("-")[1] +
+            "/" +
+            date.split("-")[0];
+          return fecha;
+        } else {
+          return date;
+        }
+      },
     },
     {
       field: "descripcion",
