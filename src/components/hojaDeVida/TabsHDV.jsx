@@ -4,10 +4,10 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import PageAdquisicion from "./PageAdquisicion";
-import PageCTecnica from "./PageCTecnica";
-import PageApoyoTecnico from "./PageApoyoTecnico";
-import PageMantenimiento from "./PageMantenimiento";
+import TabAdquisicion from "./TabAdquisicion";
+import TabCTecnica from "./TabCTecnica";
+import TabApoyoTecnico from "./TabApoyoTecnico";
+import TabMantenimiento from "./TabMantenimiento";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,19 +40,29 @@ function a11yProps(index) {
   };
 }
 
-export default function TabsHDV() {
+export default function TabsHDV(props) {
+  const {
+    disabledMode,
+    HDVData,
+    setHDVData,
+    tipoAlimentacionData,
+    setTipoAlimentacionData,
+    fuenteAlimentacionData,
+    setFuenteAlimentacionData,
+    docTecnicaData,
+    setDocTecnicaData,
+    accesoriosData,
+    mantenimientosData,
+    setReload,
+  } = props;
   const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
-          onChange={handleChange}
+          onChange={(_e, value) => setValue(value)}
           aria-label="Tabs Hoja de vida"
         >
           <Tab label="Adquisición" {...a11yProps(0)} />
@@ -62,16 +72,36 @@ export default function TabsHDV() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <PageAdquisicion />
+        <TabAdquisicion
+          disabledMode={disabledMode}
+          HDVData={HDVData}
+          setHDVData={setHDVData}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <PageCTecnica />
+        <TabCTecnica
+          disabledMode={disabledMode}
+          HDVData={HDVData}
+          setHDVData={setHDVData}
+          tipoAlimentacionData={tipoAlimentacionData}
+          setTipoAlimentacionData={setTipoAlimentacionData}
+          fuenteAlimentacionData={fuenteAlimentacionData}
+          setFuenteAlimentacionData={setFuenteAlimentacionData}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <PageApoyoTecnico />
+        <TabApoyoTecnico
+          disabledMode={disabledMode}
+          HDVData={HDVData}
+          setHDVData={setHDVData}
+          docTecnicaData={docTecnicaData}
+          setDocTecnicaData={setDocTecnicaData}
+          accesoriosData={accesoriosData}
+          setReload={setReload}
+        />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <PageMantenimiento />
+        <TabMantenimiento mantenimientosData={mantenimientosData} />
       </TabPanel>
     </Box>
   );

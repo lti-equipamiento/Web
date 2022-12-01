@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 function ApolloWrapper({ children }) {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [bearerToken, setBearerToken] = useState("");
+
   useEffect(() => {
     const getToken = async () => {
       const token = isAuthenticated ? await getAccessTokenSilently() : "empty";
@@ -20,7 +21,8 @@ function ApolloWrapper({ children }) {
   }, [getAccessTokenSilently, isAuthenticated]);
 
   const httpLink = createHttpLink({
-    uri: "https://lti-equipamiento.hasura.app/v1/graphql",
+    //uri: "https://test-agem.hasura.app/v1/graphql", //test
+    uri: "https://agem.hasura.app/v1/graphql", //prod
   });
 
   const authLink = setContext((_, { headers, ...rest }) => {
