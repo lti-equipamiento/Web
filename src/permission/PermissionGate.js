@@ -22,7 +22,7 @@ export default function PermissionsGate({
 
   if (isAuthenticated) {
     const token = localStorage.getItem(
-      `@@auth0spajs@@::TU1HzLoMRbH5X4gA7FIFYji7hL88VXTi::agem::openid profile email offline_access`
+      `@@auth0spajs@@::zO2LXg47qvXtDAUibiXnrugRm0wtDpNm::agem::openid profile email offline_access`
     );
     const role =
       jwt_decode(token)["https://hasura.io/jwt/claims"]["x-hasura-custom"];

@@ -1,30 +1,30 @@
-import pkg from "@apollo/client";
-import { setContext } from "@apollo/client/link/context/context.cjs";
-import fetch from "cross-fetch";
-import moment from "moment";
+const pkg = require("@apollo/client");
+const { setContext } = require("@apollo/client/link/context/context.cjs");
+const fetch = require("cross-fetch");
+const moment = require("moment");
 const { ApolloClient, InMemoryCache, gql, createHttpLink } = pkg;
 
+const httpLink = createHttpLink({
+  uri: "https://agem.hasura.app/v1/graphql",
+  fetch,
+});
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      "x-hasura-admin-secret":
+        "qHQVOe1iQXN5P7gWZxtuXescx67UyNno528YqExPjqC7DhZTMr6wwbBNFlMn4stM",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
 exports.handler = async function (event, context) {
-  const httpLink = createHttpLink({
-    uri: "https://agem.hasura.app/v1/graphql",
-    fetch,
-  });
-
-  const authLink = setContext((_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        "x-hasura-admin-secret":
-          "qHQVOe1iQXN5P7gWZxtuXescx67UyNno528YqExPjqC7DhZTMr6wwbBNFlMn4stM",
-      },
-    };
-  });
-
-  const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
-  });
-
   var res = [];
   const check = await client.query({
     query: gql`
@@ -43,7 +43,7 @@ exports.handler = async function (event, context) {
   for (let i = 0; i < check.data.data_equipo.length; i++) {
     const data = check.data.data_equipo[i];
     var now = moment();
-    var input = moment(data.hojaDeVidaByHojaDeVida.prox_mant_prev);
+    var input = moment(data.hojaDeVidaByHojaDeVida.prox_calib_prev);
     var isThisWeek = now.isoWeek() == input.isoWeek();
     var response;
     if (isThisWeek) {
@@ -70,10 +70,10 @@ exports.handler = async function (event, context) {
           }
         `,
         variables: {
-          descripcion: "mantenimiento preventivo",
+          descripcion: "Mantenimiento preventivo calibración",
           equipo: data.id,
           fecha: moment().format("YYYY-MM-D"),
-          tipo: "Preventivo",
+          tipo: "Preventivo calibración",
           usuario: "system",
         },
       });
