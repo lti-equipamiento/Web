@@ -934,7 +934,14 @@ export function editComponente() {
 }
 
 export function deleteComponente() {
-  return gql``;
+  return gql`
+    mutation deleteComponente($id: Int!) {
+      delete_data_accesorios_componentes_by_pk(id: $id) {
+        id
+        nombre
+      }
+    }
+  `;
 }
 
 //----------------------------------Documentacion tecnica-------------------------------------------------
