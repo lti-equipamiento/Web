@@ -21,31 +21,21 @@ import Typography from "@mui/material/Typography";
 import LoginButton from "../components/LoginButton";
 import { mainListItems } from "./NavigationItems";
 import { Avatar } from "@mui/material";
-import { Button, SvgIcon } from "@mui/material";
+import { NavLink } from "react-router-dom";
+import {
+  Button,
+  Popper,
+  Grow,
+  Paper,
+  MenuList,
+  MenuItem,
+  ClickAwayListener,
+} from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { getUsuario } from "../grapqhql/Queries";
+import logosvg from "../assets/logosvg.svg";
 
 const drawerWidth = 240;
-
-function AgemIcon(props) {
-  return (
-    <SvgIcon {...props}>
-      <path
-        d="M3857 3036 c-12 -13 -28 -50 -35 -82 -8 -33 -65 -278 -128 -547 -63
--268 -114 -489 -114 -492 0 -3 -124 -5 -275 -5 l-275 0 0 -88 0 -89 137 -6
-c75 -4 216 -7 313 -7 170 0 177 1 197 23 15 15 33 72 58 182 63 269 74 317 95
-405 11 47 28 120 37 163 10 42 20 77 23 77 4 0 21 -84 39 -187 32 -184 141
--794 161 -903 5 -30 19 -104 30 -165 16 -92 24 -114 45 -133 15 -12 32 -22 40
--22 35 0 65 45 81 120 8 41 38 183 65 315 28 132 55 266 61 298 5 31 13 57 17
-57 3 0 29 -44 56 -97 28 -53 58 -105 68 -115 15 -16 39 -18 272 -18 l255 0 17
-27 c10 16 18 46 18 71 0 36 -5 48 -28 68 -28 24 -30 24 -240 24 l-212 0 -44
-83 c-155 293 -151 287 -190 287 -58 0 -65 -18 -122 -291 -28 -134 -53 -261
--56 -281 -7 -49 -19 -40 -27 19 -4 27 -11 71 -17 98 -5 28 -39 219 -75 425
--95 551 -132 748 -144 770 -23 44 -71 51 -103 16z"
-      />
-    </SvgIcon>
-  );
-}
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -115,6 +105,31 @@ export default function NavigationBar({ children }) {
     }
   }, [data]);
 
+  const [openProfileMenu, setOpenProfileMenu] = React.useState(false);
+  const anchorRef = React.useRef(null);
+
+  const handleToggle = (event) => {
+    setOpenProfileMenu((prevOpen) => !prevOpen);
+    anchorRef.current = event.currentTarget;
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpenProfileMenu(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -146,14 +161,14 @@ export default function NavigationBar({ children }) {
             >
               <MenuIcon />
             </IconButton>
+            <Avatar src={logosvg} sx={{ marginLeft: -1 }} />
             <Typography
               component="h1"
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1, marginLeft: 1 }}
             >
-              <AgemIcon />
               AGEM
             </Typography>
 
@@ -162,12 +177,65 @@ export default function NavigationBar({ children }) {
                 <LoginButton justifyContent="flex-end" />
               </Grid>
             ) : (
-              <Button
-                title={user.email}
-                onClick={(event) => (window.location.href = "/profile")}
-              >
-                <Avatar alt={user.email} src={image ? image : user.picture} />
-              </Button>
+              <Grid>
+                <Button
+                  onClick={(event) => {
+                    handleToggle(event);
+                  }}
+                >
+                  <Avatar src={image ? image : user.picture} />
+                </Button>
+                <Popper
+                  open={openProfileMenu}
+                  anchorEl={anchorRef.current}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  role={undefined}
+                  placement="bottom-start"
+                  transition
+                  disablePortal
+                >
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === "bottom-end"
+                            ? "left top"
+                            : "left bottom",
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                          <MenuList
+                            autoFocusItem={open}
+                            id="composition-menu"
+                            aria-labelledby="composition-button"
+                            onKeyDown={handleListKeyDown}
+                          >
+                            <NavLink
+                              to="/profile"
+                              style={{ textDecoration: "none", color: "black" }}
+                            >
+                              <MenuItem onClick={handleClose}>Perfil</MenuItem>
+                            </NavLink>
+                            <MenuItem
+                              onClick={() => {
+                                logout({ returnTo: window.location.origin });
+                                handleClose();
+                              }}
+                            >
+                              Cerrar sesión
+                            </MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              </Grid>
             )}
           </Toolbar>
         </AppBar>
