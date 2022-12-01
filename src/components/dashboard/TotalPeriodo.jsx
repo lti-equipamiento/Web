@@ -59,13 +59,13 @@ export default function TotalPeriodo(props) {
                 }}
               />
             </Grid>
-            <Grid item xs={2}>
+            <Grid item marginTop={2} xs={2}>
               <IconButton
                 onClick={() => {
                   setYear(textFieldYear);
                 }}
               >
-                <CheckIcon />
+                <CheckIcon color="primary" />
               </IconButton>
             </Grid>
           </Grid>

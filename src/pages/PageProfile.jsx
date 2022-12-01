@@ -30,10 +30,6 @@ export default function PageProfile() {
   const [disabledMode, setDisabledMode] = useState(true);
   const [profileData, setProfileData] = useState([]);
 
-  // Imagen
-  const [image, setImage] = useState([]);
-  const [selectedFile, setSelectedFile] = useState();
-
   // Subir Foto
   const [dialogOpen, setDialogOpen] = useState(false);
 

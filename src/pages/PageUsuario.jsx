@@ -128,7 +128,7 @@ export default function PageUsuario() {
 
               <Grid item xs={1}>
                 <IconButton onClick={onRefresh}>
-                  <RefreshIcon />
+                  <RefreshIcon color="primary" />
                 </IconButton>
               </Grid>
             </Grid>

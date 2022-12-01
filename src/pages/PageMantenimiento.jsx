@@ -161,7 +161,7 @@ export default function PageMantenimiento() {
               </Grid>
               <Grid item xs={1}>
                 <IconButton onClick={onRefresh}>
-                  <RefreshIcon />
+                  <RefreshIcon color="primary" />
                 </IconButton>
               </Grid>
             </Grid>

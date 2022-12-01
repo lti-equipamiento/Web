@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Button, Grid, TextField } from "@mui/material";
+import { IconButton, Button, Grid, TextField } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { editUsuario } from "../../grapqhql/Queries";
+import ClearIcon from "@mui/icons-material/Clear";
 
 export default function PhotoUpload(props) {
   const {
@@ -20,6 +21,10 @@ export default function PhotoUpload(props) {
       setPhotoLink(profileData.image);
     }
   }, [profileData]);
+
+  const handleClearClick = () => {
+    setPhotoLink("");
+  };
 
   const onSubmit = () => {
     try {
@@ -54,6 +59,7 @@ export default function PhotoUpload(props) {
       justifyContent="center"
       alignItems="center"
       marginTop={-1}
+      width={500}
     >
       <TextField
         label="Link"
@@ -63,6 +69,16 @@ export default function PhotoUpload(props) {
         color="secondary"
         onChange={(e) => {
           setPhotoLink(e.target.value);
+        }}
+        InputProps={{
+          endAdornment: (
+            <IconButton
+              sx={{ visibility: photoLink ? "visible" : "hidden" }}
+              onClick={handleClearClick}
+            >
+              <ClearIcon />
+            </IconButton>
+          ),
         }}
         fullWidth
       />

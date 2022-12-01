@@ -186,12 +186,12 @@ export default function PageTicket() {
               </Grid>
               <Grid item xs={1} paddingLeft={2}>
                 <IconButton onClick={() => setDialogAddOpen(true)}>
-                  <PostAddIcon />
+                  <PostAddIcon color="primary" />
                 </IconButton>
               </Grid>
               <Grid item xs={1}>
                 <IconButton onClick={onRefresh}>
-                  <RefreshIcon />
+                  <RefreshIcon color="primary" />
                 </IconButton>
               </Grid>
             </Grid>

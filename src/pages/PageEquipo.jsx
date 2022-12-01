@@ -174,12 +174,12 @@ export default function PageEquipo() {
                     setAddDialogOpen(true);
                   }}
                 >
-                  <AddBoxIcon />
+                  <AddBoxIcon color="primary" />
                 </IconButton>
               </Grid>
               <Grid item xs={1}>
                 <IconButton onClick={onRefresh}>
-                  <RefreshIcon />
+                  <RefreshIcon color="primary" />
                 </IconButton>
               </Grid>
             </Grid>
