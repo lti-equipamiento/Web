@@ -409,7 +409,7 @@ export default function PageMantenimiento() {
           height: 400,
           width: "100%",
           "& .prioridad.baja": {
-            backgroundColor: "rgba(157, 255, 118, 0.49)",
+            backgroundColor: "#148c50",
             color: "#252525",
             fontWeight: "600",
           },
@@ -419,7 +419,7 @@ export default function PageMantenimiento() {
             fontWeight: "600",
           },
           "& .prioridad.alta": {
-            backgroundColor: "#d47483",
+            backgroundColor: "#d26769",
             color: "#252525",
             fontWeight: "600",
           },
