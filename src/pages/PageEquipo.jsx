@@ -292,7 +292,7 @@ export default function PageEquipo() {
     },
     {
       field: "garantia",
-      headerName: "Garantia",
+      headerName: "Garantía",
       minWidth: 70,
       flex: 1,
       editable: false,
@@ -310,7 +310,7 @@ export default function PageEquipo() {
     },
     {
       field: "ubicacion",
-      headerName: "Ubicacion",
+      headerName: "Ubicación",
       minWidth: 70,
       flex: 1,
       editable: false,
@@ -328,7 +328,7 @@ export default function PageEquipo() {
     },
     {
       field: "estado_fisico",
-      headerName: "Estado fisico",
+      headerName: "Estado físico",
       minWidth: 70,
       flex: 1,
       editable: false,

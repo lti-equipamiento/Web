@@ -192,7 +192,7 @@ export default function PageUsuario() {
     },
     {
       field: "telefono",
-      headerName: "Telefono",
+      headerName: "Teléfono",
       type: "number",
       minWidth: 100,
       flex: 1,
@@ -202,7 +202,7 @@ export default function PageUsuario() {
     },
     {
       field: "direccion",
-      headerName: "Direccion",
+      headerName: "Dirección",
       minWidth: 100,
       flex: 1,
       editable: false,

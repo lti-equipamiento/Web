@@ -36,12 +36,12 @@ export default function EquipoDetails(data) {
           </ListItem>
           <Divider sx={{ my: 0 }} />
           <ListItem>
-            <ListItemText primary="Garantia" secondary={garantia} />
+            <ListItemText primary="Garantía" secondary={garantia} />
           </ListItem>
           <Divider sx={{ my: 0 }} />
           <ListItem>
             <ListItemText
-              primary="Clasificacion"
+              primary="Clasificación"
               secondary={data.data.clasificacion_riesgo}
             />
           </ListItem>

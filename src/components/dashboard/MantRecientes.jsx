@@ -31,7 +31,7 @@ export default function Orders() {
           <TableRow>
             <TableCell>Fecha de cierre mantenimiento</TableCell>
             <TableCell>Equipo</TableCell>
-            <TableCell>Tecnico</TableCell>
+            <TableCell>Técnico</TableCell>
             <TableCell>Ticket</TableCell>
             <TableCell align="right">Costo</TableCell>
           </TableRow>
